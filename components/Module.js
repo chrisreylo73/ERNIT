@@ -52,7 +52,10 @@ const Module = ({ days, title, icon, image }) => {
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Text style={styles.title}>{title.toUpperCase()}</Text>
-				<Text style={styles.title}>{Math.round(percent)}%</Text>
+				{/* <Text style={styles.title}>{Math.round(percent)}%</Text> */}
+				<Text style={styles.text}>
+					{daysLeft}/{days} Days Left
+				</Text>
 				<TouchableOpacity style={[styles.button, { backgroundColor: buttonColor }]} onPress={handlePress}>
 					<Text style={styles.buttonText}>{dayComplete}</Text>
 				</TouchableOpacity>
@@ -105,8 +108,16 @@ const styles = StyleSheet.create({
 		// marginTop: 100,
 		fontSize: 20,
 		fontWeight: "bold",
-		marginBottom: 20,
+		marginBottom: 5,
 		color: "white",
+		fontFamily: "Roboto",
+		letterSpacing: 2,
+	},
+	text: {
+		fontSize: 14,
+		fontWeight: "bold",
+		marginBottom: 40,
+		color: "#4a4a4e",
 		fontFamily: "Roboto",
 		letterSpacing: 2,
 	},

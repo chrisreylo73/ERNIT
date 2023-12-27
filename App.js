@@ -9,7 +9,10 @@ export default function App() {
 		<View style={styles.container}>
 			<Text style={styles.title}>ERN-IT</Text>
 			<StatusBar style="auto" />
-			<Module days={16} title={"Guitar"} />
+			<Module days={100} title={"Guitar"} />
+			<TouchableOpacity>
+				<Text style={styles.buttonText}>+</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
@@ -23,6 +26,8 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	title: {
+		position: "absolute",
+		top: 0,
 		marginTop: 50,
 		fontSize: 20,
 		fontWeight: "bold",
