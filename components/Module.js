@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-const Module = ({ days, title, icon, image }) => {
+const Module = ({ days, title, icon, image, link }) => {
 	const rows = Number.isInteger(Math.sqrt(days)) ? Math.sqrt(days) : Math.floor(Math.sqrt(days)) + 1;
 	const columns = Number.isInteger(Math.sqrt(days)) ? Math.sqrt(days) : Math.floor(Math.sqrt(days)) + 1;
 	const [daysLeft, setDaysLeft] = useState(days - 1);
 	const [percent, setPercent] = useState(100);
-	const [dayComplete, setDayComplete] = useState("INCOMPLETE");
+	const [dayCompleted, setDayCompleted] = useState("INCOMPLETE");
 	const [buttonColor, setButtonColor] = useState("white");
 	const [currentDate, setCurrentDate] = useState(new Date().toISOString().split("T")[0]);
 	const [gridData, setGridData] = useState(
@@ -26,12 +26,11 @@ const Module = ({ days, title, icon, image }) => {
 		setDaysLeft(daysLeft - 1);
 		setPercent((daysLeft / days) * 100);
 		if (daysLeft <= 0) {
-			setDayComplete("EARNED");
-			setButtonColor("#f6b048");
-		} else if (dayComplete == "INCOMPLETE") {
-			setDayComplete("COMPLETE");
-		} else if (dayComplete == "COMPLETE") {
-			setDayComplete("INCOMPLETE");
+			setDayCompleted("EARNED");
+		} else if (dayCompleted == "INCOMPLETE") {
+			setDayCompleted("COMPLETED");
+		} else if (dayCompleted == "COMPLETED") {
+			setDayCompleted("INCOMPLETE");
 		}
 		const max = rows;
 		const min = 0;
@@ -56,12 +55,12 @@ const Module = ({ days, title, icon, image }) => {
 				<Text style={styles.text}>
 					{daysLeft}/{days} Days Left
 				</Text>
-				<TouchableOpacity style={[styles.button, { backgroundColor: buttonColor }]} onPress={handlePress}>
-					<Text style={styles.buttonText}>{dayComplete}</Text>
+				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "black" : "white" }]} onPress={handlePress}>
+					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "white" : "black" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
 			</View>
 			<View style={styles.imageContainer}>
-				<Image source={require("../assets/Forte-Port-Nylon-HO.png")} style={styles.image} />
+				<Image source={image} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</View>
 		</View>
@@ -77,27 +76,29 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		width: 370,
-		padding: 5,
-		backgroundColor: "#111111",
+		padding: 7,
+		backgroundColor: "#0b0b0b",
 		// shadowColor: "black",
-		borderColor: "#4a4a4e",
+		// borderColor: "black",
+		borderColor: "#363637",
 		borderWidth: 1,
 		borderRadius: 15,
+		marginBottom: 15,
 	},
 	imageContainer: {
-		height: 175,
-		width: 175,
+		height: 160,
+		width: 160,
 		overflow: "hidden",
 		borderWidth: 1,
-		backgroundColor: "black",
+		backgroundColor: "white",
 		borderRadius: 10,
 		borderColor: "#4a4a4e",
-		// elevation: -40,
+		elevation: 100,
 	},
 	image: {
-		height: 170,
-		width: 170,
-		// resizeMode: "cover",
+		height: 160,
+		width: 160,
+		resizeMode: "cover",
 		borderRadius: 10,
 	},
 	overlay: {
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
 		height: 40,
 		elevation: 20,
 		borderWidth: 1,
-		borderColor: "#f0f0f0",
+		borderColor: "#363637",
 	},
 	buttonText: {
 		textAlign: "center",
