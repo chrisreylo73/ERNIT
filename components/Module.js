@@ -27,7 +27,7 @@ const Module = ({ days, title, icon, image }) => {
 		setPercent((daysLeft / days) * 100);
 		if (daysLeft <= 0) {
 			setDayComplete("EARNED");
-			setButtonColor("yellow");
+			setButtonColor("#f6b048");
 		} else if (dayComplete == "INCOMPLETE") {
 			setDayComplete("COMPLETE");
 		} else if (dayComplete == "COMPLETE") {
@@ -73,29 +73,28 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		justifyContent: "space-between",
 		alignItems: "center",
-		width: 380,
-		// width: "400px",
+		width: 370,
 		padding: 5,
-		// height: "300px",
-		backgroundColor: "#252526",
-		elevation: 20,
+		backgroundColor: "#111111",
 		// shadowColor: "black",
-		border: "none",
+		borderColor: "#4a4a4e",
+		borderWidth: 1,
 		borderRadius: 15,
 	},
 	imageContainer: {
-		// position: "relative",
-		height: 170,
-		width: 170,
+		height: 175,
+		width: 175,
 		overflow: "hidden",
-		backgroundColor: "#262266",
+		borderWidth: 1,
+		backgroundColor: "black",
 		borderRadius: 10,
-		elevation: -40,
+		borderColor: "#4a4a4e",
+		// elevation: -40,
 	},
 	image: {
 		height: 170,
 		width: 170,
-		resizeMode: "cover",
+		// resizeMode: "cover",
 		borderRadius: 10,
 	},
 	overlay: {
@@ -104,10 +103,10 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		// marginTop: 100,
-		fontSize: 18,
+		fontSize: 20,
 		fontWeight: "bold",
 		marginBottom: 20,
-		// color: "white",
+		color: "white",
 		fontFamily: "Roboto",
 		letterSpacing: 2,
 	},
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		padding: 10,
 		borderRadius: 5,
-		width: 180,
+		width: 170,
 		height: 40,
 		elevation: 20,
 		borderWidth: 1,
@@ -146,13 +145,14 @@ const styles = StyleSheet.create({
 	gridBox: {
 		flex: 1,
 		aspectRatio: 1,
-		borderWidth: 2,
-		borderColor: "black",
+		borderWidth: 1,
+		borderColor: "#4a4a4e",
+		// borderRadius: 5,
 		backgroundColor: "rgba(0, 0, 0, .8)", // Semi-transparent green background
 	},
 	updatedStyle: {
 		// Style to be applied when the button is pressed
 		backgroundColor: "transparent", // Change this to your desired style
-		// borderColor: "transparent",
+		borderColor: "transparent",
 	},
 });
