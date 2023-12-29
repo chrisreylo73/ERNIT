@@ -9,9 +9,9 @@ export default function App() {
 		<View style={styles.container}>
 			<Text style={styles.title}>ERN-IT</Text>
 			<View style={styles.separator} />
-			<Module days={100} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} />
-			<Module days={15} title={"Basketball"} image={require("./assets/J12.png")} />
-			<Module days={21} title={"Leet Code"} image={require("./assets/nirvana.jpg")} />
+			<Module totalDays={100} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} />
+			<Module totalDays={15} title={"Basketball"} image={require("./assets/J12.png")} />
+			<Module totalDays={21} title={"Leet Code"} image={require("./assets/nirvana.jpg")} />
 			<TouchableOpacity style={styles.button}>
 				<Text style={styles.buttonText}>+</Text>
 			</TouchableOpacity>
