@@ -9,7 +9,6 @@ export default function App() {
 		<View style={styles.container}>
 			<Text style={styles.title}>ERN-IT</Text>
 			<View style={styles.separator} />
-
 			<Module days={100} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} />
 			<Module days={15} title={"Basketball"} image={require("./assets/J12.png")} />
 			<Module days={21} title={"Leet Code"} image={require("./assets/nirvana.jpg")} />
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
 		marginTop: 50,
 		fontSize: 20,
 		fontWeight: "bold",
-		marginBottom: 20,
+		// marginBottom: 5,
 		fontFamily: "Roboto",
 		letterSpacing: 4,
 		color: "white",

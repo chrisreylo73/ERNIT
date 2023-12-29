@@ -8,8 +8,8 @@ const Module = ({ days, title, icon, image, link }) => {
 	const [daysLeft, setDaysLeft] = useState(days - 1);
 	const [percent, setPercent] = useState(100);
 	const [dayCompleted, setDayCompleted] = useState("INCOMPLETE");
-	const [buttonColor, setButtonColor] = useState("white");
 	const [currentDate, setCurrentDate] = useState(new Date().toISOString().split("T")[0]);
+
 	const [gridData, setGridData] = useState(
 		Array.from({ length: rows }, (_, rowIndex) =>
 			Array.from({ length: columns }, (_, colIndex) => ({
