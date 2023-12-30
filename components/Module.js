@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 const Module = ({ totalDays, title, icon, image, link, color }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
 	const columns = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
-	const [numGridBoxes, setNumGridBoxes] = useState(rows * columns);
+	const [gridBoxesLeft, setGridBoxesLeft] = useState(rows * columns);
 	const [daysLeft, setDaysLeft] = useState(totalDays);
 	const [removedGridBoxes, setRemovedGridBoxes] = useState([]);
 	const [dayCompleted, setDayCompleted] = useState("INCOMPLETE");
@@ -25,37 +25,62 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 		</View>
 	));
 
+	// useEffect(() => {
+	// 	console.log("daysleft: ", daysLeft);
+	// 	console.log("gridBoxesLeft: ", gridBoxesLeft);
+	// 	console.log("removedGridBoxes", removedGridBoxes);
+	// }, [daysLeft, gridData, gridBoxesLeft, removedGridBoxes]);
+
+	// useEffect(() => {
+	// 	console.log("removedGridBoxes", removedGridBoxes);
+	// 	// console.log("gridData 2", gridData);
+	// 	// for (i = 0; i < gridData.length; i++) {
+	// 	// 	for (j = 0; j < gridData[i].length; j++) {
+	// 	// 		console.log(gridData[i][j]);
+	// 	// 	}
+	// 	// }
+	// }, [removedGridBoxes]);
+
 	const handlePress = () => {
-		// if (daysLeft === 0) {
-		// 	handleGridBoxRemoval();
-		// 	setDayCompleted("EARNED");
-		if (dayCompleted == "INCOMPLETE") {
-			if (numGridBoxes - daysLeft == 0) {
-				handleGridBoxRemoval();
-				setNumGridBoxes(numGridBoxes - 1);
-			} else {
-				handleGridBoxRemoval();
-				handleGridBoxRemoval();
-				setNumGridBoxes(numGridBoxes - 2);
+		if (daysLeft !== 0) {
+			if (dayCompleted == "INCOMPLETE") {
+				if (gridBoxesLeft - daysLeft == 0) {
+					// Adds the new indecies to the removedGridBoxes array
+					setRemovedGridBoxes([...removedGridBoxes, handleGridBoxRemoval()]);
+					// Decrement the number of gridBoxesLeft counter
+					setGridBoxesLeft(gridBoxesLeft - 1);
+				} else {
+					// Adds the new indecies to the removedGridBoxes array
+					setRemovedGridBoxes([...removedGridBoxes, handleGridBoxRemoval(), handleGridBoxRemoval()]);
+					// Decrement the number of gridBoxesLeft counter
+					setGridBoxesLeft(gridBoxesLeft - 2);
+				}
+				// handleGridBoxRemoval();
+				setDaysLeft(daysLeft - 1);
+				setDayCompleted("COMPLETED");
+			} else if (dayCompleted == "COMPLETED") {
+				setDaysLeft(daysLeft + 1);
+				setDayCompleted("INCOMPLETE");
 			}
-			setDaysLeft(daysLeft - 1);
-			setDayCompleted("COMPLETED");
-		} else if (dayCompleted == "COMPLETED") {
-			// setDaysLeft(daysLeft + 1);
-			setDayCompleted("INCOMPLETE");
+		} else {
+			setDayCompleted("EARNED");
 		}
 	};
 
 	const handleGridBoxRemoval = () => {
+		// Get random indices between 0 and number of rows/columns
+		// for (let i = 0; i < counter; i++) {
 		let randomRow = Math.floor(Math.random() * (rows - 0)) + 0;
 		let randomColumn = Math.floor(Math.random() * (columns - 0)) + 0;
+		// Make sure we are getting indices that haven't been removed
 		while (removedGridBoxes.includes(gridData[randomRow][randomColumn].key)) {
 			randomRow = Math.floor(Math.random() * (rows - 0)) + 0;
 			randomColumn = Math.floor(Math.random() * (columns - 0)) + 0;
 		}
+		// Make the new random gridBox transparent
 		gridData[randomRow][randomColumn].style = styles.updatedStyle; // Update the style here
-		console.log(gridData[randomRow][randomColumn].key);
-		setRemovedGridBoxes([...removedGridBoxes, gridData[randomRow][randomColumn].key]);
+		// console.log(gridData[randomRow][randomColumn].key);
+		return gridData[randomRow][randomColumn].key;
 	};
 
 	return (

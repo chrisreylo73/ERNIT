@@ -3,17 +3,18 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground } from
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import Module from "./components/Module";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function App() {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>ERN-IT</Text>
 			<View style={styles.separator} />
-			<Module totalDays={100} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} />
+			<Module totalDays={21} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} />
 			<Module totalDays={15} title={"Basketball"} image={require("./assets/J12.png")} />
 			<Module totalDays={21} title={"Leet Code"} image={require("./assets/nirvana.jpg")} />
 			<TouchableOpacity style={styles.button}>
-				<Text style={styles.buttonText}>+</Text>
+				<AntDesign name="plus" size={24} color="white" />
 			</TouchableOpacity>
 			<StatusBar style="auto" />
 		</View>
@@ -24,8 +25,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#111111",
-		// backgroundColor: "white",
-		// backgroundColor: "linear-gradient(to bottom, #000000, #808080)",
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -35,30 +34,30 @@ const styles = StyleSheet.create({
 		marginTop: 50,
 		fontSize: 20,
 		fontWeight: "bold",
-		// marginBottom: 5,
 		fontFamily: "Roboto",
 		letterSpacing: 4,
 		color: "white",
 	},
 	button: {
 		position: "absolute",
-		bottom: 0,
+		bottom: 20,
 		marginTop: 10,
+		alignItems: "center",
+		justifyContent: "center",
 		backgroundColor: "black",
-		height: "40px",
 		padding: 10,
-		borderTopLeftRadius: 70,
-		borderTopRightRadius: 70,
-		width: "100%",
-		height: 40,
-		elevation: 20,
+		width: "90%",
+		borderRadius: 20,
+		// height: 50,
+		// elevation: 20,
 		borderWidth: 1,
 		// borderColor: "#f0f0f0",
 	},
 	separator: {
+		position: "absolute",
 		height: 1, // Height of the separator
 		width: "90%",
-		backgroundColor: "#ddd", // Color of the separator
-		marginBottom: 20,
+		backgroundColor: "white", // Color of the separator
+		top: 100,
 	},
 });
