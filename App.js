@@ -11,8 +11,8 @@ export default function App() {
 			<Text style={styles.title}>ERN-IT</Text>
 			<View style={styles.separator} />
 			<Module totalDays={3} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} />
-			<Module totalDays={15} title={"Basketball"} image={require("./assets/J12.png")} />
-			<Module totalDays={21} title={"Leet Code"} image={require("./assets/nirvana.jpg")} />
+			<Module totalDays={3} title={"Basketball"} image={require("./assets/J12.png")} />
+			<Module totalDays={3} title={"Leet Code"} image={require("./assets/nirvana.jpg")} />
 			<TouchableOpacity style={styles.button}>
 				<AntDesign name="plus" size={24} color="white" />
 			</TouchableOpacity>

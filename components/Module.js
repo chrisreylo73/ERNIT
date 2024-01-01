@@ -23,27 +23,12 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 			))}
 		</View>
 	));
-	const handlePress = async () => {
-		if (dayCompleted === "INCOMPLETE" && daysLeft !== 0) {
-			if (gridBoxesLeft - daysLeft === 0) {
-				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
-				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 1);
-				setDaysLeft((daysLeft) => daysLeft - 1);
-			} else {
-				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval(), handleGridBoxRemoval()]);
-				// setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
-				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 2);
-				setDaysLeft((daysLeft) => daysLeft - 1);
-			}
-			setDayCompleted("COMPLETED");
-		} else if (dayCompleted === "COMPLETED" && daysLeft !== 0) {
-			setDayCompleted("INCOMPLETE");
-			// setDaysLeft((daysLeft) => daysLeft + 1);
-		} else {
+
+	const handlePress = () => {
+		if (daysLeft === 1 && dayCompleted === "INCOMPLETE") {
 			// Just in case of error remove any box that still has not been removed, remove all boxes
 			console.log(removedGridBoxes.length);
 			console.log(removedGridBoxes);
-			// const hasDuplicates = new Set(removedGridBoxes).size !== removedGridBoxes.length;
 			if (new Set(removedGridBoxes).size !== removedGridBoxes.length) {
 				for (let x = 0; x < gridData.length; x++) {
 					for (let y = 0; y < gridData[x].length; y++) {
@@ -52,23 +37,48 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 					}
 				}
 			}
+			setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
+			setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 1);
+			setDaysLeft((daysLeft) => daysLeft - 1);
 			setDayCompleted("EARNED");
+		} else if (dayCompleted === "INCOMPLETE" && daysLeft !== 0) {
+			if (gridBoxesLeft - daysLeft === 0) {
+				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
+				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 1);
+			} else {
+				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval(), handleGridBoxRemoval()]);
+				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 2);
+			}
+			setDaysLeft((daysLeft) => daysLeft - 1);
+			setDayCompleted("COMPLETED");
+		} else if (dayCompleted === "COMPLETED" && daysLeft !== 0) {
+			setDayCompleted("INCOMPLETE");
+			// setDaysLeft((daysLeft) => daysLeft + 1);
 		}
 	};
 
 	const handleGridBoxRemoval = () => {
 		// Get random indices between 0 and number of rows/columns
-		let randomRow = Math.floor(Math.random() * (rows - 0)) + 0;
-		let randomColumn = Math.floor(Math.random() * (columns - 0)) + 0;
-		// Make sure we are getting indices that haven't been removed
-		while (removedGridBoxes.includes(gridData[randomRow][randomColumn].key)) {
-			randomRow = Math.floor(Math.random() * (rows - 0)) + 0;
-			randomColumn = Math.floor(Math.random() * (columns - 0)) + 0;
+		let randomRow = Math.floor(Math.random() * rows);
+		let randomColumn = Math.floor(Math.random() * columns);
+		let selectedBoxKey = gridData[randomRow][randomColumn].key;
+
+		// Make sure the selected box hasn't been removed in the current call
+		while (removedGridBoxes.includes(selectedBoxKey)) {
+			randomRow = Math.floor(Math.random() * rows);
+			randomColumn = Math.floor(Math.random() * columns);
+			selectedBoxKey = gridData[randomRow][randomColumn].key;
 		}
+
 		// Make the new random gridBox transparent
-		gridData[randomRow][randomColumn].style = styles.updatedStyle; // Update the style here
-		console.log(gridData[randomRow][randomColumn].key);
-		return gridData[randomRow][randomColumn].key;
+		gridData[randomRow][randomColumn].style = styles.updatedStyle;
+		console.log(selectedBoxKey);
+
+		// if (new Set(removedGridBoxes).size !== removedGridBoxes.length) {
+		// 	console.log("WELP");
+		// }
+
+		return selectedBoxKey;
 	};
 
 	return (
