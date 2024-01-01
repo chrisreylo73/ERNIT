@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
 
 const Module = ({ totalDays, title, icon, image, link, color }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
-	const columns = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
+	const columns = rows;
 	const [gridBoxesLeft, setGridBoxesLeft] = useState(rows * columns);
 	const [daysLeft, setDaysLeft] = useState(totalDays);
 	const [removedGridBoxes, setRemovedGridBoxes] = useState([]);
@@ -19,57 +18,46 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 
 	const gridRows = gridData.map((row, rowIndex) => (
 		<View key={rowIndex} style={styles.row}>
-			{row.map(({ key, style }, colIndex) => (
+			{row.map(({ key, style }) => (
 				<View key={key} style={[styles.gridBox, style]} />
 			))}
 		</View>
 	));
-
-	// useEffect(() => {
-	// 	console.log("daysleft: ", daysLeft);
-	// 	console.log("gridBoxesLeft: ", gridBoxesLeft);
-	// 	console.log("removedGridBoxes", removedGridBoxes);
-	// }, [daysLeft, gridData, gridBoxesLeft, removedGridBoxes]);
-
-	// useEffect(() => {
-	// 	console.log("removedGridBoxes", removedGridBoxes);
-	// 	// console.log("gridData 2", gridData);
-	// 	// for (i = 0; i < gridData.length; i++) {
-	// 	// 	for (j = 0; j < gridData[i].length; j++) {
-	// 	// 		console.log(gridData[i][j]);
-	// 	// 	}
-	// 	// }
-	// }, [removedGridBoxes]);
-
-	const handlePress = () => {
-		if (daysLeft !== 0) {
-			if (dayCompleted == "INCOMPLETE") {
-				if (gridBoxesLeft - daysLeft == 0) {
-					// Adds the new indecies to the removedGridBoxes array
-					setRemovedGridBoxes([...removedGridBoxes, handleGridBoxRemoval()]);
-					// Decrement the number of gridBoxesLeft counter
-					setGridBoxesLeft(gridBoxesLeft - 1);
-				} else {
-					// Adds the new indecies to the removedGridBoxes array
-					setRemovedGridBoxes([...removedGridBoxes, handleGridBoxRemoval(), handleGridBoxRemoval()]);
-					// Decrement the number of gridBoxesLeft counter
-					setGridBoxesLeft(gridBoxesLeft - 2);
-				}
-				// handleGridBoxRemoval();
-				setDaysLeft(daysLeft - 1);
-				setDayCompleted("COMPLETED");
-			} else if (dayCompleted == "COMPLETED") {
-				setDaysLeft(daysLeft + 1);
-				setDayCompleted("INCOMPLETE");
+	const handlePress = async () => {
+		if (dayCompleted === "INCOMPLETE" && daysLeft !== 0) {
+			if (gridBoxesLeft - daysLeft === 0) {
+				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
+				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 1);
+				setDaysLeft((daysLeft) => daysLeft - 1);
+			} else {
+				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval(), handleGridBoxRemoval()]);
+				// setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
+				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 2);
+				setDaysLeft((daysLeft) => daysLeft - 1);
 			}
+			setDayCompleted("COMPLETED");
+		} else if (dayCompleted === "COMPLETED" && daysLeft !== 0) {
+			setDayCompleted("INCOMPLETE");
+			// setDaysLeft((daysLeft) => daysLeft + 1);
 		} else {
+			// Just in case of error remove any box that still has not been removed, remove all boxes
+			console.log(removedGridBoxes.length);
+			console.log(removedGridBoxes);
+			// const hasDuplicates = new Set(removedGridBoxes).size !== removedGridBoxes.length;
+			if (new Set(removedGridBoxes).size !== removedGridBoxes.length) {
+				for (let x = 0; x < gridData.length; x++) {
+					for (let y = 0; y < gridData[x].length; y++) {
+						// make each box transparent
+						gridData[x][y].style = styles.updatedStyle;
+					}
+				}
+			}
 			setDayCompleted("EARNED");
 		}
 	};
 
 	const handleGridBoxRemoval = () => {
 		// Get random indices between 0 and number of rows/columns
-		// for (let i = 0; i < counter; i++) {
 		let randomRow = Math.floor(Math.random() * (rows - 0)) + 0;
 		let randomColumn = Math.floor(Math.random() * (columns - 0)) + 0;
 		// Make sure we are getting indices that haven't been removed
@@ -79,7 +67,7 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 		}
 		// Make the new random gridBox transparent
 		gridData[randomRow][randomColumn].style = styles.updatedStyle; // Update the style here
-		// console.log(gridData[randomRow][randomColumn].key);
+		console.log(gridData[randomRow][randomColumn].key);
 		return gridData[randomRow][randomColumn].key;
 	};
 
@@ -113,23 +101,22 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 370,
 		padding: 7,
-		backgroundColor: "#0b0b0b",
-		// shadowColor: "black",
-		// borderColor: "black",
-		borderColor: "#363637",
+
 		borderWidth: 1,
 		borderRadius: 15,
 		marginBottom: 15,
+		backgroundColor: "#0b0b0b",
+		borderColor: "#363637",
 	},
 	imageContainer: {
 		height: 160,
 		width: 160,
 		overflow: "hidden",
 		borderWidth: 1,
-		backgroundColor: "white",
 		borderRadius: 10,
-		borderColor: "#4a4a4e",
 		elevation: 100,
+		borderColor: "#4a4a4e",
+		backgroundColor: "white",
 	},
 	image: {
 		height: 160,
@@ -142,7 +129,6 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 	},
 	title: {
-		// marginTop: 100,
 		fontSize: 20,
 		fontWeight: "bold",
 		marginBottom: 5,
@@ -181,11 +167,8 @@ const styles = StyleSheet.create({
 	header: {
 		flexDirection: "column",
 		justifyContent: "space-between",
-		// width: "250px",
 		alignItems: "center",
 		margin: 5,
-		// padding: 4,
-		// marginBottom: 10,
 	},
 	row: {
 		flex: 1,
@@ -195,7 +178,6 @@ const styles = StyleSheet.create({
 		aspectRatio: 1,
 		borderWidth: 1,
 		borderColor: "#4a4a4e",
-		// borderRadius: 5,
 		backgroundColor: "rgba(0, 0, 0, .8)", // Semi-transparent green background
 	},
 	updatedStyle: {
