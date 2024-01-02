@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
-const Module = ({ totalDays, title, icon, image, link, color }) => {
+const Module = ({ totalDays, title, image, link, accentColor }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
 	const columns = rows;
 	const [gridBoxesLeft, setGridBoxesLeft] = useState(rows * columns);
@@ -19,7 +19,7 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 	const gridRows = gridData.map((row, rowIndex) => (
 		<View key={rowIndex} style={styles.row}>
 			{row.map(({ key, style }) => (
-				<View key={key} style={[styles.gridBox, style]} />
+				<View key={key} style={[styles.gridBox, { backgroundColor: accentColor || "rgba(0, 0, 0, .8)" }, style]} />
 			))}
 		</View>
 	));
@@ -27,8 +27,6 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 	const handlePress = () => {
 		if (daysLeft === 1 && dayCompleted === "INCOMPLETE") {
 			// Just in case of error remove any box that still has not been removed, remove all boxes
-			console.log(removedGridBoxes.length);
-			console.log(removedGridBoxes);
 			if (new Set(removedGridBoxes).size !== removedGridBoxes.length) {
 				for (let x = 0; x < gridData.length; x++) {
 					for (let y = 0; y < gridData[x].length; y++) {
@@ -83,7 +81,7 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.header}>
+			<TouchableOpacity style={styles.header}>
 				<Text style={styles.title}>{title.toUpperCase()}</Text>
 				<View style={styles.dayCounter}>
 					<Text style={[styles.text, { color: "white" }]}>{daysLeft}</Text>
@@ -92,11 +90,11 @@ const Module = ({ totalDays, title, icon, image, link, color }) => {
 				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "black" : "white" }]} onPress={handlePress}>
 					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "white" : "black" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
-			</View>
-			<View style={styles.imageContainer}>
+			</TouchableOpacity>
+			<TouchableOpacity style={styles.imageContainer}>
 				<Image source={image} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
-			</View>
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -188,7 +186,7 @@ const styles = StyleSheet.create({
 		aspectRatio: 1,
 		borderWidth: 1,
 		borderColor: "#4a4a4e",
-		backgroundColor: "rgba(0, 0, 0, .8)", // Semi-transparent green background
+		//backgroundColor: "rgba(0, 0, 0, .8)", // Semi-transparent green background
 	},
 	updatedStyle: {
 		// Style to be applied when the button is pressed

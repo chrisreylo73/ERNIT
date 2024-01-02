@@ -10,9 +10,9 @@ export default function App() {
 		<View style={styles.container}>
 			<Text style={styles.title}>ERN-IT</Text>
 			<View style={styles.separator} />
-			<Module totalDays={3} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} />
-			<Module totalDays={3} title={"Basketball"} image={require("./assets/J12.png")} />
-			<Module totalDays={3} title={"Leet Code"} image={require("./assets/nirvana.jpg")} />
+			<Module totalDays={103} title={"Guitar"} image={require("./assets/Forte-Port-Nylon-HO.png")} accentColor={"rgba(144, 238, 144, 0.7)"} />
+			<Module totalDays={123} title={"Basketball"} image={require("./assets/J12.png")} />
+			<Module totalDays={103} title={"Leet Code"} image={require("./assets/nirvana.jpg")} accentColor={"rgba(173, 216, 230, 0.7)"} />
 			<TouchableOpacity style={styles.button}>
 				<AntDesign name="plus" size={24} color="white" />
 			</TouchableOpacity>
@@ -20,11 +20,12 @@ export default function App() {
 		</View>
 	);
 }
-
+//rgba(144, 238, 144, 0.7)
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#111111",
+		// backgroundColor: "#111111",
+		backgroundColor: "black",
 		alignItems: "center",
 		justifyContent: "center",
 	},
