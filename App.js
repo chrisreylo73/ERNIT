@@ -10,6 +10,9 @@ export default function App() {
 		{ id: "1", totalDays: 36, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://example.com/module1" },
 		{ id: "2", totalDays: 25, title: "Basketball", image: require("./assets/J12.png"), link: "https://example.com/module1" },
 		{ id: "3", totalDays: 16, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
+		{ id: "4", totalDays: 9, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://example.com/module1" },
+		{ id: "5", totalDays: 4, title: "Basketball", image: require("./assets/J12.png"), link: "https://example.com/module1" },
+		{ id: "6", totalDays: 1, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
 	];
 
 	return (
@@ -18,15 +21,15 @@ export default function App() {
 				<Text style={styles.title}>ERN-IT</Text>
 				<View style={styles.separator} />
 			</View>
-
 			<View style={styles.list}>
-				{/* Move FlatList inside the View */}
 				<FlatList data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule totalDays={item.totalDays} title={item.title} image={item.image} link={item.link} accentColor={item.accentColor} />} />
 			</View>
-
-			<TouchableOpacity style={styles.button}>
-				<AntDesign name="plus" size={24} color="white" />
-			</TouchableOpacity>
+			<View style={styles.footer}>
+				<View style={styles.separator} />
+				<TouchableOpacity style={styles.button}>
+					<AntDesign name="plus" size={24} color="white" />
+				</TouchableOpacity>
+			</View>
 			<StatusBar style="auto" />
 		</View>
 	);
@@ -45,33 +48,47 @@ const styles = StyleSheet.create({
 		width: "100%", // Adjust width as needed
 		justifyContent: "center",
 		alignItems: "center",
+		marginBottom: 60,
+		overflow: "hidden",
 	},
 	header: {
-		marginTop: 50,
-		width: "90%",
-		marginBottom: 10,
+		width: "100%",
+		marginBottom: 8,
+		height: "10%",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	title: {
+		marginTop: 40,
 		textAlign: "center",
 		fontSize: 20,
 		fontWeight: "bold",
 		fontFamily: "Roboto",
 		letterSpacing: 4,
 		color: "white",
+		marginBottom: 15,
 	},
 	separator: {
-		height: 1,
-		backgroundColor: "white",
+		height: 3,
+		backgroundColor: "#1a1a1a",
+		width: "90%",
 	},
-	button: {
+	footer: {
 		position: "absolute",
-		bottom: 20,
+		width: "100%",
 		alignItems: "center",
 		justifyContent: "center",
 		backgroundColor: "black",
-		padding: 10,
-		width: "90%",
+		height: "10%",
+		marginTop: 5,
+		bottom: 0,
+	},
+	button: {
+		alignItems: "center",
+		justifyContent: "center",
+		// backgroundColor: "black",
+		padding: 16,
 		borderRadius: 20,
-		borderWidth: 1,
+		//borderWidth: 1,
 	},
 });

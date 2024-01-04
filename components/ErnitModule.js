@@ -81,16 +81,18 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity style={styles.header}>
-				<Text style={styles.title}>{title.toUpperCase()}</Text>
-				<View style={styles.dayCounter}>
-					<Text style={[styles.text, { color: "white" }]}>{daysLeft}</Text>
-					<Text style={styles.text}>/{totalDays} Days Left</Text>
-				</View>
+			<View style={styles.header}>
+				<TouchableOpacity style={styles.header}>
+					<Text style={styles.title}>{title.toUpperCase()}</Text>
+					<View style={styles.dayCounter}>
+						<Text style={[styles.text, { color: "white" }]}>{daysLeft}</Text>
+						<Text style={styles.text}>/{totalDays} Days Left</Text>
+					</View>
+				</TouchableOpacity>
 				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "black" : "white" }]} onPress={handlePress}>
 					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "white" : "black" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
-			</TouchableOpacity>
+			</View>
 			<TouchableOpacity style={styles.imageContainer}>
 				<Image source={image} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
@@ -107,17 +109,16 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		justifyContent: "space-between",
 		alignItems: "center",
-		width: 370,
-		padding: 7,
-		borderWidth: 1,
+		width: 360,
+		padding: 10,
+		borderWidth: 0,
 		borderRadius: 15,
 		marginBottom: 15,
-		backgroundColor: "#0b0b0b",
+		backgroundColor: "#111111",
 		borderColor: "#363637",
 	},
 	imageContainer: {
-		height: 160,
-		width: 160,
+		aspectRatio: 1,
 		overflow: "hidden",
 		borderWidth: 1,
 		borderRadius: 10,
@@ -126,8 +127,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 	},
 	image: {
-		height: 160,
-		width: 160,
+		height: 140,
+		width: 140,
 		resizeMode: "cover",
 		borderRadius: 10,
 	},
@@ -172,10 +173,11 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	header: {
+		// width: 140,
+		// height: 140,
 		flexDirection: "column",
 		justifyContent: "space-between",
 		alignItems: "center",
-		margin: 5,
 	},
 	row: {
 		flex: 1,
@@ -185,6 +187,7 @@ const styles = StyleSheet.create({
 		aspectRatio: 1,
 		borderWidth: 1,
 		borderColor: "#4a4a4e",
+		margin: -1,
 		//backgroundColor: "rgba(0, 0, 0, .8)", // Semi-transparent green background
 	},
 	updatedStyle: {
