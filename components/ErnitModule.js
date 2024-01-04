@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
-const Module = ({ totalDays, title, image, link, accentColor }) => {
+const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
 	const columns = rows;
 	const [gridBoxesLeft, setGridBoxesLeft] = useState(rows * columns);
@@ -99,7 +99,7 @@ const Module = ({ totalDays, title, image, link, accentColor }) => {
 	);
 };
 
-export default Module;
+export default ErnitModule;
 
 const styles = StyleSheet.create({
 	container: {
@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 370,
 		padding: 7,
-
 		borderWidth: 1,
 		borderRadius: 15,
 		marginBottom: 15,
