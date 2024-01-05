@@ -1,12 +1,17 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, ImageBackground } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } from "react-native";
 import React, { useState } from "react";
 import ErnitModule from "./components/ErnitModule";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function App() {
+	const [isModalVisible, setModalVisible] = useState(false);
+	const [menuInput, setMenuInput] = useState("");
 	const data = [
+		//accentColor: "rgba(170, 216, 92, 0.6)}"
+		//accentColor: "rgba(255, 0, 0, 0.6)"
+		//accentColor: "rgba(128, 0, 128, 0.6)"
+		//accentColor: "rgba(150, 216, 250, 0.6)"
 		{ id: "1", totalDays: 36, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://example.com/module1" },
 		{ id: "2", totalDays: 25, title: "Basketball", image: require("./assets/J12.png"), link: "https://example.com/module1" },
 		{ id: "3", totalDays: 16, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
@@ -26,10 +31,20 @@ export default function App() {
 			</View>
 			<View style={styles.footer}>
 				<View style={styles.separator} />
-				<TouchableOpacity style={styles.button}>
+				<TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
 					<AntDesign name="plus" size={24} color="white" />
 				</TouchableOpacity>
 			</View>
+			<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
+				<View style={styles.modalContainer}>
+					{/* Your menu content goes here */}
+					<Text style={styles.modalText}>Your Menu Content</Text>
+					<TextInput placeholder="Enter something" value={menuInput} onChangeText={(text) => setMenuInput(text)} style={styles.modalInput} />
+					<TouchableOpacity onPress={() => setModalVisible(false)}>
+						<Text style={styles.closeButtonText}>Close</Text>
+					</TouchableOpacity>
+				</View>
+			</Modal>
 			<StatusBar style="auto" />
 		</View>
 	);
@@ -39,7 +54,9 @@ export default function App() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "black",
+		//backgroundColor: "black",
+		backgroundColor: "#111111",
+		//backgroundColor: "#2d3460",
 		alignItems: "center",
 		justifyContent: "center", // Center content vertically
 	},
@@ -69,8 +86,9 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	separator: {
-		height: 3,
-		backgroundColor: "#1a1a1a",
+		height: 1,
+		backgroundColor: "#363637",
+		//backgroundColor: "#49528f",
 		width: "90%",
 	},
 	footer: {
@@ -78,8 +96,10 @@ const styles = StyleSheet.create({
 		width: "100%",
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "black",
-		height: "10%",
+		//backgroundColor: "black",
+		backgroundColor: "#111111",
+		//backgroundColor: "#2d3460",
+		height: "9%",
 		marginTop: 5,
 		bottom: 0,
 	},
@@ -90,5 +110,27 @@ const styles = StyleSheet.create({
 		padding: 16,
 		borderRadius: 20,
 		//borderWidth: 1,
+	},
+	modalContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+	},
+	modalText: {
+		color: "white",
+		fontSize: 18,
+		marginBottom: 20,
+	},
+	modalInput: {
+		backgroundColor: "white",
+		width: 200,
+		padding: 10,
+		marginBottom: 20,
+		borderRadius: 8,
+	},
+	closeButtonText: {
+		color: "white",
+		fontSize: 16,
 	},
 });

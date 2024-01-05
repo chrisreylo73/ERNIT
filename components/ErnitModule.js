@@ -111,11 +111,14 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 360,
 		padding: 10,
-		borderWidth: 0,
+		borderWidth: 1,
 		borderRadius: 15,
 		marginBottom: 15,
+		//backgroundColor: "black",
 		backgroundColor: "#111111",
+		//backgroundColor: "#2d3460",
 		borderColor: "#363637",
+		//borderColor: "#49528f",
 	},
 	imageContainer: {
 		aspectRatio: 1,
@@ -149,6 +152,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		marginBottom: 40,
 		color: "#4a4a4e",
+		//color: "#49528f",
 		fontFamily: "Roboto",
 		letterSpacing: 2,
 	},
@@ -187,8 +191,7 @@ const styles = StyleSheet.create({
 		aspectRatio: 1,
 		borderWidth: 1,
 		borderColor: "#4a4a4e",
-		margin: -1,
-		//backgroundColor: "rgba(0, 0, 0, .8)", // Semi-transparent green background
+		margin: -0.5,
 	},
 	updatedStyle: {
 		// Style to be applied when the button is pressed
