@@ -12,7 +12,7 @@ export default function App() {
 		//accentColor: "rgba(255, 0, 0, 0.6)"
 		//accentColor: "rgba(128, 0, 128, 0.6)"
 		//accentColor: "rgba(150, 216, 250, 0.6)"
-		{ id: "1", totalDays: 36, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://example.com/module1" },
+		{ id: "1", totalDays: 36, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://www.michaelkellyguitars.com/en/" },
 		{ id: "2", totalDays: 25, title: "Basketball", image: require("./assets/J12.png"), link: "https://example.com/module1" },
 		{ id: "3", totalDays: 16, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
 		{ id: "4", totalDays: 9, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://example.com/module1" },
@@ -37,7 +37,6 @@ export default function App() {
 			</View>
 			<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
 				<View style={styles.modalContainer}>
-					{/* Your menu content goes here */}
 					<Text style={styles.modalText}>Your Menu Content</Text>
 					<TextInput placeholder="Enter something" value={menuInput} onChangeText={(text) => setMenuInput(text)} style={styles.modalInput} />
 					<TouchableOpacity onPress={() => setModalVisible(false)}>

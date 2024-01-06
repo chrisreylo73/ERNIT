@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { Linking, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
@@ -19,7 +19,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	const gridRows = gridData.map((row, rowIndex) => (
 		<View key={rowIndex} style={styles.row}>
 			{row.map(({ key, style }) => (
-				<View key={key} style={[styles.gridBox, { backgroundColor: accentColor || "rgba(0, 0, 0, .8)" }, style]} />
+				<View key={key} style={[styles.gridBox, { backgroundColor: accentColor || "rgba(0, 0, 0, .85)" }, style]} />
 			))}
 		</View>
 	));
@@ -55,6 +55,12 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 		}
 	};
 
+	handleLink = () => {
+		if (daysLeft === 0) {
+			Linking.openURL(link).catch((err) => console.error("An error occurred while opening the link:", err));
+		}
+	};
+
 	const handleGridBoxRemoval = () => {
 		// Get random indices between 0 and number of rows/columns
 		let randomRow = Math.floor(Math.random() * rows);
@@ -81,7 +87,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.header}>
+			<View style={styles.info}>
 				<TouchableOpacity style={styles.header}>
 					<Text style={styles.title}>{title.toUpperCase()}</Text>
 					<View style={styles.dayCounter}>
@@ -93,7 +99,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "white" : "black" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
 			</View>
-			<TouchableOpacity style={styles.imageContainer}>
+			<TouchableOpacity style={styles.imageContainer} onPress={handleLink}>
 				<Image source={image} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</TouchableOpacity>
@@ -158,11 +164,12 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		marginTop: 10,
-		backgroundColor: "white",
-		padding: 10,
+		// backgroundColor: "white",
+		padding: 6,
+
 		borderRadius: 5,
 		width: 170,
-		height: 40,
+		height: 35,
 		elevation: 20,
 		borderWidth: 1,
 		borderColor: "#363637",
@@ -177,9 +184,11 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	header: {
-		// width: 140,
-		// height: 140,
-		flexDirection: "column",
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+	info: {
+		marginLeft: 8,
 		justifyContent: "space-between",
 		alignItems: "center",
 	},
