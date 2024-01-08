@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } from "react-native";
 import React, { useState } from "react";
 import ErnitModule from "./components/ErnitModule";
+import ImagePickerComponent from "./components/ImagePickerComponent";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function App() {
@@ -12,12 +13,11 @@ export default function App() {
 		//accentColor: "rgba(255, 0, 0, 0.6)"
 		//accentColor: "rgba(128, 0, 128, 0.6)"
 		//accentColor: "rgba(150, 216, 250, 0.6)"
-		{ id: "1", totalDays: 36, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://www.michaelkellyguitars.com/en/" },
-		{ id: "2", totalDays: 25, title: "Basketball", image: require("./assets/J12.png"), link: "https://example.com/module1" },
+		{ id: "1", totalDays: 36, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://www.michaelkellyguitars.com/en/products/view/forte-port-nylon" },
+		{ id: "2", totalDays: 25, title: "Basketball", image: require("./assets/1.jpg"), link: "https://www.flightclub.com/air-jordan-12-retro-cool-grey-white-team-orange-011569" },
 		{ id: "3", totalDays: 16, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
-		{ id: "4", totalDays: 9, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://example.com/module1" },
-		{ id: "5", totalDays: 4, title: "Basketball", image: require("./assets/J12.png"), link: "https://example.com/module1" },
-		{ id: "6", totalDays: 1, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
+		{ id: "4", totalDays: 9, title: "Make an APP", image: require("./assets/2.jpg"), link: "https://www.amazon.com/dp/B06XNX6QJ4/?coliid=I34XSE63MAY7VL&colid=299X7CKVGCA6D&psc=0&ref_=list_c_wl_lv_ov_lig_dp_it" },
+		{ id: "5", totalDays: 4, title: "Workout", image: require("./assets/3.jpg"), link: "https://powerblock.com/product/commercial-pro-175-lb-adjustable-dumbbell/" },
 	];
 
 	return (
@@ -27,7 +27,7 @@ export default function App() {
 				<View style={styles.separator} />
 			</View>
 			<View style={styles.list}>
-				<FlatList data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule totalDays={item.totalDays} title={item.title} image={item.image} link={item.link} accentColor={item.accentColor} />} />
+				<FlatList showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule totalDays={item.totalDays} title={item.title} image={item.image} link={item.link} accentColor={item.accentColor} />} />
 			</View>
 			<View style={styles.footer}>
 				<View style={styles.separator} />
@@ -35,12 +35,30 @@ export default function App() {
 					<AntDesign name="plus" size={24} color="white" />
 				</TouchableOpacity>
 			</View>
-			<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
+			<Modal animationType="fade" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
 				<View style={styles.modalContainer}>
-					<Text style={styles.modalText}>Your Menu Content</Text>
-					<TextInput placeholder="Enter something" value={menuInput} onChangeText={(text) => setMenuInput(text)} style={styles.modalInput} />
-					<TouchableOpacity onPress={() => setModalVisible(false)}>
-						<Text style={styles.closeButtonText}>Close</Text>
+					{/* <Text style={styles.modalText}>Create New </Text> */}
+					<View style={styles.modalContainerRow}>
+						<Text style={styles.modalText}>Action Title:</Text>
+						<TextInput placeholder="Enter a title" value={menuInput} onChangeText={(text) => setMenuInput(text)} style={styles.modalInput} />
+					</View>
+					<View style={styles.modalContainerRow}>
+						<Text style={styles.modalText}>Total Days:</Text>
+						<TextInput placeholder="Enter a number" keyboardType="numeric" style={styles.modalInput} />
+					</View>
+					<View style={styles.modalContainerRow}>
+						<Text style={styles.modalText}>Reward Link:</Text>
+						<TextInput placeholder="http://" value={menuInput} onChangeText={(text) => setMenuInput(text)} style={styles.modalInput} />
+					</View>
+					<View style={styles.modalContainerRow}>
+						<Text style={styles.modalText}>Reward Image:</Text>
+						<ImagePickerComponent />
+					</View>
+					<TouchableOpacity style={styles.createButton}>
+						<AntDesign name="plus" size={24} color="white" />
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+						<AntDesign name="close" size={24} color="white" />
 					</TouchableOpacity>
 				</View>
 			</Modal>
@@ -114,22 +132,41 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "rgba(0, 0, 0, 0.5)",
+		backgroundColor: "rgba(0, 0, 0, .92)",
+		width: "100%",
+		hight: "100%",
+	},
+	modalContainerRow: {
+		padding: 10,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		width: "90%",
 	},
 	modalText: {
 		color: "white",
 		fontSize: 18,
-		marginBottom: 20,
+		marginRight: 10,
+		// marginBottom: 20,
 	},
 	modalInput: {
-		backgroundColor: "white",
+		backgroundColor: "#363637",
 		width: 200,
-		padding: 10,
-		marginBottom: 20,
-		borderRadius: 8,
+		borderRadius: 5,
 	},
-	closeButtonText: {
-		color: "white",
-		fontSize: 16,
+	createButton: {
+		alignItems: "center",
+		justifyContent: "center",
+		// backgroundColor: "black",
+		padding: 16,
+		borderRadius: 20,
+	},
+	// createButtonText: {
+	// 	color: "white",
+	// 	fontSize: 16,
+	// },
+	closeButton: {
+		position: "absolute",
+		bottom: 25,
 	},
 });
