@@ -21,13 +21,14 @@ const ImagePickerComponent = () => {
 			const result = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
 				allowsEditing: true,
-				aspect: [4, 3],
+				aspect: [3, 3],
 				quality: 1,
 			});
 
 			if (!result.canceled) {
 				// Set the selected image URI
 				setSelectedImage(result.uri);
+				console.log(result.uri);
 			}
 		} catch (error) {
 			console.error("Error picking an image", error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Linking, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-
+import { BlurView } from "expo-blur";
 const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
 	const columns = rows;
@@ -86,7 +86,12 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	};
 
 	return (
-		<View style={styles.container}>
+		<BlurView
+			intensity={100} // Adjust the intensity to control the blur effect
+			tint="dark"
+			style={styles.container}
+			// overlayColor="black"
+		>
 			<View style={styles.info}>
 				<TouchableOpacity style={styles.header}>
 					<Text style={styles.title}>{title.toUpperCase()}</Text>
@@ -96,14 +101,14 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 					</View>
 				</TouchableOpacity>
 				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "black" : "white" }]} onPress={handlePress}>
-					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "white" : "black" }]}>{dayCompleted}</Text>
+					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "#f5f5f5" : "black" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity style={styles.imageContainer} onPress={handleLink}>
 				<Image source={image} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</TouchableOpacity>
-		</View>
+		</BlurView>
 	);
 };
 
@@ -117,13 +122,15 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 360,
 		padding: 10,
+		marginTop: 3,
 		borderWidth: 1,
 		borderRadius: 15,
-		marginBottom: 15,
+		marginBottom: 3,
+		// marginBottom: 8,
 		//backgroundColor: "black",
-		backgroundColor: "#111111",
+		// backgroundColor: "#111111",
 		//backgroundColor: "#2d3460",
-		borderColor: "#363637",
+		borderColor: "#080808",
 		//borderColor: "#49528f",
 	},
 	imageContainer: {
