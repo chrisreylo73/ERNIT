@@ -86,12 +86,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	};
 
 	return (
-		<BlurView
-			intensity={100} // Adjust the intensity to control the blur effect
-			tint="dark"
-			style={styles.container}
-			// overlayColor="black"
-		>
+		<BlurView intensity={100} tint="dark" style={styles.container}>
 			<View style={styles.info}>
 				<TouchableOpacity style={styles.header}>
 					<Text style={styles.title}>{title.toUpperCase()}</Text>
@@ -100,8 +95,8 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 						<Text style={styles.text}>/{totalDays} Days Left</Text>
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "black" : "white" }]} onPress={handlePress}>
-					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "#f5f5f5" : "black" }]}>{dayCompleted}</Text>
+				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "#111111" : "white" }]} onPress={handlePress}>
+					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "#f5f5f5" : "#111111" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity style={styles.imageContainer} onPress={handleLink}>
@@ -122,10 +117,10 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 360,
 		padding: 10,
-		marginTop: 3,
+		// marginTop: 10,
 		borderWidth: 1,
 		borderRadius: 15,
-		marginBottom: 3,
+		marginVertical: 5,
 		// marginBottom: 8,
 		//backgroundColor: "black",
 		// backgroundColor: "#111111",
@@ -177,8 +172,8 @@ const styles = StyleSheet.create({
 		width: 170,
 		height: 35,
 		// elevation: 20,
-		borderWidth: 1,
-		borderColor: "#363637",
+		borderWidth: 0,
+		// borderColor: "#363637",
 	},
 	buttonText: {
 		textAlign: "center",

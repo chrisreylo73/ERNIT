@@ -62,11 +62,14 @@ export default function App() {
 		<View style={styles.container}>
 			<StatusBar style="auto" />
 			<Header />
+			<View style={styles.padding}></View>
 			<View style={styles.list}>
-				<FlatList showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule totalDays={item.totalDays} title={item.title} image={item.image} link={item.link} accentColor={item.accentColor} />} />
+				<FlatList contentContainerStyle={{ paddingBottom: 60, paddingTop: 85 }} showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule totalDays={item.totalDays} title={item.title} image={item.image} link={item.link} accentColor={item.accentColor} />} />
 			</View>
+			<View style={styles.padding}></View>
 			<Footer setModalVisible={setModalVisible} />
 			<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
+				<StatusBar barStyle="light-content" backgroundColor="black" />
 				<View style={styles.modalContainer}>
 					{/* <Text style={styles.modalText}>Create New </Text> */}
 					<View style={styles.modalContainerRow}>
@@ -107,18 +110,17 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center", // Center content vertically
 	},
+	padding: { paddingVertical: 100 },
 	list: {
-		// paddingTop: 100,
-		flex: 1,
+		// flex: 1,
 		width: "100%", // Adjust width as needed
 		justifyContent: "center",
 		alignItems: "center",
-		// paddingHorizontal: 2,
 		// marginVertical: 60,
-		marginTop: 80,
-		marginBottom: 62,
+		// Adjust height as needed
+		marginTop: 0,
+		marginBottom: 0,
 		// overflow: "hidden",
-		// paddingTop: 20,
 	},
 	button: {
 		alignItems: "center",

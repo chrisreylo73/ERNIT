@@ -4,11 +4,7 @@ import { BlurView } from "expo-blur";
 
 const Header = () => {
 	return (
-		<BlurView
-			style={styles.header}
-			intensity={80} // Adjust the intensity to control the blur effect
-			tint="dark" // Change to "light" for a lighter blur effect
-		>
+		<BlurView style={styles.header} intensity={100} tint="dark">
 			<View>
 				<Text style={styles.title}>ERN-IT</Text>
 			</View>
@@ -23,12 +19,13 @@ const styles = StyleSheet.create({
 	header: {
 		position: "absolute",
 		width: "100%",
+		borderRadius: 100,
 		alignItems: "center",
 		//justifyContent: "space-between",
 		// marginBottom: 200,
-		backgroundColor: "transparent",
+		// backgroundColor: "transparent",
 		// height: "10%",
-		borderBottomLeftRadius: 50,
+
 		top: 0,
 		// left: 0,
 		// right: 0,
@@ -49,7 +46,7 @@ const styles = StyleSheet.create({
 	},
 	separator: {
 		height: 1,
-		backgroundColor: "#080808",
+		// backgroundColor: "white",
 		//backgroundColor: "#49528f",
 		width: "100%",
 	},
