@@ -95,11 +95,11 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 						<Text style={styles.text}>/{totalDays} Days Left</Text>
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "#111111" : "white" }]} onPress={handlePress}>
+				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "#111111" : dayCompleted === "INCOMPLETE" ? "white" : "#FFD700" }]} onPress={handlePress}>
 					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "#f5f5f5" : "#111111" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
 			</View>
-			<TouchableOpacity style={styles.imageContainer} onPress={handleLink}>
+			<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
 				<Image source={image} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</TouchableOpacity>
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 15,
 		marginVertical: 5,
+		height: 170,
 		// marginBottom: 8,
 		//backgroundColor: "black",
 		// backgroundColor: "#111111",
@@ -147,7 +148,10 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 	},
 	title: {
-		fontSize: 20,
+		overflow: "hidden",
+		// width: 150,
+
+		fontSize: 18,
 		fontWeight: "bold",
 		marginBottom: 5,
 		color: "white",
@@ -157,17 +161,21 @@ const styles = StyleSheet.create({
 	text: {
 		fontSize: 14,
 		fontWeight: "bold",
-		marginBottom: 40,
+		// marginBottom: 40,
 		color: "#4a4a4e",
 		//color: "#49528f",
 		fontFamily: "Roboto",
 		letterSpacing: 2,
 	},
 	button: {
-		marginTop: 10,
+		// position: "absolute",
+		// bottom: -10,
+		// marginTop: 50,
 		// backgroundColor: "white",
+		//flex: 1,
+		// marginBottom: "auto",
 		padding: 6,
-
+		alignSelf: "center",
 		borderRadius: 5,
 		width: 170,
 		height: 35,
@@ -185,13 +193,18 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	header: {
-		justifyContent: "space-between",
-		alignItems: "center",
+		// justifyContent: "space-between",
+		// alignItems: "center",
 	},
 	info: {
-		marginLeft: 8,
+		// position: "relative",
+		width: 180,
+		height: "100%",
+		padding: 4,
+		fex: 1,
 		justifyContent: "space-between",
-		alignItems: "center",
+		// alignItems: "center",
+		// alignItems: "flex-end",
 	},
 	row: {
 		flex: 1,

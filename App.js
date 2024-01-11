@@ -6,7 +6,7 @@ import ImagePickerComponent from "./components/ImagePickerComponent";
 import { AntDesign } from "@expo/vector-icons";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
+import { BlurView } from "expo-blur";
 export default function App() {
 	const [isModalVisible, setModalVisible] = useState(false);
 	const [titleInput, setTitleInput] = useState("");
@@ -18,8 +18,8 @@ export default function App() {
 		//accentColor: "rgba(255, 0, 0, 0.6)"
 		//accentColor: "rgba(128, 0, 128, 0.6)"
 		//accentColor: "rgba(150, 216, 250, 0.6)"
-		{ id: "1", totalDays: 36, title: "Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://www.michaelkellyguitars.com/en/products/view/forte-port-nylon" },
-		{ id: "2", totalDays: 25, title: "Basketball", image: require("./assets/1.jpg"), link: "https://www.flightclub.com/air-jordan-12-retro-cool-grey-white-team-orange-011569" },
+		{ id: "1", totalDays: 36, title: "Practice Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://www.michaelkellyguitars.com/en/products/view/forte-port-nylon" },
+		{ id: "2", totalDays: 25, title: "Play Basketball", image: require("./assets/1.jpg"), link: "https://www.flightclub.com/air-jordan-12-retro-cool-grey-white-team-orange-011569" },
 		{ id: "3", totalDays: 16, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
 		{ id: "4", totalDays: 9, title: "Make an APP", image: require("./assets/2.jpg"), link: "https://www.amazon.com/dp/B06XNX6QJ4/?coliid=I34XSE63MAY7VL&colid=299X7CKVGCA6D&psc=0&ref_=list_c_wl_lv_ov_lig_dp_it" },
 		{ id: "5", totalDays: 4, title: "Workout", image: require("./assets/3.jpg"), link: "https://powerblock.com/product/commercial-pro-175-lb-adjustable-dumbbell/" },
@@ -68,9 +68,9 @@ export default function App() {
 			</View>
 			<View style={styles.padding}></View>
 			<Footer setModalVisible={setModalVisible} />
-			<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
+			<Modal animationType="fade" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
 				<StatusBar barStyle="light-content" backgroundColor="black" />
-				<View style={styles.modalContainer}>
+				<BlurView intensity={100} tint="dark" style={styles.modalContainer}>
 					{/* <Text style={styles.modalText}>Create New </Text> */}
 					<View style={styles.modalContainerRow}>
 						<Text style={styles.modalText}>Action Title:</Text>
@@ -94,7 +94,7 @@ export default function App() {
 					<TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
 						<AntDesign name="close" size={24} color="white" />
 					</TouchableOpacity>
-				</View>
+				</BlurView>
 			</Modal>
 		</View>
 	);
