@@ -91,12 +91,18 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 				<TouchableOpacity style={styles.header}>
 					<Text style={styles.title}>{title.toUpperCase()}</Text>
 					<View style={styles.dayCounter}>
-						<Text style={[styles.text, { color: "white" }]}>{daysLeft}</Text>
-						<Text style={styles.text}>/{totalDays} Days Left</Text>
+						{dayCompleted === "EARNED" ? (
+							<Text style={[styles.text, { color: "#FFD700", fontSize: 16 }]}>{totalDays} Days Completed</Text>
+						) : (
+							<>
+								<Text style={[styles.text, { color: "white" }]}>{daysLeft}</Text>
+								<Text style={styles.text}>/{totalDays} Days Left</Text>
+							</>
+						)}
 					</View>
 				</TouchableOpacity>
 				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "#111111" : dayCompleted === "INCOMPLETE" ? "white" : "#FFD700" }]} onPress={handlePress}>
-					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "#f5f5f5" : "#111111" }]}>{dayCompleted}</Text>
+					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "white" : "#111111" }]}>{dayCompleted}</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
@@ -153,7 +159,7 @@ const styles = StyleSheet.create({
 
 		fontSize: 18,
 		fontWeight: "bold",
-		marginBottom: 5,
+		marginBottom: 8,
 		color: "white",
 		fontFamily: "Roboto",
 		letterSpacing: 2,
