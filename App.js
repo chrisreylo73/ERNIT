@@ -69,7 +69,6 @@ export default function App() {
 			<View style={styles.padding}></View>
 			<Footer setModalVisible={setModalVisible} />
 			<Modal animationType="fade" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
-				<StatusBar barStyle="light-content" backgroundColor="black" />
 				<BlurView intensity={100} tint="dark" style={styles.modalContainer}>
 					{/* <Text style={styles.modalText}>Create New </Text> */}
 					<View style={styles.modalContainerRow}>
