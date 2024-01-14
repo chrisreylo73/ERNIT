@@ -11,7 +11,13 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 	const [totalDays, setTotalDays] = useState("");
 	const [rewardLink, setRewardLink] = useState("");
 	const [rewardImage, setRewardImage] = useState(null);
-
+	const handleCloseButton = () => {
+		setErnitModuleTitle("");
+		setTotalDays("");
+		setRewardLink("");
+		setRewardImage(null);
+		setModalVisible(false);
+	};
 	const handleCreateButtonPress = async () => {
 		console.log("Data:", data);
 		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage) {
@@ -24,7 +30,10 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 
 		const newModule = {
 			id: String(data.length + 1),
+			dateCreated: new Date(),
+			todaysDate: new Date(),
 			totalDays: parseInt(totalDays),
+			daysLeft: parseInt(totalDays),
 			title: ernitModuleTitle,
 			image: rewardImage,
 			link: rewardLink,
@@ -59,7 +68,7 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 		}
 	};
 	return (
-		<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
+		<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={handleCloseButton}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
@@ -80,7 +89,7 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 				<TouchableOpacity style={styles.createButton} onPress={handleCreateButtonPress}>
 					<AntDesign name="plus" size={24} color="white" />
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+				<TouchableOpacity style={styles.closeButton} onPress={handleCloseButton}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
 			</BlurView>
@@ -121,6 +130,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		padding: 16,
+		marginTop: 10,
 		borderRadius: 20,
 	},
 	closeButton: {

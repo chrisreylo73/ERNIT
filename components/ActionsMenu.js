@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 
 const ActionsMenu = ({ isActionsMenuVisible, setActionsMenuVisible, data, setData, item }) => {
@@ -22,6 +23,8 @@ const ActionsMenu = ({ isActionsMenuVisible, setActionsMenuVisible, data, setDat
 		setActionsMenuVisible(false);
 	};
 
+	const handleUpdateButtonPress = async (id) => {};
+
 	const updateAsyncStorage = async (updatedData) => {
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
@@ -35,6 +38,12 @@ const ActionsMenu = ({ isActionsMenuVisible, setActionsMenuVisible, data, setDat
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteButtonPress(item.id)}>
 					<MaterialIcons name="delete-outline" size={24} color="white" />
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.updateButton} onPress={() => handleUpdateButtonPress(item.id)}>
+					<Feather name="edit-3" size={24} color="white" />
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.closeButton} onPress={() => setActionsMenuVisible(false)}>
+					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
 			</BlurView>
 		</Modal>
@@ -71,6 +80,12 @@ const styles = StyleSheet.create({
 		padding: 3,
 	},
 	deleteButton: {
+		alignItems: "center",
+		justifyContent: "center",
+		padding: 16,
+		borderRadius: 20,
+	},
+	updateButton: {
 		alignItems: "center",
 		justifyContent: "center",
 		padding: 16,

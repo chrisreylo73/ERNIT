@@ -34,7 +34,7 @@ const ImagePickerComponent = ({ rewardImage, setRewardImage }) => {
 
 	return (
 		<View>
-			{rewardImage && <Image source={{ uri: rewardImage }} style={{ width: 200, height: 200 }} />}
+			{rewardImage && <Image style={styles.image} source={{ uri: rewardImage }} />}
 			<TouchableOpacity onPress={pickImage} style={styles.button}>
 				<Text style={styles.buttonText}>SELECT IMAGE</Text>
 			</TouchableOpacity>
@@ -45,6 +45,13 @@ const ImagePickerComponent = ({ rewardImage, setRewardImage }) => {
 export default ImagePickerComponent;
 
 const styles = StyleSheet.create({
+	image: {
+		borderRadius: 20,
+		overflow: "hidden",
+		width: 160,
+		height: 160,
+		marginBottom: 10,
+	},
 	button: {
 		color: "white",
 		backgroundColor: "#111111",
