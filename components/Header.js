@@ -21,19 +21,9 @@ const styles = StyleSheet.create({
 		width: "100%",
 		borderRadius: 100,
 		alignItems: "center",
-		//justifyContent: "space-between",
-		// marginBottom: 200,
-		// backgroundColor: "transparent",
-		// height: "10%",
-
 		top: 0,
-		// left: 0,
-		// right: 0,
 		zIndex: 2,
-		elevation: 10,
 	},
-	// blurView: { position: "fixed", width: "100%", height: "100%" },
-
 	title: {
 		marginTop: 40,
 		textAlign: "center",
@@ -47,7 +37,6 @@ const styles = StyleSheet.create({
 	separator: {
 		height: 1,
 		backgroundColor: "black",
-		//backgroundColor: "#49528f",
 		width: "100%",
 	},
 });

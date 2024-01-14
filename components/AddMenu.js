@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";

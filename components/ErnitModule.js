@@ -79,7 +79,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData
 
 		// Make the new random gridBox transparent
 		gridData[randomRow][randomColumn].style = styles.updatedStyle;
-		console.log(selectedBoxKey);
+		// console.log(selectedBoxKey);
 
 		// if (new Set(removedGridBoxes).size !== removedGridBoxes.length) {
 		// 	console.log("WELP");
@@ -112,7 +112,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData
 				<Image source={{ uri: image }} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</TouchableOpacity>
-			<ActionsMenu data={data} setData={setData} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} item={item} />
+			<ActionsMenu title={title} image={image} gridRows={gridRows} data={data} setData={setData} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} item={item} />
 		</BlurView>
 	);
 };
@@ -127,17 +127,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 360,
 		padding: 10,
-		// marginTop: 10,
 		borderWidth: 1,
 		borderRadius: 15,
 		marginVertical: 5,
 		height: 170,
-		// marginBottom: 8,
-		//backgroundColor: "black",
-		// backgroundColor: "#111111",
-		//backgroundColor: "#2d3460",
 		borderColor: "#080808",
-		//borderColor: "#49528f",
 	},
 	imageContainer: {
 		aspectRatio: 1,
@@ -159,7 +153,6 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		overflow: "hidden",
-		// width: 150,
 		fontSize: 18,
 		fontWeight: "bold",
 		marginBottom: 8,
@@ -170,27 +163,17 @@ const styles = StyleSheet.create({
 	text: {
 		fontSize: 14,
 		fontWeight: "bold",
-		// marginBottom: 40,
 		color: "#4a4a4e",
-		//color: "#49528f",
 		fontFamily: "Roboto",
 		letterSpacing: 2,
 	},
 	button: {
-		// position: "absolute",
-		// bottom: -10,
-		// marginTop: 50,
-		// backgroundColor: "white",
-		//flex: 1,
-		// marginBottom: "auto",
 		padding: 6,
 		alignSelf: "center",
 		borderRadius: 5,
 		width: 170,
 		height: 35,
-		// elevation: 20,
 		borderWidth: 0,
-		// borderColor: "#363637",
 	},
 	buttonText: {
 		textAlign: "center",
@@ -201,19 +184,13 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		fontWeight: "bold",
 	},
-	header: {
-		// justifyContent: "space-between",
-		// alignItems: "center",
-	},
+	header: {},
 	info: {
-		// position: "relative",
 		width: 180,
 		height: "100%",
 		padding: 4,
 		fex: 1,
 		justifyContent: "space-between",
-		// alignItems: "center",
-		// alignItems: "flex-end",
 	},
 	row: {
 		flex: 1,
@@ -224,10 +201,10 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "#4a4a4e",
 		margin: -0.5,
+		backgroundColor: "rgba(0, 0, 0, 0.85)",
 	},
 	updatedStyle: {
-		// Style to be applied when the button is pressed
-		backgroundColor: "transparent", // Change this to your desired style
+		backgroundColor: "transparent",
 		borderColor: "transparent",
 	},
 	dayCounter: {
