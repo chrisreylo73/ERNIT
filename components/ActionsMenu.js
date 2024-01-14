@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput, Image, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
-import ImagePickerComponent from "./ImagePickerComponent";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
@@ -39,39 +38,45 @@ const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsM
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
-				<View style={styles.header}>
-					<Text style={styles.title}>{title.toUpperCase()}</Text>
-				</View>
-				{/* <View style={styles.container}> */}
-				<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
-					<Image source={{ uri: image }} style={styles.image} />
-					<View style={styles.overlay}>{gridRows}</View>
-				</TouchableOpacity>
-				<View style={styles.statsContainer}>
-					<Progress.Bar progress={0.3} width={250} color={"white"} />
-					<Progress.Bar progress={0.3} width={250} color={"white"} />
-					<Progress.Bar progress={0.3} width={250} color={"white"} />
-				</View>
-				{/* </View> */}
-				<Calendar
-					style={{
-						// borderWidth: 1,
-						// borderColor: "gray",
-						// height: 350,
-						width: 350,
-						padding: 10,
-						borderRadius: 20,
-					}}
-					theme={{
-						//backgroundColor: "rgba(0, 0, 0, .1)",
-						calendarBackground: "rgba(0, 0, 0, .2)",
-						textSectionTitleColor: "#b6c1cd",
-						selectedDayBackgroundColor: "#00adf5",
-						selectedDayTextColor: "#ffffff",
-						todayTextColor: "#00adf5",
-						dayTextColor: "#2d4150",
-					}}
-				/>
+				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
+					<View style={styles.header}>
+						<Text style={styles.title}>{title.toUpperCase()}</Text>
+					</View>
+
+					<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
+						<Image source={{ uri: image }} style={styles.image} />
+						<View style={styles.overlay}>{gridRows}</View>
+					</TouchableOpacity>
+					<View style={styles.statsContainer}>
+						<View style={styles.circleStats}>
+							<View style={styles.streak}>
+								<Text style={styles.statsText}>CURRENT STREAK</Text>
+								<Text style={[styles.statsText, { color: "white" }]}>6</Text>
+							</View>
+							<View style={styles.streak}>
+								<Text style={styles.statsText}>HIGHEST STREAK</Text>
+								<Text style={[styles.statsText, { color: "white" }]}>12</Text>
+							</View>
+						</View>
+
+						<Text style={styles.statsText}>COMPLETION RATE</Text>
+						<Progress.Bar borderRadius={10} height={20} unfilledColor="#4a4a4e" borderWidth={0} progress={0.3} width={330} color={"white"} />
+						<Text style={styles.statsText}>CONSISTENCY RATE </Text>
+						<Progress.Bar borderRadius={10} height={20} unfilledColor="#4a4a4e" borderWidth={0} progress={0.6} width={330} color={"white"} style={{ marginBottom: 20 }} />
+					</View>
+
+					<Calendar
+						style={styles.calendar}
+						theme={{
+							calendarBackground: "rgba(0, 0, 0, .2)",
+							textSectionTitleColor: "#b6c1cd", // Grayscale
+							selectedDayBackgroundColor: "#808080", // Grayscale
+							selectedDayTextColor: "#ffffff",
+							todayTextColor: "#00adf5", // Grayscale
+							dayTextColor: "#808080", // Grayscale
+						}}
+					/>
+				</ScrollView>
 				<View style={styles.actionButtons}>
 					<TouchableOpacity style={styles.closeButton} onPress={() => setActionsMenuVisible(false)}>
 						<AntDesign name="close" size={24} color="white" />
@@ -91,6 +96,20 @@ const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsM
 export default ActionsMenu;
 
 const styles = StyleSheet.create({
+	calendar: {
+		width: 350,
+		padding: 10,
+		borderRadius: 20,
+		marginTop: 110,
+		marginBottom: 30,
+		marginHorizontal: 17,
+	},
+	scrollContainer: {
+		flexGrow: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		width: "100%",
+	},
 	container: {
 		flexDirection: "row",
 		overflow: "hidden",
@@ -110,23 +129,42 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-between",
 	},
+	circleStats: {
+		alignItems: "center",
+		justifyContent: "space-between",
+		flexDirection: "row",
+		width: 330,
+	},
+	statsText: {
+		fontSize: 14,
+		fontWeight: "bold",
+		color: "#4a4a4e",
+		fontFamily: "Roboto",
+		letterSpacing: 2,
+		marginVertical: 5,
+	},
+	streak: {
+		alignItems: "center",
+		justifyContent: "center",
+	},
 	header: {
 		// position: "absolute",
-		width: "100%",
+		marginTop: 20,
+		width: 260,
 		borderRadius: 100,
 		alignItems: "center",
 		// top: 0,
 		// zIndex: 2,
 	},
 	title: {
-		marginTop: 40,
+		// marginTop: 40,
 		textAlign: "center",
 		fontSize: 20,
 		fontWeight: "bold",
 		fontFamily: "Roboto",
 		letterSpacing: 4,
 		color: "white",
-		marginBottom: 10,
+		marginBottom: 15,
 	},
 	imageContainer: {
 		aspectRatio: 1,
@@ -184,9 +222,9 @@ const styles = StyleSheet.create({
 	},
 	actionButtons: {
 		position: "absolute",
-		top: 10,
-		right: 5,
-		zIndex: 2,
+		top: 5,
+		right: 0,
+		// zIndex: 2,
 	},
 	deleteButton: {
 		alignItems: "center",
