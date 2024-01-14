@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, Button } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-const ImagePickerComponent = () => {
+const ImagePickerComponent = ({ setRewardImage }) => {
 	const [selectedImage, setSelectedImage] = useState(null);
 
 	useEffect(() => {
@@ -27,8 +27,10 @@ const ImagePickerComponent = () => {
 
 			if (!result.canceled) {
 				// Set the selected image URI
-				setSelectedImage(result.uri);
-				console.log(result.uri);
+				const selectedImageUri = result.assets[0].uri;
+				setSelectedImage(selectedImageUri);
+				setRewardImage(selectedImageUri);
+				console.log(selectedImageUri);
 			}
 		} catch (error) {
 			console.error("Error picking an image", error);
@@ -38,9 +40,34 @@ const ImagePickerComponent = () => {
 	return (
 		<View>
 			{selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />}
-			<Button title="SELECT IMAGE" onPress={pickImage} />
+			<TouchableOpacity onPress={pickImage} style={styles.button}>
+				<Text style={styles.buttonText}>SELECT IMAGE</Text>
+			</TouchableOpacity>
 		</View>
 	);
 };
 
 export default ImagePickerComponent;
+
+const styles = StyleSheet.create({
+	button: {
+		color: "white",
+		backgroundColor: "#111111",
+		borderColor: "#4a4a4e",
+		borderWidth: 1,
+		padding: 6,
+		alignSelf: "center",
+		borderRadius: 5,
+		width: 140,
+		height: 35,
+	},
+	buttonText: {
+		textAlign: "center",
+		flex: 1,
+		color: "white",
+		fontSize: 16,
+		justifyContent: "center",
+		alignItems: "center",
+		fontWeight: "bold",
+	},
+});

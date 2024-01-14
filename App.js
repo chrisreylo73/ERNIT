@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } from "react-native";
-import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect } from "react";
 import ErnitModule from "./components/ErnitModule";
 import ImagePickerComponent from "./components/ImagePickerComponent";
 import { AntDesign } from "@expo/vector-icons";
@@ -18,17 +19,22 @@ export default function App() {
 		//accentColor: "rgba(255, 0, 0, 0.6)"
 		//accentColor: "rgba(128, 0, 128, 0.6)"
 		//accentColor: "rgba(150, 216, 250, 0.6)"
-		{ id: "1", totalDays: 36, title: "Practice Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://www.michaelkellyguitars.com/en/products/view/forte-port-nylon" },
-		{ id: "2", totalDays: 25, title: "Play Basketball", image: require("./assets/1.jpg"), link: "https://www.flightclub.com/air-jordan-12-retro-cool-grey-white-team-orange-011569" },
-		{ id: "3", totalDays: 16, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
-		{ id: "4", totalDays: 9, title: "Make an APP", image: require("./assets/2.jpg"), link: "https://www.amazon.com/dp/B06XNX6QJ4/?coliid=I34XSE63MAY7VL&colid=299X7CKVGCA6D&psc=0&ref_=list_c_wl_lv_ov_lig_dp_it" },
-		{ id: "5", totalDays: 4, title: "Workout", image: require("./assets/3.jpg"), link: "https://powerblock.com/product/commercial-pro-175-lb-adjustable-dumbbell/" },
+		// { id: "1", totalDays: 36, title: "Practice Guitar", image: require("./assets/Forte-Port-Nylon-HO.png"), link: "https://www.michaelkellyguitars.com/en/products/view/forte-port-nylon" },
+		// { id: "2", totalDays: 25, title: "Play Basketball", image: require("./assets/1.jpg"), link: "https://www.flightclub.com/air-jordan-12-retro-cool-grey-white-team-orange-011569" },
+		// { id: "3", totalDays: 16, title: "Leet Code", image: require("./assets/nirvana.jpg"), link: "https://example.com/module1" },
+		// { id: "4", totalDays: 9, title: "Make an APP", image: require("./assets/2.jpg"), link: "https://www.amazon.com/dp/B06XNX6QJ4/?coliid=I34XSE63MAY7VL&colid=299X7CKVGCA6D&psc=0&ref_=list_c_wl_lv_ov_lig_dp_it" },
+		// { id: "5", totalDays: 4, title: "Workout", image: require("./assets/3.jpg"), link: "https://powerblock.com/product/commercial-pro-175-lb-adjustable-dumbbell/" },
 	]);
 
-	const handleCreateButtonPress = () => {
+	const handleCreateButtonPress = async () => {
+		console.log("Data:", data);
 		// Validate input fields before adding a new module
-		if (!titleInput || !totalDaysInput || !rewardLinkInput || !rewardImage) {
+		if (!titleInput || !totalDaysInput || !rewardLinkInput) {
 			// Handle validation error (you can display an alert or do something else)
+			console.log("TitleInput: ", titleInput);
+			console.log("TotalDaysInput: ", totalDaysInput);
+			console.log("RewardLinkInput: ", rewardLinkInput);
+			console.log("RewardImage: ", rewardImage);
 			return;
 		}
 
@@ -39,7 +45,6 @@ export default function App() {
 			title: titleInput,
 			image: rewardImage,
 			link: rewardLinkInput,
-			// Add other properties as needed
 		};
 
 		// Update the data state with the new module
@@ -51,12 +56,34 @@ export default function App() {
 		setTotalDaysInput("");
 		setRewardLinkInput("");
 		setRewardImage(null);
+		try {
+			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
+		} catch (error) {
+			console.error("Error saving data:", error);
+		}
+
+		// Close the modal
+		setModalVisible(false);
+		setTitleInput("");
+		setTotalDaysInput("");
+		setRewardLinkInput("");
+		setRewardImage(null);
 	};
 
-	const handlePress = () => {
-		// Your button press logic here
-		console.log("Button pressed!");
+	const loadData = async () => {
+		try {
+			const storedData = await AsyncStorage.getItem("modules");
+			if (storedData) {
+				setData(JSON.parse(storedData));
+			}
+		} catch (error) {
+			console.error("Error loading data:", error);
+		}
 	};
+
+	useEffect(() => {
+		loadData();
+	}, []);
 
 	return (
 		<View style={styles.container}>
@@ -68,8 +95,8 @@ export default function App() {
 			</View>
 			<View style={styles.padding}></View>
 			<Footer setModalVisible={setModalVisible} />
-			<Modal animationType="fade" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
-				<BlurView intensity={100} tint="dark" style={styles.modalContainer}>
+			<Modal useNativeDriver={true} animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
+				<View intensity={100} tint="dark" style={styles.modalContainer}>
 					{/* <Text style={styles.modalText}>Create New </Text> */}
 					<View style={styles.modalContainerRow}>
 						<Text style={styles.modalText}>Action Title:</Text>
@@ -85,7 +112,7 @@ export default function App() {
 					</View>
 					<View style={styles.modalContainerRow}>
 						<Text style={styles.modalText}>Reward Image:</Text>
-						<ImagePickerComponent />
+						<ImagePickerComponent setRewardImage={setRewardLinkInput} />
 					</View>
 					<TouchableOpacity style={styles.createButton} onPress={handleCreateButtonPress}>
 						<AntDesign name="plus" size={24} color="white" />
@@ -93,7 +120,7 @@ export default function App() {
 					<TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
 						<AntDesign name="close" size={24} color="white" />
 					</TouchableOpacity>
-				</BlurView>
+				</View>
 			</Modal>
 		</View>
 	);
@@ -109,7 +136,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center", // Center content vertically
 	},
-	padding: { paddingVertical: 100 },
 	list: {
 		// flex: 1,
 		width: "100%", // Adjust width as needed
@@ -134,7 +160,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "rgba(0, 0, 0, .92)",
+		backgroundColor: "#111111",
 		width: "100%",
 		hight: "100%",
 	},

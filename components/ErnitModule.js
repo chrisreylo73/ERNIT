@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Linking, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { BlurView } from "expo-blur";
+
 const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
 	const columns = rows;
@@ -156,7 +157,6 @@ const styles = StyleSheet.create({
 	title: {
 		overflow: "hidden",
 		// width: 150,
-
 		fontSize: 18,
 		fontWeight: "bold",
 		marginBottom: 8,

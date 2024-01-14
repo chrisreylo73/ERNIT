@@ -7,7 +7,7 @@ const Footer = ({ setModalVisible }) => {
 	return (
 		<BlurView style={styles.footer} intensity={100} tint="dark">
 			<View style={styles.separator} />
-			<Ripple rippleContainerBorderRadius={100} rippleOverflow={true} rippleColor="#fff" style={styles.button} onPress={() => setModalVisible(true)}>
+			<Ripple rippleColor="#fff" rippleopacity={0.87} rippleDuration={2400} style={styles.button} onPress={() => setModalVisible(true)}>
 				<AntDesign name="plus" size={24} color="white" />
 			</Ripple>
 		</BlurView>
