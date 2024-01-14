@@ -107,7 +107,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
-				<Image source={image} style={styles.image} />
+				<Image source={{ uri: image }} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</TouchableOpacity>
 		</BlurView>

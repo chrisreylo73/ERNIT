@@ -2,12 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-const ImagePickerComponent = ({ setRewardImage }) => {
-	const [selectedImage, setSelectedImage] = useState(null);
-
+const ImagePickerComponent = ({ rewardImage, setRewardImage }) => {
 	useEffect(() => {
 		(async () => {
-			// Request permission to access the device's photo gallery
 			const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 			if (status !== "granted") {
 				console.error("Permission to access gallery was denied");
@@ -17,18 +14,16 @@ const ImagePickerComponent = ({ setRewardImage }) => {
 
 	const pickImage = async () => {
 		try {
-			// Open the image picker
 			const result = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
 				allowsEditing: true,
 				aspect: [3, 3],
 				quality: 1,
 			});
+			console.log(result);
 
 			if (!result.canceled) {
-				// Set the selected image URI
 				const selectedImageUri = result.assets[0].uri;
-				setSelectedImage(selectedImageUri);
 				setRewardImage(selectedImageUri);
 				console.log(selectedImageUri);
 			}
@@ -39,7 +34,7 @@ const ImagePickerComponent = ({ setRewardImage }) => {
 
 	return (
 		<View>
-			{selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />}
+			{rewardImage && <Image source={{ uri: rewardImage }} style={{ width: 200, height: 200 }} />}
 			<TouchableOpacity onPress={pickImage} style={styles.button}>
 				<Text style={styles.buttonText}>SELECT IMAGE</Text>
 			</TouchableOpacity>

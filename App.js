@@ -29,7 +29,7 @@ export default function App() {
 	const handleCreateButtonPress = async () => {
 		console.log("Data:", data);
 		// Validate input fields before adding a new module
-		if (!titleInput || !totalDaysInput || !rewardLinkInput) {
+		if (!titleInput || !totalDaysInput || !rewardLinkInput || !rewardImage) {
 			// Handle validation error (you can display an alert or do something else)
 			console.log("TitleInput: ", titleInput);
 			console.log("TotalDaysInput: ", totalDaysInput);
@@ -37,7 +37,6 @@ export default function App() {
 			console.log("RewardImage: ", rewardImage);
 			return;
 		}
-
 		// Add a new module to the data array
 		const newModule = {
 			id: String(data.length + 1),
@@ -46,28 +45,22 @@ export default function App() {
 			image: rewardImage,
 			link: rewardLinkInput,
 		};
-
 		// Update the data state with the new module
 		setData((prevData) => [...prevData, newModule]);
-		// Close the modal
-		setModalVisible(false);
-		// Clear input fields
-		setTitleInput("");
-		setTotalDaysInput("");
-		setRewardLinkInput("");
-		setRewardImage(null);
+
 		try {
+			// Save the new data to AsyncStorage
 			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
+			// Clear input fields and set rewardImage to null after successful save
+			setTitleInput("");
+			setTotalDaysInput("");
+			setRewardLinkInput("");
+			setRewardImage(nusl);
+			// Close the modal
+			setModalVisible(false);
 		} catch (error) {
 			console.error("Error saving data:", error);
 		}
-
-		// Close the modal
-		setModalVisible(false);
-		setTitleInput("");
-		setTotalDaysInput("");
-		setRewardLinkInput("");
-		setRewardImage(null);
 	};
 
 	const loadData = async () => {
@@ -112,7 +105,7 @@ export default function App() {
 					</View>
 					<View style={styles.modalContainerRow}>
 						<Text style={styles.modalText}>Reward Image:</Text>
-						<ImagePickerComponent setRewardImage={setRewardLinkInput} />
+						<ImagePickerComponent setRewardImage={setRewardImage} rewardImage={rewardImage} />
 					</View>
 					<TouchableOpacity style={styles.createButton} onPress={handleCreateButtonPress}>
 						<AntDesign name="plus" size={24} color="white" />
@@ -195,3 +188,10 @@ const styles = StyleSheet.create({
 		bottom: 25,
 	},
 });
+
+// try {
+// 	await AsyncStorage.clear();
+// 	console.log("AsyncStorage cleared successfully");
+// } catch (error) {
+// 	console.error("Error clearing AsyncStorage:", error);
+// }
