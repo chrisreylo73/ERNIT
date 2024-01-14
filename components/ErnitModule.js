@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Linking, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { BlurView } from "expo-blur";
+import ActionsMenu from "./ActionsMenu";
 
-const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
+const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData, item }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
 	const columns = rows;
 	const [gridBoxesLeft, setGridBoxesLeft] = useState(rows * columns);
 	const [daysLeft, setDaysLeft] = useState(totalDays);
 	const [removedGridBoxes, setRemovedGridBoxes] = useState([]);
+	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 	const [dayCompleted, setDayCompleted] = useState("INCOMPLETE");
 	const [gridData, setGridData] = useState(
 		Array.from({ length: rows }, (_, rowIndex) =>
@@ -89,7 +91,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 	return (
 		<BlurView intensity={100} tint="dark" style={styles.container}>
 			<View style={styles.info}>
-				<TouchableOpacity style={styles.header}>
+				<TouchableOpacity style={styles.header} onPress={() => setActionsMenuVisible(true)}>
 					<Text style={styles.title}>{title.toUpperCase()}</Text>
 					<View style={styles.dayCounter}>
 						{dayCompleted === "EARNED" ? (
@@ -110,6 +112,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor }) => {
 				<Image source={{ uri: image }} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</TouchableOpacity>
+			<ActionsMenu isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} item={item} />
 		</BlurView>
 	);
 };

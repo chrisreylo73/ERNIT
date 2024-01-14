@@ -15,7 +15,7 @@ export default function App() {
 			<StatusBar style="auto" />
 			<Header />
 			<View style={styles.list}>
-				<FlatList contentContainerStyle={{ paddingBottom: 60, paddingTop: 85 }} showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule totalDays={item.totalDays} title={item.title} image={item.image} link={item.link} accentColor={item.accentColor} />} />
+				<FlatList contentContainerStyle={{ paddingBottom: 60, paddingTop: 85 }} showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule item={item} totalDays={item.totalDays} title={item.title} image={item.image} link={item.link} accentColor={item.accentColor} />} />
 			</View>
 			<Footer setModalVisible={setModalVisible} />
 			<AddMenu data={data} setData={setData} isModalVisible={isModalVisible} setModalVisible={setModalVisible} />

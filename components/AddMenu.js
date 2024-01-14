@@ -3,18 +3,14 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } 
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
-// import Header from "./components/Header";
-// import Footer from "./components/Footer";
-// import ErnitModule from "./components/ErnitModule";
 import ImagePickerComponent from "./ImagePickerComponent";
-// import AddMenu from "./components/AddMenu";
+import { BlurView } from "expo-blur";
 
 const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 	const [ernitModuleTitle, setErnitModuleTitle] = useState("");
 	const [totalDays, setTotalDays] = useState("");
 	const [rewardLink, setRewardLink] = useState("");
 	const [rewardImage, setRewardImage] = useState(null);
-	// const [data, setData] = useState([]);
 
 	const handleCreateButtonPress = async () => {
 		console.log("Data:", data);
@@ -25,6 +21,7 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 			console.log("RewardImage: ", rewardImage);
 			return;
 		}
+
 		const newModule = {
 			id: String(data.length + 1),
 			totalDays: parseInt(totalDays),
@@ -32,7 +29,9 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 			image: rewardImage,
 			link: rewardLink,
 		};
+
 		setData((prevData) => [...prevData, newModule]);
+
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
 			setErnitModuleTitle("");
@@ -60,8 +59,8 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 		}
 	};
 	return (
-		<Modal animationType="fade" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
-			<View style={styles.modalContainer}>
+		<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={() => setModalVisible(false)}>
+			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
 					<TextInput placeholder="Enter daily action title" value={ernitModuleTitle} onChangeText={(text) => setErnitModuleTitle(text)} style={styles.modalInput} />
@@ -84,7 +83,7 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 				<TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
-			</View>
+			</BlurView>
 		</Modal>
 	);
 };
@@ -126,6 +125,7 @@ const styles = StyleSheet.create({
 	},
 	closeButton: {
 		position: "absolute",
-		bottom: 25,
+		top: 20,
+		right: 20,
 	},
 });

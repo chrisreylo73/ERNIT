@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
 		bottom: 0, // backgroundColor: "#111111",
 		height: "7%",
 		// marginTop: 5,
+		elevation: 10,
 	},
 	separator: {
 		height: 1,
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
 		hight: "100%",
 		padding: 15,
 		borderRadius: 20,
+		//elevation: 10,
 		// marginBottom: 10,
 		//borderWidth: 1,
 	},
