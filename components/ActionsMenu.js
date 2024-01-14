@@ -9,12 +9,31 @@ import { BlurView } from "expo-blur";
 
 const ActionsMenu = ({ isActionsMenuVisible, setActionsMenuVisible, data, setData, item }) => {
 	const handleDeleteButtonPress = async (id) => {
-		// setActionsMenuVisible(false);
+		// Filter out the module with the specified ID
+		const updatedData = data.filter((module) => module.id !== id);
+
+		// Update the data state
+		setData(updatedData);
+
+		// Update AsyncStorage
+		updateAsyncStorage(updatedData);
+
+		// Close the actions menu
+		setActionsMenuVisible(false);
 	};
+
+	const updateAsyncStorage = async (updatedData) => {
+		try {
+			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
+		} catch (error) {
+			console.error("Error updating AsyncStorage:", error);
+		}
+	};
+
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
-				<TouchableOpacity style={styles.deleteButton} onPress={handleDeleteButtonPress(item.id)}>
+				<TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteButtonPress(item.id)}>
 					<MaterialIcons name="delete-outline" size={24} color="white" />
 				</TouchableOpacity>
 			</BlurView>

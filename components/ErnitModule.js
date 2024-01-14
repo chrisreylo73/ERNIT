@@ -112,7 +112,7 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData
 				<Image source={{ uri: image }} style={styles.image} />
 				<View style={styles.overlay}>{gridRows}</View>
 			</TouchableOpacity>
-			<ActionsMenu isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} item={item} />
+			<ActionsMenu data={data} setData={setData} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} item={item} />
 		</BlurView>
 	);
 };
