@@ -38,43 +38,61 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData
 
 	useEffect(() => {
 		console.log("tilesLeft updated:", tilesLeft);
+		const updatedGridData = [...gridData];
 	}, [tilesLeft]);
 
 	useEffect(() => {
 		console.log("dayCompleted updated:", dayCompleted);
 	}, [dayCompleted]);
+	useEffect(() => {
+		console.log("gridData updated:", gridData);
+	}, [gridData]);
 
+	const updateGridData = (a) => {
+		const updatedGridData = [...gridData];
+		updatedGridData[a.split("-")[0]][a.split("-")[1]].style = styles.updatedStyle;
+		setGridData(updatedGridData);
+	};
 	const handlePress = () => {
 		if (dayCompleted !== "EARNED") {
 			let a = handleTileRemoval();
 			let b = handleTileRemoval();
-
-			while (a === b && daysLeft !== 1) {
-				a = handleTileRemoval();
-				b = handleTileRemoval();
+			if (daysLeft !== 1 || totalDays == 2) {
+				while (a === b) {
+					a = handleTileRemoval();
+					b = handleTileRemoval();
+				}
 			}
-
+			const updatedGridData = [...gridData];
 			if (daysLeft === 1 && dayCompleted === "INCOMPLETE") {
 				if (tilesLeft - daysLeft === 0) {
 					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
 					setTilesLeft((tilesLeft) => tilesLeft - 1);
-					// 		setTilesLeft((tilesLeft) => tilesLeft - 1);
+					updateGridData(a);
 				} else {
-					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
-					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, b]);
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a, b]);
+					// setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, b]);
 					setTilesLeft((tilesLeft) => tilesLeft - 2);
+					updateGridData(a);
+					updateGridData(b);
 				}
 				setDaysLeft((daysLeft) => daysLeft - 1);
 				setDayCompleted("EARNED");
+
+				// Make the new random gridBox transparent
+				setGridData(updatedGridData);
 			} else if (dayCompleted === "INCOMPLETE") {
 				if (tilesLeft - daysLeft === 0) {
 					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
 					setTilesLeft((tilesLeft) => tilesLeft - 1);
+					updateGridData(a);
 					// 		setTilesLeft((tilesLeft) => tilesLeft - 1);
 				} else {
-					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
-					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, b]);
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a, b]);
+					// setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, b]);
 					setTilesLeft((tilesLeft) => tilesLeft - 2);
+					updateGridData(a);
+					updateGridData(b);
 				}
 				setDaysLeft((daysLeft) => daysLeft - 1);
 				setDayCompleted("COMPLETED");
