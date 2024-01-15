@@ -6,11 +6,12 @@ import ActionsMenu from "./ActionsMenu";
 const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData, item }) => {
 	const rows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
 	const columns = rows;
-	const [gridBoxesLeft, setGridBoxesLeft] = useState(rows * columns);
+	const [tilesLeft, setTilesLeft] = useState(rows * columns);
 	const [daysLeft, setDaysLeft] = useState(totalDays);
-	const [removedGridBoxes, setRemovedGridBoxes] = useState([]);
+	const [removedTiles, setRemovedTiles] = useState([]);
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 	const [dayCompleted, setDayCompleted] = useState("INCOMPLETE");
+
 	const [gridData, setGridData] = useState(
 		Array.from({ length: rows }, (_, rowIndex) =>
 			Array.from({ length: columns }, (_, colIndex) => ({
@@ -27,65 +28,122 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData
 		</View>
 	));
 
+	useEffect(() => {
+		console.log("removedTiles updated:", removedTiles);
+	}, [removedTiles]);
+
+	useEffect(() => {
+		console.log("daysLeft updated:", daysLeft);
+	}, [daysLeft]);
+
+	useEffect(() => {
+		console.log("tilesLeft updated:", tilesLeft);
+	}, [tilesLeft]);
+
+	useEffect(() => {
+		console.log("dayCompleted updated:", dayCompleted);
+	}, [dayCompleted]);
+
 	const handlePress = () => {
-		if (daysLeft === 1 && dayCompleted === "INCOMPLETE") {
-			// Just in case of error remove any box that still has not been removed, remove all boxes
-			if (new Set(removedGridBoxes).size !== removedGridBoxes.length) {
-				for (let x = 0; x < gridData.length; x++) {
-					for (let y = 0; y < gridData[x].length; y++) {
-						// make each box transparent
-						gridData[x][y].style = styles.updatedStyle;
-					}
+		if (dayCompleted !== "EARNED") {
+			let a = handleTileRemoval();
+			let b = handleTileRemoval();
+
+			while (a === b && daysLeft !== 1) {
+				a = handleTileRemoval();
+				b = handleTileRemoval();
+			}
+
+			if (daysLeft === 1 && dayCompleted === "INCOMPLETE") {
+				if (tilesLeft - daysLeft === 0) {
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
+					setTilesLeft((tilesLeft) => tilesLeft - 1);
+					// 		setTilesLeft((tilesLeft) => tilesLeft - 1);
+				} else {
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, b]);
+					setTilesLeft((tilesLeft) => tilesLeft - 2);
 				}
+				setDaysLeft((daysLeft) => daysLeft - 1);
+				setDayCompleted("EARNED");
+			} else if (dayCompleted === "INCOMPLETE") {
+				if (tilesLeft - daysLeft === 0) {
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
+					setTilesLeft((tilesLeft) => tilesLeft - 1);
+					// 		setTilesLeft((tilesLeft) => tilesLeft - 1);
+				} else {
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
+					setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, b]);
+					setTilesLeft((tilesLeft) => tilesLeft - 2);
+				}
+				setDaysLeft((daysLeft) => daysLeft - 1);
+				setDayCompleted("COMPLETED");
+			} else if (dayCompleted === "COMPLETED") {
+				setDayCompleted("INCOMPLETE");
 			}
-			setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
-			setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 1);
-			setDaysLeft((daysLeft) => daysLeft - 1);
-			setDayCompleted("EARNED");
-		} else if (dayCompleted === "INCOMPLETE" && daysLeft !== 0) {
-			if (gridBoxesLeft - daysLeft === 0) {
-				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval()]);
-				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 1);
-			} else {
-				setRemovedGridBoxes((removedGridBoxes) => [...removedGridBoxes, handleGridBoxRemoval(), handleGridBoxRemoval()]);
-				setGridBoxesLeft((gridBoxesLeft) => gridBoxesLeft - 2);
-			}
-			setDaysLeft((daysLeft) => daysLeft - 1);
-			setDayCompleted("COMPLETED");
-		} else if (dayCompleted === "COMPLETED" && daysLeft !== 0) {
-			setDayCompleted("INCOMPLETE");
-			// setDaysLeft((daysLeft) => daysLeft + 1);
 		}
+		// return;
+		// console.log(a, b);
+
+		// return;
+
+		// if (daysLeft === 1 && dayCompleted === "INCOMPLETE") {
+		// 	// Just in case of error remove any box that still has not been removed, remove all boxes
+		// 	if (new Set(removedTiles).size !== removedTiles.length) {
+		// 		for (let x = 0; x < gridData.length; x++) {
+		// 			for (let y = 0; y < gridData[x].length; y++) {
+		// 				// make each box transparent
+		// 				gridData[x][y].style = styles.updatedStyle;
+		// 			}
+		// 		}
+		// 	}
+		// 	setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
+		// 	setTilesLeft((tilesLeft) => tilesLeft - 1);
+		// 	setDaysLeft((daysLeft) => daysLeft - 1);
+		// 	setDayCompleted("EARNED");
+		// } else if (dayCompleted === "INCOMPLETE") {
+		// 	if (tilesLeft - daysLeft === 0) {
+		// 		setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a]);
+		// 		setTilesLeft((tilesLeft) => tilesLeft - 1);
+		// 	} else {
+		// 		setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, a, b]);
+		// 		// setRemovedTiles((prevRemovedTiles) => [...prevRemovedTiles, handleTileRemoval()]);
+		// 		setTilesLeft((tilesLeft) => tilesLeft - 2);
+		// 	}
+		// 	setDaysLeft((daysLeft) => daysLeft - 1);
+		// 	setDayCompleted("COMPLETED");
+		// } else if (dayCompleted === "COMPLETED") {
+		// 	setDayCompleted("INCOMPLETE");
+		// 	// setDaysLeft((daysLeft) => daysLeft + 1);
+		// }
+	};
+
+	const handleTileRemoval = () => {
+		// Get random indices between 0 and number of rows/columns
+		let randomRow = Math.floor(Math.random() * rows);
+		let randomColumn = Math.floor(Math.random() * columns);
+		// let selectedBoxKey = gridData[randomRow][randomColumn].key;
+
+		// Make sure the selected box hasn't been removed in the current call
+		while (removedTiles.includes(`${randomRow}-${randomColumn}`)) {
+			randomRow = Math.floor(Math.random() * rows);
+			randomColumn = Math.floor(Math.random() * columns);
+			// selectedBoxKey = gridData[randomRow][randomColumn].key;
+		}
+		// const updatedGridData = [...gridData];
+		// updatedGridData[randomRow][randomColumn].style = styles.updatedStyle;
+
+		// // Make the new random gridBox transparent
+		// setGridData(updatedGridData);
+		// console.log(selectedBoxKey);
+
+		return `${randomRow}-${randomColumn}`;
 	};
 
 	handleLink = () => {
 		if (daysLeft === 0) {
 			Linking.openURL(link).catch((err) => console.error("An error occurred while opening the link:", err));
 		}
-	};
-
-	const handleGridBoxRemoval = () => {
-		// Get random indices between 0 and number of rows/columns
-		let randomRow = Math.floor(Math.random() * rows);
-		let randomColumn = Math.floor(Math.random() * columns);
-		let selectedBoxKey = gridData[randomRow][randomColumn].key;
-
-		// Make sure the selected box hasn't been removed in the current call
-		while (removedGridBoxes.includes(selectedBoxKey)) {
-			randomRow = Math.floor(Math.random() * rows);
-			randomColumn = Math.floor(Math.random() * columns);
-			selectedBoxKey = gridData[randomRow][randomColumn].key;
-		}
-
-		// Make the new random gridBox transparent
-		gridData[randomRow][randomColumn].style = styles.updatedStyle;
-		// console.log(selectedBoxKey);
-
-		// if (new Set(removedGridBoxes).size !== removedGridBoxes.length) {
-		// 	console.log("WELP");
-		// }
-
-		return selectedBoxKey;
 	};
 
 	return (

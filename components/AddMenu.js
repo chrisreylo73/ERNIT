@@ -18,7 +18,7 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 		setModalVisible(false);
 	};
 	const handleCreateButtonPress = async () => {
-		console.log("Data:", data);
+		// console.log("Data:", data);
 		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage) {
 			console.log("ernitModuleTitle: ", ernitModuleTitle);
 			console.log("totalDays: ", totalDays);
@@ -29,13 +29,19 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 
 		const newModule = {
 			id: String(data.length + 1),
-			dateCreated: new Date(),
-			todaysDate: new Date(),
 			totalDays: parseInt(totalDays),
 			daysLeft: parseInt(totalDays),
 			title: ernitModuleTitle,
 			image: rewardImage,
 			link: rewardLink,
+			dateCreated: new Date(),
+			todaysDate: new Date(),
+			currentStreak: 0,
+			highestStreak: 0,
+			completionRate: 0,
+			consistencyRate: 1,
+			daysCompleted: [],
+			tilesRemoved: [],
 		};
 
 		setData((prevData) => [...prevData, newModule]);

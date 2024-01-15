@@ -20,12 +20,12 @@ const ImagePickerComponent = ({ rewardImage, setRewardImage }) => {
 				aspect: [3, 3],
 				quality: 1,
 			});
-			console.log(result);
+			//console.log(result);
 
 			if (!result.canceled) {
 				const selectedImageUri = result.assets[0].uri;
 				setRewardImage(selectedImageUri);
-				console.log(selectedImageUri);
+				//console.log(selectedImageUri);
 			}
 		} catch (error) {
 			console.error("Error picking an image", error);
