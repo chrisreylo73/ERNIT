@@ -9,8 +9,10 @@ import { BlurView } from "expo-blur";
 //import { Calendar } from "react-native-calendars";
 import { Calendar } from "react-native-calendars";
 import * as Progress from "react-native-progress";
+import UpdateMenu from "./UpdateMenu";
 
 const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsMenuVisible, data, setData, item }) => {
+	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
 	const handleDeleteButtonPress = async (id) => {
 		// Filter out the module with the specified ID
 		const updatedData = data.filter((module) => module.id !== id);
@@ -25,7 +27,9 @@ const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsM
 		setActionsMenuVisible(false);
 	};
 
-	const handleUpdateButtonPress = async (id) => {};
+	const handleUpdateButtonPress = async () => {
+		setUpdateMenuVisible(true);
+	};
 
 	const updateAsyncStorage = async (updatedData) => {
 		try {
@@ -89,6 +93,7 @@ const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsM
 					</TouchableOpacity>
 				</View>
 			</BlurView>
+			<UpdateMenu data={data} setData={setData} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} id={item.id} />
 		</Modal>
 	);
 };

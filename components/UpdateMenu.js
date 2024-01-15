@@ -4,76 +4,100 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
+const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, id }) => {
 	const [ernitModuleTitle, setErnitModuleTitle] = useState("");
 	const [totalDays, setTotalDays] = useState("");
 	const [rewardLink, setRewardLink] = useState("");
 	const [rewardImage, setRewardImage] = useState(null);
-	const handleCloseButton = () => {
-		setErnitModuleTitle("");
-		setTotalDays("");
-		setRewardLink("");
-		setRewardImage(null);
-		setModalVisible(false);
-	};
-	const handleCreateButtonPress = async () => {
-		// console.log("Data:", data);
-		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage) {
-			console.log("ernitModuleTitle: ", ernitModuleTitle);
-			console.log("totalDays: ", totalDays);
-			console.log("RewardLink: ", rewardLink);
-			console.log("RewardImage: ", rewardImage);
-			return;
-		}
-
-		const newModule = {
-			id: String(data.length + 1),
-			totalDays: parseInt(totalDays),
-			daysLeft: parseInt(totalDays),
-			title: ernitModuleTitle,
-			image: rewardImage,
-			link: rewardLink,
-			dateCreated: new Date(),
-			todaysDate: new Date(),
-			currentStreak: 0,
-			highestStreak: 0,
-			completionRate: 0,
-			consistencyRate: 1,
-			daysCompleted: [],
-			// tilesRemoved: [],
-		};
-
-		setData((prevData) => [...prevData, newModule]);
-
-		try {
-			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
-			setErnitModuleTitle("");
-			setTotalDays("");
-			setRewardLink("");
-			setRewardImage(null);
-			setModalVisible(false);
-		} catch (error) {
-			console.error("Error saving data:", error);
-		}
-	};
+	const [daysLeft, setDaysLeft] = useState("");
 
 	useEffect(() => {
 		loadData();
-	}, []);
+	}, [isUpdateMenuVisible]); // Re-run the effect whenever the 'id' changes
 
 	const loadData = async () => {
 		try {
 			const storedData = await AsyncStorage.getItem("modules");
 			if (storedData) {
-				setData(JSON.parse(storedData));
+				const modules = JSON.parse(storedData);
+				const selectedModule = modules.find((module) => module.id === id);
+
+				if (selectedModule) {
+					// Populate the input fields with the previous data
+					setErnitModuleTitle(selectedModule.title || "");
+					setTotalDays(selectedModule.totalDays ? String(selectedModule.totalDays) : "");
+					setDaysLeft(selectedModule.daysLeft ? String(selectedModule.daysLeft) : "");
+					setRewardLink(selectedModule.link || "");
+					setRewardImage(selectedModule.image || null);
+				}
 			}
 		} catch (error) {
 			console.error("Error loading data:", error);
 		}
 	};
+
+	const handleCloseButton = () => {
+		setErnitModuleTitle("");
+		setTotalDays("");
+		setDaysLeft("");
+		setRewardLink("");
+		setRewardImage(null);
+		setUpdateMenuVisible(false);
+	};
+
+	// const handleDaysLeftUpdate = () => {
+
+	// }
+
+	const handleUpdateButtonPress = async () => {
+		// const selectedModule = data.find((module) => module.id === id);
+		// if (selectedModule) {
+		// }
+		// console.log("Data:", data);
+		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage || !daysLeft) {
+			console.log("ernitModuleTitle: ", ernitModuleTitle);
+			console.log("totalDays: ", totalDays);
+			console.log("RewardLink: ", rewardLink);
+			console.log("RewardImage: ", rewardImage);
+			console.log("daysLeft: ", daysLeft);
+			return;
+		}
+
+		const updatedData = data.map((module) => {
+			if (module.id === id) {
+				return {
+					...module,
+					totalDays: parseInt(totalDays),
+					title: ernitModuleTitle,
+					image: rewardImage,
+					link: rewardLink,
+					daysLeft: parseInt(daysLeft),
+					// Update other properties as needed
+				};
+			} else {
+				return module;
+			}
+		});
+
+		setData(updatedData);
+
+		try {
+			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
+			setErnitModuleTitle("");
+			setTotalDays("");
+			setRewardLink("");
+			setRewardImage(null);
+			setUpdateMenuVisible(false);
+			setDaysLeft("");
+		} catch (error) {
+			console.error("Error saving data:", error);
+		}
+	};
+
 	return (
-		<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={handleCloseButton}>
+		<Modal animationType="slide" transparent={true} visible={isUpdateMenuVisible} onRequestClose={handleCloseButton}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
@@ -84,6 +108,10 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 					<TextInput placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays} onChangeText={(text) => setTotalDays(text)} />
 				</View>
 				<View style={styles.modalContainerRow}>
+					<Text style={styles.modalText}>Total Days:</Text>
+					<TextInput placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft} onChangeText={(text) => setDaysLeft(text)} />
+				</View>
+				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Reward Link:</Text>
 					<TextInput placeholder="http://" value={rewardLink} onChangeText={(text) => setRewardLink(text)} style={styles.modalInput} />
 				</View>
@@ -91,8 +119,8 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 					<Text style={styles.modalText}>Reward Image:</Text>
 					<ImagePickerComponent setRewardImage={setRewardImage} rewardImage={rewardImage} />
 				</View>
-				<TouchableOpacity style={styles.createButton} onPress={handleCreateButtonPress}>
-					<AntDesign name="plus" size={24} color="white" />
+				<TouchableOpacity style={styles.updateButton} onPress={handleUpdateButtonPress}>
+					<MaterialCommunityIcons name="circle-edit-outline" size={34} color="white" />
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.closeButton} onPress={handleCloseButton}>
 					<AntDesign name="close" size={24} color="white" />
@@ -102,7 +130,7 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 	);
 };
 
-export default AddMenu;
+export default UpdateMenu;
 
 const styles = StyleSheet.create({
 	modalContainer: {
@@ -131,7 +159,23 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		padding: 3,
 	},
-	createButton: {
+	// createButton: {
+	// 	alignItems: "center",
+	// 	justifyContent: "center",
+	// 	padding: 16,
+	// 	marginTop: 10,
+	// 	borderRadius: 20,
+	// },
+	buttonText: {
+		textAlign: "center",
+		flex: 1,
+		color: "white",
+		fontSize: 16,
+		justifyContent: "center",
+		alignItems: "center",
+		fontWeight: "bold",
+	},
+	updateButton: {
 		alignItems: "center",
 		justifyContent: "center",
 		padding: 16,

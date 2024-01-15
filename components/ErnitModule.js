@@ -8,12 +8,12 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData
 	const columns = rows;
 	const [tilesLeft, setTilesLeft] = useState(rows * columns);
 	const [daysLeft, setDaysLeft] = useState(totalDays);
-	const [removedTiles, setRemovedTiles] = useState([]);
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 	const [dayCompleted, setDayCompleted] = useState("INCOMPLETE");
 	const [currentDate, setCurrentDate] = useState(new Date().getDate());
 	const [randomTileKey, setRandomTileKey] = useState([]);
 	const [addBack, setAddBack] = useState(0);
+
 	const [gridData, setGridData] = useState(
 		Array.from({ length: rows }, (_, rowIndex) =>
 			Array.from({ length: columns }, (_, colIndex) => ({
@@ -32,14 +32,14 @@ const ErnitModule = ({ totalDays, title, image, link, accentColor, data, setData
 	));
 
 	useEffect(() => {
-		console.log("removedTiles updated:", removedTiles);
-		console.log("daysLeft updated:", totalDays - removedTiles.length);
+		console.log("daysLeft updated:", daysLeft);
 		console.log("tilesLeft updated:", tilesLeft);
 		console.log("dayCompleted updated:", dayCompleted);
 		console.log("gridData updated:", gridData);
-	}, [removedTiles, tilesLeft, dayCompleted, gridData, totalDays]);
+	}, [tilesLeft, dayCompleted, gridData, totalDays, daysLeft]);
 
 	useEffect(() => {
+		setAddBack(0);
 		let a = getRandomTileIndex();
 		let b = getRandomTileIndex();
 		if (daysLeft !== 1 || totalDays == 2) {
