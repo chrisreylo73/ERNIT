@@ -5,14 +5,10 @@ import ActionsMenu from "./ActionsMenu";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ErnitModule = ({ item, data, setData }) => {
-	// const rows = Number.isInteger(Math.sqrt(item.totalDays)) ? Math.sqrt(item.totalDays) : Math.floor(Math.sqrt(item.totalDays)) + 1;
-	// const columns = rows;
-	// const [numRows, setNumRows] = useState(Number.isInteger(Math.sqrt(item.totalDays)) ? Math.sqrt(item.totalDays) : Math.floor(Math.sqrt(item.totalDays)) + 1);
-	// const [numColumns, setNumColumns] = useState(Number.isInteger(Math.sqrt(item.totalDays)) ? Math.sqrt(item.totalDays) : Math.floor(Math.sqrt(item.totalDays)) + 1);
 	const [tilesLeft, setTilesLeft] = useState("");
 	const [daysLeft, setDaysLeft] = useState("");
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
-	const [dayCompleted, setDayCompleted] = useState("INCOMPLETE");
+	const [dayCompleted, setDayCompleted] = useState("");
 	const [currentDate, setCurrentDate] = useState(new Date().getDate());
 	const [randomTileKeys, setRandomTileKeys] = useState([]);
 	const [addBack, setAddBack] = useState(0);
@@ -22,9 +18,11 @@ const ErnitModule = ({ item, data, setData }) => {
 		loadData();
 	}, []);
 
+	useEffect(() => {
+		saveData();
+	}, [dayCompleted]);
+
 	const loadData = async () => {
-		// console.log("LOAD");
-		// console.log(item);
 		try {
 			const storedData = await AsyncStorage.getItem("modules");
 			if (storedData) {
@@ -73,13 +71,11 @@ const ErnitModule = ({ item, data, setData }) => {
 					randomTileKeys: randomTileKeys,
 					addBack: parseInt(addBack),
 					gridData: gridData,
-					// Update other properties as needed
 				};
 			}
 			return module;
 		});
 		console.log("\n\n\nUPDATED: ", updatedData);
-
 		setData(updatedData);
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify(data));
@@ -133,7 +129,6 @@ const ErnitModule = ({ item, data, setData }) => {
 			setDayCompleted("INCOMPLETE");
 		}
 		console.log(data);
-		saveData();
 	};
 
 	const updateGridData = (index) => {

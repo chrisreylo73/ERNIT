@@ -11,7 +11,6 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	const [totalDays, setTotalDays] = useState("");
 	const [rewardLink, setRewardLink] = useState("");
 	const [rewardImage, setRewardImage] = useState(null);
-	const [randomTileKeys, setRandomTileKeys] = useState([]);
 	const [gridData, setGridData] = useState([]);
 
 	const handleCloseButton = () => {
@@ -21,7 +20,6 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		setNumRows(0);
 		setGridData([]);
 		setRewardImage(null);
-		setRandomTileKeys([]);
 		setAddMenuVisible(false);
 	};
 
@@ -72,7 +70,6 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			console.log("RewardImage: ", rewardImage);
 			return;
 		}
-		// const keys = updateTileKeys();
 
 		const newModule = {
 			id: String(data.length + 1),
