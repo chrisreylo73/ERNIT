@@ -11,19 +11,16 @@ import { Calendar } from "react-native-calendars";
 import * as Progress from "react-native-progress";
 import UpdateMenu from "./UpdateMenu";
 
-const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsMenuVisible, data, setData, item }) => {
+const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
-	const handleDeleteButtonPress = async (id) => {
-		// Filter out the module with the specified ID
-		const updatedData = data.filter((module) => module.id !== id);
-
-		// Update the data state
+	const handleDeleteButtonPress = async () => {
+		const updatedData = data.filter((module) => module.id !== item.id);
 		setData(updatedData);
-
-		// Update AsyncStorage
-		updateAsyncStorage(updatedData);
-
-		// Close the actions menu
+		try {
+			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
+		} catch (error) {
+			console.error("Error updating AsyncStorage:", error);
+		}
 		setActionsMenuVisible(false);
 	};
 
@@ -31,25 +28,25 @@ const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsM
 		setUpdateMenuVisible(true);
 	};
 
-	const updateAsyncStorage = async (updatedData) => {
-		try {
-			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
-		} catch (error) {
-			console.error("Error updating AsyncStorage:", error);
-		}
-	};
-
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
 					<View style={styles.header}>
-						<Text style={styles.title}>{title.toUpperCase()}</Text>
+						<Text style={styles.title}>{item.title.toUpperCase()}</Text>
 					</View>
 
 					<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
-						<Image source={{ uri: image }} style={styles.image} />
-						<View style={styles.overlay}>{gridRows}</View>
+						<Image source={{ uri: item.image }} style={styles.image} />
+						<View style={styles.overlay}>
+							{item.gridData.map((row, rowIndex) => (
+								<View key={rowIndex} style={styles.row}>
+									{row.map(({ key, visible }) => (
+										<View key={key} style={[styles.gridBox, { opacity: visible ? 1 : 0 }]} />
+									))}
+								</View>
+							))}
+						</View>
 					</TouchableOpacity>
 					<View style={styles.statsContainer}>
 						<View style={styles.circleStats}>
@@ -85,15 +82,15 @@ const ActionsMenu = ({ title, image, gridRows, isActionsMenuVisible, setActionsM
 					<TouchableOpacity style={styles.closeButton} onPress={() => setActionsMenuVisible(false)}>
 						<AntDesign name="close" size={24} color="white" />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.updateButton} onPress={() => handleUpdateButtonPress(item.id)}>
+					<TouchableOpacity style={styles.updateButton} onPress={() => handleUpdateButtonPress()}>
 						<Feather name="edit-3" size={24} color="white" />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteButtonPress(item.id)}>
+					<TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteButtonPress()}>
 						<MaterialIcons name="delete-outline" size={24} color="white" />
 					</TouchableOpacity>
 				</View>
 			</BlurView>
-			<UpdateMenu data={data} setData={setData} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} id={item.id} />
+			<UpdateMenu data={data} setData={setData} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} item={item} />
 		</Modal>
 	);
 };

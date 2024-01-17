@@ -5,18 +5,51 @@ import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
 
-const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
+const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
+	const [numRows, setNumRows] = useState("");
 	const [ernitModuleTitle, setErnitModuleTitle] = useState("");
 	const [totalDays, setTotalDays] = useState("");
 	const [rewardLink, setRewardLink] = useState("");
 	const [rewardImage, setRewardImage] = useState(null);
+	const [randomTileKeys, setRandomTileKeys] = useState([]);
+	const [gridData, setGridData] = useState([]);
+
 	const handleCloseButton = () => {
 		setErnitModuleTitle("");
 		setTotalDays("");
 		setRewardLink("");
+		setNumRows("");
+		setGridData([]);
 		setRewardImage(null);
-		setModalVisible(false);
+		setRandomTileKeys([]);
+		setAddMenuVisible(false);
 	};
+
+	useEffect(() => {
+		setNumRows(Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1);
+	}, [totalDays]);
+
+	useEffect(() => {
+		setGridData(
+			Array.from({ length: numRows }, (_, rowIndex) =>
+				Array.from({ length: numRows }, (_, colIndex) => ({
+					key: `${rowIndex}-${colIndex}`,
+					visible: true,
+				}))
+			)
+		);
+	}, [numRows]);
+
+	const getRandomTileIndex = () => {
+		let randomRow = Math.floor(Math.random() * numRows);
+		let randomColumn = Math.floor(Math.random() * numRows);
+		while (gridData[randomRow][randomColumn].visible === false) {
+			randomRow = Math.floor(Math.random() * numRows);
+			randomColumn = Math.floor(Math.random() * numRows);
+		}
+		return `${randomRow}-${randomColumn}`;
+	};
+
 	const handleCreateButtonPress = async () => {
 		// console.log("Data:", data);
 		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage) {
@@ -27,22 +60,42 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 			return;
 		}
 
+		let a = getRandomTileIndex();
+		let b = getRandomTileIndex();
+		// if (totalDays !== 1 || totalDays == 2) {
+		while (a === b) {
+			a = getRandomTileIndex();
+			b = getRandomTileIndex();
+		}
+		// }
+		setRandomTileKeys([a, b]);
+
+		// const numRows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
+
+		// console.log("GridData", gridData);
 		const newModule = {
 			id: String(data.length + 1),
+			title: String(ernitModuleTitle),
 			totalDays: parseInt(totalDays),
-			daysLeft: parseInt(totalDays),
-			title: ernitModuleTitle,
-			image: rewardImage,
 			link: rewardLink,
-			dateCreated: new Date(),
-			todaysDate: new Date(),
-			currentStreak: 0,
-			highestStreak: 0,
-			completionRate: 0,
-			consistencyRate: 1,
-			daysCompleted: [],
-			// tilesRemoved: [],
+			image: rewardImage,
+			rows: numRows,
+			columns: numRows,
+			tilesLeft: numRows * numRows,
+			daysLeft: parseInt(totalDays),
+			dayCompleted: "INCOMPLETE",
+			currentDate: new Date().getDate(),
+			randomTileKeys: randomTileKeys,
+			addBack: 0,
+			gridData: gridData,
+			// daysCompleted: [],
+			// dateCreated: new Date(),
+			// currentStreak: 0,
+			// highestStreak: 0,
+			// completionRate: 0,
+			// consistencyRate: 0,
 		};
+		console.log("NEW MODULE: ", newModule);
 
 		setData((prevData) => [...prevData, newModule]);
 
@@ -52,7 +105,7 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 			setTotalDays("");
 			setRewardLink("");
 			setRewardImage(null);
-			setModalVisible(false);
+			setAddMenuVisible(false);
 		} catch (error) {
 			console.error("Error saving data:", error);
 		}
@@ -72,8 +125,9 @@ const AddMenu = ({ setModalVisible, isModalVisible, data, setData }) => {
 			console.error("Error loading data:", error);
 		}
 	};
+
 	return (
-		<Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={handleCloseButton}>
+		<Modal animationType="slide" transparent={true} visible={isAddMenuVisible} onRequestClose={handleCloseButton}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>

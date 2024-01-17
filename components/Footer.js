@@ -3,11 +3,11 @@ import React from "react";
 import Ripple from "react-native-material-ripple";
 import { AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-const Footer = ({ setModalVisible }) => {
+const Footer = ({ setAddMenuVisible }) => {
 	return (
 		<BlurView style={styles.footer} intensity={100} tint="dark">
 			<View style={styles.separator} />
-			<Ripple rippleColor="#fff" rippleopacity={0.87} rippleDuration={2400} style={styles.button} onPress={() => setModalVisible(true)}>
+			<Ripple rippleColor="#fff" rippleopacity={0.87} rippleDuration={2400} style={styles.button} onPress={() => setAddMenuVisible(true)}>
 				<AntDesign name="plus" size={24} color="white" />
 			</Ripple>
 		</BlurView>

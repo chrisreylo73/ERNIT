@@ -6,7 +6,7 @@ import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, id }) => {
+const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, item }) => {
 	const [ernitModuleTitle, setErnitModuleTitle] = useState("");
 	const [totalDays, setTotalDays] = useState("");
 	const [rewardLink, setRewardLink] = useState("");
@@ -15,14 +15,14 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 
 	useEffect(() => {
 		loadData();
-	}, [isUpdateMenuVisible]); // Re-run the effect whenever the 'id' changes
+	}, [isUpdateMenuVisible]);
 
 	const loadData = async () => {
 		try {
 			const storedData = await AsyncStorage.getItem("modules");
 			if (storedData) {
 				const modules = JSON.parse(storedData);
-				const selectedModule = modules.find((module) => module.id === id);
+				const selectedModule = modules.find((module) => module.id === item.id);
 
 				if (selectedModule) {
 					// Populate the input fields with the previous data
@@ -52,10 +52,6 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 	// }
 
 	const handleUpdateButtonPress = async () => {
-		// const selectedModule = data.find((module) => module.id === id);
-		// if (selectedModule) {
-		// }
-		// console.log("Data:", data);
 		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage || !daysLeft) {
 			console.log("ernitModuleTitle: ", ernitModuleTitle);
 			console.log("totalDays: ", totalDays);
@@ -66,7 +62,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 		}
 
 		const updatedData = data.map((module) => {
-			if (module.id === id) {
+			if (module.id === item.id) {
 				return {
 					...module,
 					totalDays: parseInt(totalDays),
@@ -108,7 +104,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 					<TextInput placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays} onChangeText={(text) => setTotalDays(text)} />
 				</View>
 				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Total Days:</Text>
+					<Text style={styles.modalText}> Days Left:</Text>
 					<TextInput placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft} onChangeText={(text) => setDaysLeft(text)} />
 				</View>
 				<View style={styles.modalContainerRow}>
