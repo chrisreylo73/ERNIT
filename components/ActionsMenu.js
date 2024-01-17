@@ -6,7 +6,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-//import { Calendar } from "react-native-calendars";
 import { Calendar } from "react-native-calendars";
 import * as Progress from "react-native-progress";
 import UpdateMenu from "./UpdateMenu";

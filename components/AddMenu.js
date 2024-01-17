@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
+// import { v4 as uuidv4 } from "uuid";
 
 const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	const [numRows, setNumRows] = useState("");
@@ -72,7 +73,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		}
 
 		const newModule = {
-			id: String(data.length + 1),
+			id: String(Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0)),
 			title: String(ernitModuleTitle),
 			totalDays: parseInt(totalDays),
 			link: rewardLink,
