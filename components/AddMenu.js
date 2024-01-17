@@ -18,7 +18,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		setErnitModuleTitle("");
 		setTotalDays("");
 		setRewardLink("");
-		setNumRows("");
+		setNumRows(0);
 		setGridData([]);
 		setRewardImage(null);
 		setRandomTileKeys([]);
@@ -40,18 +40,31 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		);
 	}, [numRows]);
 
-	const getRandomTileIndex = () => {
-		let randomRow = Math.floor(Math.random() * numRows);
-		let randomColumn = Math.floor(Math.random() * numRows);
+	const getRandomTileIndex = (rows) => {
+		let randomRow = Math.floor(Math.random() * rows);
+		let randomColumn = Math.floor(Math.random() * rows);
 		while (gridData[randomRow][randomColumn].visible === false) {
-			randomRow = Math.floor(Math.random() * numRows);
-			randomColumn = Math.floor(Math.random() * numRows);
+			randomRow = Math.floor(Math.random() * rows);
+			randomColumn = Math.floor(Math.random() * rows);
 		}
 		return `${randomRow}-${randomColumn}`;
 	};
 
+	const updateTileKeys = () => {
+		let a = getRandomTileIndex(numRows);
+		let b = getRandomTileIndex(numRows);
+		if (totalDays == 1) {
+			return [a];
+		} else {
+			while (a === b) {
+				a = getRandomTileIndex(numRows);
+				b = getRandomTileIndex(numRows);
+			}
+			return [a, b];
+		}
+	};
+
 	const handleCreateButtonPress = async () => {
-		// console.log("Data:", data);
 		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage) {
 			console.log("ernitModuleTitle: ", ernitModuleTitle);
 			console.log("totalDays: ", totalDays);
@@ -59,20 +72,8 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			console.log("RewardImage: ", rewardImage);
 			return;
 		}
+		// const keys = updateTileKeys();
 
-		let a = getRandomTileIndex();
-		let b = getRandomTileIndex();
-		// if (totalDays !== 1 || totalDays == 2) {
-		while (a === b) {
-			a = getRandomTileIndex();
-			b = getRandomTileIndex();
-		}
-		// }
-		setRandomTileKeys([a, b]);
-
-		// const numRows = Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1;
-
-		// console.log("GridData", gridData);
 		const newModule = {
 			id: String(data.length + 1),
 			title: String(ernitModuleTitle),
@@ -85,7 +86,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			daysLeft: parseInt(totalDays),
 			dayCompleted: "INCOMPLETE",
 			currentDate: new Date().getDate(),
-			randomTileKeys: randomTileKeys,
+			randomTileKeys: updateTileKeys(),
 			addBack: 0,
 			gridData: gridData,
 			// daysCompleted: [],
