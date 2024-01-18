@@ -5,10 +5,26 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ErnitModule from "./components/ErnitModule";
 import AddMenu from "./components/AddMenu";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
 	const [isAddMenuVisible, setAddMenuVisible] = useState(false);
 	const [data, setData] = useState([]);
+
+	useEffect(() => {
+		loadData();
+	}, []);
+
+	const loadData = async () => {
+		try {
+			const storedModules = await AsyncStorage.getItem("modules");
+			if (storedModules) {
+				setData(JSON.parse(storedModules));
+			}
+		} catch (error) {
+			console.error("Error loading tasks:", error);
+		}
+	};
 
 	return (
 		<View style={styles.container}>

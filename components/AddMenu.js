@@ -8,14 +8,14 @@ import { BlurView } from "expo-blur";
 
 const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	const [numRows, setNumRows] = useState("");
-	const [ernitModuleTitle, setErnitModuleTitle] = useState("");
+	const [title, setTitle] = useState("");
 	const [totalDays, setTotalDays] = useState("");
 	const [rewardLink, setRewardLink] = useState("");
 	const [rewardImage, setRewardImage] = useState(null);
 	const [gridData, setGridData] = useState([]);
 
 	const handleCloseButton = () => {
-		setErnitModuleTitle("");
+		setTitle("");
 		setTotalDays("");
 		setRewardLink("");
 		setNumRows(0);
@@ -64,8 +64,8 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	};
 
 	const handleCreateButtonPress = async () => {
-		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage) {
-			console.log("ernitModuleTitle: ", ernitModuleTitle);
+		if (!title || !totalDays || !rewardLink || !rewardImage) {
+			console.log("title: ", title);
 			console.log("totalDays: ", totalDays);
 			console.log("RewardLink: ", rewardLink);
 			console.log("RewardImage: ", rewardImage);
@@ -74,16 +74,16 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 
 		const newModule = {
 			id: String(Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0)),
-			title: String(ernitModuleTitle),
-			totalDays: parseInt(totalDays),
-			link: rewardLink,
-			image: rewardImage,
+			title: title,
+			totalDays: totalDays,
+			rewardLink: rewardLink,
+			rewardImage: rewardImage,
 			rows: numRows,
 			columns: numRows,
 			tilesLeft: numRows * numRows,
-			daysLeft: parseInt(totalDays),
+			daysLeft: totalDays,
 			dayCompleted: "INCOMPLETE",
-			currentDate: new Date().getDate(),
+			currentDate: String(new Date().getDate()),
 			randomTileKeys: updateTileKeys(),
 			addBack: 0,
 			gridData: gridData,
@@ -100,7 +100,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
-			setErnitModuleTitle("");
+			setTitle("");
 			setTotalDays("");
 			setRewardLink("");
 			setRewardImage(null);
@@ -110,27 +110,12 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		}
 	};
 
-	useEffect(() => {
-		loadData();
-	}, []);
-
-	const loadData = async () => {
-		try {
-			const storedData = await AsyncStorage.getItem("modules");
-			if (storedData) {
-				setData(JSON.parse(storedData));
-			}
-		} catch (error) {
-			console.error("Error loading data:", error);
-		}
-	};
-
 	return (
 		<Modal animationType="slide" transparent={true} visible={isAddMenuVisible} onRequestClose={handleCloseButton}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
-					<TextInput placeholder="Enter daily action title" value={ernitModuleTitle} onChangeText={(text) => setErnitModuleTitle(text)} style={styles.modalInput} />
+					<TextInput placeholder="Enter daily action title" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Total Days:</Text>

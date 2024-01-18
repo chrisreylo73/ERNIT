@@ -12,6 +12,7 @@ import UpdateMenu from "./UpdateMenu";
 
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
+
 	const handleDeleteButtonPress = async () => {
 		const updatedData = data.filter((module) => module.id !== item.id);
 		setData(updatedData);
@@ -23,10 +24,6 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 		setActionsMenuVisible(false);
 	};
 
-	const handleUpdateButtonPress = async () => {
-		setUpdateMenuVisible(true);
-	};
-
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
@@ -36,7 +33,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 					</View>
 
 					<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
-						<Image source={{ uri: item.image }} style={styles.image} />
+						<Image source={{ uri: item.rewardImage }} style={styles.image} />
 						<View style={styles.overlay}>
 							{item.gridData.map((row, rowIndex) => (
 								<View key={rowIndex} style={styles.row}>
@@ -81,7 +78,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 					<TouchableOpacity style={styles.closeButton} onPress={() => setActionsMenuVisible(false)}>
 						<AntDesign name="close" size={24} color="white" />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.updateButton} onPress={() => handleUpdateButtonPress()}>
+					<TouchableOpacity style={styles.updateButton} onPress={() => setUpdateMenuVisible(true)}>
 						<Feather name="edit-3" size={24} color="white" />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteButtonPress()}>
@@ -114,15 +111,11 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
 		overflow: "hidden",
-		// justifyContent: "space-between",
 		alignItems: "center",
-		// width: 360,
 		padding: 10,
 		borderWidth: 1,
 		borderRadius: 15,
 		marginVertical: 5,
-		// height: 170,
-		// borderColor: "#080808",
 	},
 	statsContainer: {
 		marginVertical: 20,

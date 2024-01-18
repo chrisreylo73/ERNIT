@@ -7,49 +7,11 @@ import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, item }) => {
-	const [ernitModuleTitle, setErnitModuleTitle] = useState("");
-	const [totalDays, setTotalDays] = useState("");
-	const [rewardLink, setRewardLink] = useState("");
-	const [rewardImage, setRewardImage] = useState(null);
-	const [daysLeft, setDaysLeft] = useState("");
-
-	useEffect(() => {
-		loadData();
-	}, [isUpdateMenuVisible]);
-
-	const loadData = async () => {
-		try {
-			const storedData = await AsyncStorage.getItem("modules");
-			if (storedData) {
-				const modules = JSON.parse(storedData);
-				const selectedModule = modules.find((module) => module.id === item.id);
-
-				if (selectedModule) {
-					// Populate the input fields with the previous data
-					setErnitModuleTitle(selectedModule.title || "");
-					setTotalDays(selectedModule.totalDays ? String(selectedModule.totalDays) : "");
-					setDaysLeft(selectedModule.daysLeft ? String(selectedModule.daysLeft) : "");
-					setRewardLink(selectedModule.link || "");
-					setRewardImage(selectedModule.image || null);
-				}
-			}
-		} catch (error) {
-			console.error("Error loading data:", error);
-		}
-	};
-
-	const handleCloseButton = () => {
-		setErnitModuleTitle("");
-		setTotalDays("");
-		setDaysLeft("");
-		setRewardLink("");
-		setRewardImage(null);
-		setUpdateMenuVisible(false);
-	};
-
-	// const handleDaysLeftUpdate = () => {
-
-	// }
+	const [ernitModuleTitle, setErnitModuleTitle] = useState(item.title);
+	const [totalDays, setTotalDays] = useState(item.totalDays);
+	const [rewardLink, setRewardLink] = useState(item.rewardLink);
+	const [rewardImage, setRewardImage] = useState(item.rewardImage);
+	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 
 	const handleUpdateButtonPress = async () => {
 		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage || !daysLeft) {
@@ -65,11 +27,11 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 			if (module.id === item.id) {
 				return {
 					...module,
-					totalDays: parseInt(totalDays),
+					totalDays: totalDays,
 					title: ernitModuleTitle,
 					image: rewardImage,
 					link: rewardLink,
-					daysLeft: parseInt(daysLeft),
+					daysLeft: daysLeft,
 					// Update other properties as needed
 				};
 			} else {
@@ -81,19 +43,14 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
-			setErnitModuleTitle("");
-			setTotalDays("");
-			setRewardLink("");
-			setRewardImage(null);
 			setUpdateMenuVisible(false);
-			setDaysLeft("");
 		} catch (error) {
 			console.error("Error saving data:", error);
 		}
 	};
 
 	return (
-		<Modal animationType="slide" transparent={true} visible={isUpdateMenuVisible} onRequestClose={handleCloseButton}>
+		<Modal animationType="slide" transparent={true} visible={isUpdateMenuVisible} onRequestClose={() => setUpdateMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
@@ -118,7 +75,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 				<TouchableOpacity style={styles.updateButton} onPress={handleUpdateButtonPress}>
 					<MaterialCommunityIcons name="circle-edit-outline" size={34} color="white" />
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.closeButton} onPress={handleCloseButton}>
+				<TouchableOpacity style={styles.closeButton} onPress={() => setUpdateMenuVisible(false)}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
 			</BlurView>
@@ -155,13 +112,6 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		padding: 3,
 	},
-	// createButton: {
-	// 	alignItems: "center",
-	// 	justifyContent: "center",
-	// 	padding: 16,
-	// 	marginTop: 10,
-	// 	borderRadius: 20,
-	// },
 	buttonText: {
 		textAlign: "center",
 		flex: 1,
