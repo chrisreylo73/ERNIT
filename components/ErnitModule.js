@@ -4,7 +4,7 @@ import { BlurView } from "expo-blur";
 import ActionsMenu from "./ActionsMenu";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ErnitModule = ({ item, data, setData }) => {
+const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [tilesLeft, setTilesLeft] = useState(item.tilesLeft);
 	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 	const [dayCompleted, setDayCompleted] = useState(item.dayCompleted);
@@ -16,61 +16,7 @@ const ErnitModule = ({ item, data, setData }) => {
 	const [loading, setLoading] = useState(true);
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 
-	// useEffect(() => {
-	// 	loadData();
-	// }, []);
-
-	// useEffect(() => {
-	// 	saveData();
-	// }, [dayCompleted]);
-
-	// const loadData = async () => {
-	// 	try {
-	// 		const storedData = await AsyncStorage.getItem("modules");
-	// 		if (currentDate !== new Date().getDate()) {
-	// 			setAddBack(0);
-	// 			setDayCompleted("INCOMPLETE");
-	// 			updateTileKeys();
-	// 			setCurrentDate(new Date().getDate());
-
-	// 			if (storedData) {
-	// 				const modules = JSON.parse(storedData);
-	// 				const selectedModule = modules.find((module) => module.id === item.id);
-	// 				if (selectedModule) {
-	// 					// Populate the input fields with the previous data
-	// 					setGridData(selectedModule.gridData);
-	// 					setTilesLeft(selectedModule.tilesLeft);
-	// 					setDaysLeft(selectedModule.daysLeft);
-	// 					// setDayCompleted(selectedModule.dayCompleted);
-	// 					// setCurrentDate(selectedModule.currentDate);
-	// 					// setRandomTileKeys(selectedModule.randomTileKeys);
-	// 					// setAddBack(selectedModule.addBack);
-	// 				}
-	// 			}
-	// 		} else {
-	// 			if (storedData) {
-	// 				const modules = JSON.parse(storedData);
-	// 				const selectedModule = modules.find((module) => module.id === item.id);
-	// 				if (selectedModule) {
-	// 					// Populate the input fields with the previous data
-	// 					setGridData(item.gridData);
-	// 					setTilesLeft(item.tilesLeft);
-	// 					setDaysLeft(item.daysLeft);
-	// 					setDayCompleted(item.dayCompleted);
-	// 					setCurrentDate(item.currentDate);
-	// 					setRandomTileKeys(item.randomTileKeys);
-	// 					setAddBack(item.addBack);
-	// 				}
-	// 			}
-	// 		}
-
-	// 		setLoading(false);
-	// 	} catch (error) {
-	// 		console.error("Error loading data:", error);
-	// 	}
-	// };
-
-	const updateTileKeys = () => {
+	const updateTileKeys = async () => {
 		let a = getRandomTileIndex(item.rows);
 		let b = getRandomTileIndex(item.rows);
 		if (item.totalDays == 1) {
@@ -82,9 +28,10 @@ const ErnitModule = ({ item, data, setData }) => {
 			}
 			setRandomTileKeys([a, b]);
 		}
+		// onUpdate({ ...item, randomTileKeys });
 	};
 
-	const getRandomTileIndex = (rows) => {
+	const getRandomTileIndex = async (rows) => {
 		let randomRow = Math.floor(Math.random() * rows);
 		let randomColumn = Math.floor(Math.random() * rows);
 		while (gridData[randomRow][randomColumn].visible === false) {
@@ -94,34 +41,8 @@ const ErnitModule = ({ item, data, setData }) => {
 		return `${randomRow}-${randomColumn}`;
 	};
 
-	const saveData = async () => {
-		setLoading(false);
-		const updatedData = data.map((module) => {
-			if (module.id === item.id) {
-				console.log(module.id, item.id);
-				return {
-					...module,
-					tilesLeft: parseInt(tilesLeft),
-					daysLeft: parseInt(daysLeft),
-					dayCompleted: String(dayCompleted),
-					currentDate: String(currentDate),
-					randomTileKeys: randomTileKeys,
-					addBack: parseInt(addBack),
-					gridData: gridData,
-				};
-			}
-			return module;
-		});
-		setData(updatedData);
-		try {
-			await AsyncStorage.setItem("modules", JSON.stringify(data));
-		} catch (error) {
-			console.error("Error saving data:", error);
-		}
-	};
-
 	const handlePress = () => {
-		if (daysLeft === 1 && dayCompleted === "INCOMPLETE") {
+		if (dayCompleted === false) {
 			if (tilesLeft - daysLeft === 0) {
 				setTilesLeft((tilesLeft) => tilesLeft - 1);
 				updateGridData(randomTileKeys[0]);
@@ -133,38 +54,19 @@ const ErnitModule = ({ item, data, setData }) => {
 				setAddBack(2);
 			}
 			setDaysLeft((daysLeft) => daysLeft - 1);
-			setDayCompleted("EARNED");
-		} else if (dayCompleted === "INCOMPLETE") {
-			if (tilesLeft - daysLeft === 0) {
-				setTilesLeft((tilesLeft) => tilesLeft - 1);
-				updateGridData(randomTileKeys[0]);
-				setAddBack(1);
-			} else {
-				setTilesLeft((tilesLeft) => tilesLeft - 2);
-				updateGridData(randomTileKeys[0]);
-				updateGridData(randomTileKeys[1]);
-				setAddBack(2);
-			}
-			setDaysLeft((daysLeft) => daysLeft - 1);
-			setDayCompleted("COMPLETED");
-		} else if (dayCompleted === "COMPLETED") {
+		} else if (dayCompleted === true) {
 			if (addBack === 1) {
 				setTilesLeft((tilesLeft) => tilesLeft + 1);
 				updateGridData(randomTileKeys[0]);
-				// addBack = 1;
 			} else if (addBack === 2) {
 				setTilesLeft((tilesLeft) => tilesLeft + 2);
 				updateGridData(randomTileKeys[0]);
 				updateGridData(randomTileKeys[1]);
-				// addBack = 2;
-			} else {
-				console.log("TF");
 			}
 			setDaysLeft((daysLeft) => daysLeft + 1);
-			setDayCompleted("INCOMPLETE");
 		}
-		saveData();
-		console.log(data);
+		setDayCompleted(!dayCompleted);
+		// onUpdate({ ...item, tilesLeft, gridData, daysLeft, addBack });
 	};
 
 	const updateGridData = (index) => {
@@ -190,7 +92,7 @@ const ErnitModule = ({ item, data, setData }) => {
 				<TouchableOpacity style={styles.header} onPress={() => setActionsMenuVisible(true)}>
 					<Text style={styles.title}>{item.title.toUpperCase()}</Text>
 					<View style={styles.dayCounter}>
-						{dayCompleted === "EARNED" ? (
+						{daysLeft === 0 ? (
 							<Text style={[styles.text, { color: "#FFD700", fontSize: 16 }]}>{item.totalDays} Days Completed</Text>
 						) : (
 							<>
@@ -200,8 +102,8 @@ const ErnitModule = ({ item, data, setData }) => {
 						)}
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === "COMPLETED" ? "#111111" : dayCompleted === "INCOMPLETE" ? "white" : "#FFD700" }]} onPress={handlePress}>
-					<Text style={[styles.buttonText, { color: dayCompleted === "COMPLETED" ? "white" : "#111111" }]}>{dayCompleted}</Text>
+				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === true ? "#111111" : dayCompleted === false ? "white" : "#FFD700" }]} onPress={handlePress}>
+					<Text style={[styles.buttonText, { color: dayCompleted === false ? "#111111" : "white" }]}>{dayCompleted === false ? "INCOMPLETE" : "COMPLETED"}</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
@@ -216,7 +118,7 @@ const ErnitModule = ({ item, data, setData }) => {
 					))}
 				</View>
 			</TouchableOpacity>
-			<ActionsMenu item={item} data={data} setData={setData} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
+			<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
 			{/* </>
 			)} */}
 		</BlurView>
@@ -317,3 +219,87 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 	},
 });
+
+// const saveData = async () => {
+// 	try {
+// 		const updatedData = data.map((module) => {
+// 			if (module.id === item.id) {
+// 				return {
+// 					...module,
+// 					tilesLeft: parseInt(tilesLeft),
+// 					daysLeft: parseInt(daysLeft),
+// 					dayCompleted: dayCompleted,
+// 					currentDate: currentDate,
+// 					randomTileKeys: randomTileKeys,
+// 					addBack: parseInt(addBack),
+// 					gridData: gridData,
+// 				};
+// 			}
+// 			return module;
+// 		});
+// 		setData(updatedData);
+// 		await AsyncStorage.setItem("modules", JSON.stringify(data));
+// 	} catch (error) {
+// 		console.error("Error saving data:", error);
+// 	}
+// };
+// useEffect(() => {
+// 	const saveDataAsync = async () => {
+// 		await saveData();
+// 	};
+// 	saveDataAsync();
+// }, []);
+
+// useEffect(() => {
+// 	loadData();
+// }, []);
+
+// useEffect(() => {
+// 	saveData();
+// }, [dayCompleted]);
+
+// const loadData = async () => {
+// 	try {
+// 		const storedData = await AsyncStorage.getItem("modules");
+// 		if (currentDate !== new Date().getDate()) {
+// 			setAddBack(0);
+// 			setDayCompleted("INCOMPLETE");
+// 			updateTileKeys();
+// 			setCurrentDate(new Date().getDate());
+
+// 			if (storedData) {
+// 				const modules = JSON.parse(storedData);
+// 				const selectedModule = modules.find((module) => module.id === item.id);
+// 				if (selectedModule) {
+// 					// Populate the input fields with the previous data
+// 					setGridData(selectedModule.gridData);
+// 					setTilesLeft(selectedModule.tilesLeft);
+// 					setDaysLeft(selectedModule.daysLeft);
+// 					// setDayCompleted(selectedModule.dayCompleted);
+// 					// setCurrentDate(selectedModule.currentDate);
+// 					// setRandomTileKeys(selectedModule.randomTileKeys);
+// 					// setAddBack(selectedModule.addBack);
+// 				}
+// 			}
+// 		} else {
+// 			if (storedData) {
+// 				const modules = JSON.parse(storedData);
+// 				const selectedModule = modules.find((module) => module.id === item.id);
+// 				if (selectedModule) {
+// 					// Populate the input fields with the previous data
+// 					setGridData(item.gridData);
+// 					setTilesLeft(item.tilesLeft);
+// 					setDaysLeft(item.daysLeft);
+// 					setDayCompleted(item.dayCompleted);
+// 					setCurrentDate(item.currentDate);
+// 					setRandomTileKeys(item.randomTileKeys);
+// 					setAddBack(item.addBack);
+// 				}
+// 			}
+// 		}
+
+// 		setLoading(false);
+// 	} catch (error) {
+// 		console.error("Error loading data:", error);
+// 	}
+// };

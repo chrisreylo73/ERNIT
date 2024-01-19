@@ -6,16 +6,16 @@ import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, item }) => {
-	const [ernitModuleTitle, setErnitModuleTitle] = useState(item.title);
+const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, item, onUpdate }) => {
+	const [title, setTitle] = useState(item.title);
 	const [totalDays, setTotalDays] = useState(item.totalDays);
 	const [rewardLink, setRewardLink] = useState(item.rewardLink);
 	const [rewardImage, setRewardImage] = useState(item.rewardImage);
 	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 
 	const handleUpdateButtonPress = async () => {
-		if (!ernitModuleTitle || !totalDays || !rewardLink || !rewardImage || !daysLeft) {
-			console.log("ernitModuleTitle: ", ernitModuleTitle);
+		if (!title || !totalDays || !rewardLink || !rewardImage || !daysLeft) {
+			console.log("title: ", title);
 			console.log("totalDays: ", totalDays);
 			console.log("RewardLink: ", rewardLink);
 			console.log("RewardImage: ", rewardImage);
@@ -23,30 +23,31 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 			return;
 		}
 
-		const updatedData = data.map((module) => {
-			if (module.id === item.id) {
-				return {
-					...module,
-					totalDays: totalDays,
-					title: ernitModuleTitle,
-					image: rewardImage,
-					link: rewardLink,
-					daysLeft: daysLeft,
-					// Update other properties as needed
-				};
-			} else {
-				return module;
-			}
-		});
+		// const updatedData = data.map((module) => {
+		// 	if (module.id === item.id) {
+		// 		return {
+		// 			...module,
+		// 			totalDays: parseInt(totalDays),
+		// 			title: title,
+		// 			image: rewardImage,
+		// 			link: rewardLink,
+		// 			daysLeft: parseInt(daysLeft),
+		// 			// Update other properties as needed
+		// 		};
+		// 	} else {
+		// 		return module;
+		// 	}
+		// });
 
-		setData(updatedData);
+		// setData(updatedData);
 
-		try {
-			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
-			setUpdateMenuVisible(false);
-		} catch (error) {
-			console.error("Error saving data:", error);
-		}
+		// try {
+		// 	await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
+		// 	setUpdateMenuVisible(false);
+		// } catch (error) {
+		// 	console.error("Error saving data:", error);
+		// }
+		onUpdate({ ...item, title, totalDays: parseInt(totalDays), daysLeft: parseInt(daysLeft), rewardImage: rewardImage, rewardlink: rewardLink });
 	};
 
 	return (
@@ -54,15 +55,15 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
-					<TextInput placeholder="Enter daily action title" value={ernitModuleTitle} onChangeText={(text) => setErnitModuleTitle(text)} style={styles.modalInput} />
+					<TextInput placeholder="Enter daily action title" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Total Days:</Text>
-					<TextInput placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays} onChangeText={(text) => setTotalDays(text)} />
+					<TextInput placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays.toString()} onChangeText={(text) => setTotalDays(text)} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}> Days Left:</Text>
-					<TextInput placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft} onChangeText={(text) => setDaysLeft(text)} />
+					<TextInput placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft.toString()} onChangeText={(text) => setDaysLeft(text)} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Reward Link:</Text>

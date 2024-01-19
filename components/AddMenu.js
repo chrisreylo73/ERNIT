@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
-// import { v4 as uuidv4 } from "uuid";
 
 const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	const [numRows, setNumRows] = useState("");
@@ -75,15 +74,15 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		const newModule = {
 			id: String(Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0)),
 			title: title,
-			totalDays: totalDays,
+			totalDays: parseInt(totalDays),
 			rewardLink: rewardLink,
 			rewardImage: rewardImage,
-			rows: numRows,
-			columns: numRows,
-			tilesLeft: numRows * numRows,
-			daysLeft: totalDays,
-			dayCompleted: "INCOMPLETE",
-			currentDate: String(new Date().getDate()),
+			rows: parseInt(numRows),
+			columns: parseInt(numRows),
+			tilesLeft: parseInt(numRows * numRows),
+			daysLeft: parseInt(totalDays),
+			dayCompleted: false,
+			currentDate: new Date().toLocaleDateString(),
 			randomTileKeys: updateTileKeys(),
 			addBack: 0,
 			gridData: gridData,
@@ -94,7 +93,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			// completionRate: 0,
 			// consistencyRate: 0,
 		};
-		console.log("NEW MODULE: ", newModule);
+		console.log("NEW MODULE: ", newModule.currentDate);
 
 		setData((prevData) => [...prevData, newModule]);
 

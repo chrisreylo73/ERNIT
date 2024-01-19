@@ -10,19 +10,24 @@ import { Calendar } from "react-native-calendars";
 import * as Progress from "react-native-progress";
 import UpdateMenu from "./UpdateMenu";
 
-const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData }) => {
+const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
 
-	const handleDeleteButtonPress = async () => {
-		const updatedData = data.filter((module) => module.id !== item.id);
-		setData(updatedData);
-		try {
-			await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
-		} catch (error) {
-			console.error("Error updating AsyncStorage:", error);
-		}
+	const handleDeleteButtonPress = () => {
+		onDelete(item.id);
 		setActionsMenuVisible(false);
 	};
+
+	// const handleDeleteButtonPress = async () => {
+	// 	const updatedData = data.filter((module) => module.id !== item.id);
+	// 	setData(updatedData);
+	// 	try {
+	// 		await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
+	// 	} catch (error) {
+	// 		console.error("Error updating AsyncStorage:", error);
+	// 	}
+	// 	setActionsMenuVisible(false);
+	// };
 
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
@@ -31,7 +36,6 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 					<View style={styles.header}>
 						<Text style={styles.title}>{item.title.toUpperCase()}</Text>
 					</View>
-
 					<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
 						<Image source={{ uri: item.rewardImage }} style={styles.image} />
 						<View style={styles.overlay}>
@@ -81,12 +85,12 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 					<TouchableOpacity style={styles.updateButton} onPress={() => setUpdateMenuVisible(true)}>
 						<Feather name="edit-3" size={24} color="white" />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteButtonPress()}>
+					<TouchableOpacity style={styles.deleteButton} onPress={handleDeleteButtonPress}>
 						<MaterialIcons name="delete-outline" size={24} color="white" />
 					</TouchableOpacity>
 				</View>
 			</BlurView>
-			<UpdateMenu data={data} setData={setData} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} item={item} />
+			{/* <UpdateMenu data={data} setData={setData} onUpdate={onUpdate} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} item={item} /> */}
 		</Modal>
 	);
 };
