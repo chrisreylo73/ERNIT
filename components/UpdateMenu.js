@@ -22,32 +22,8 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 			console.log("daysLeft: ", daysLeft);
 			return;
 		}
-
-		// const updatedData = data.map((module) => {
-		// 	if (module.id === item.id) {
-		// 		return {
-		// 			...module,
-		// 			totalDays: parseInt(totalDays),
-		// 			title: title,
-		// 			image: rewardImage,
-		// 			link: rewardLink,
-		// 			daysLeft: parseInt(daysLeft),
-		// 			// Update other properties as needed
-		// 		};
-		// 	} else {
-		// 		return module;
-		// 	}
-		// });
-
-		// setData(updatedData);
-
-		// try {
-		// 	await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
-		// 	setUpdateMenuVisible(false);
-		// } catch (error) {
-		// 	console.error("Error saving data:", error);
-		// }
 		onUpdate({ ...item, title, totalDays: parseInt(totalDays), daysLeft: parseInt(daysLeft), rewardImage: rewardImage, rewardlink: rewardLink });
+		setUpdateMenuVisible(false);
 	};
 
 	return (

@@ -81,7 +81,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			columns: parseInt(numRows),
 			tilesLeft: parseInt(numRows * numRows),
 			daysLeft: parseInt(totalDays),
-			dayCompleted: false,
+			taskFinished: false,
 			currentDate: new Date().toLocaleDateString(),
 			randomTileKeys: updateTileKeys(),
 			addBack: 0,
@@ -93,8 +93,6 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			// completionRate: 0,
 			// consistencyRate: 0,
 		};
-		console.log("NEW MODULE: ", newModule.currentDate);
-
 		setData((prevData) => [...prevData, newModule]);
 
 		try {

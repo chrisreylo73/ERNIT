@@ -18,17 +18,6 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 		setActionsMenuVisible(false);
 	};
 
-	// const handleDeleteButtonPress = async () => {
-	// 	const updatedData = data.filter((module) => module.id !== item.id);
-	// 	setData(updatedData);
-	// 	try {
-	// 		await AsyncStorage.setItem("modules", JSON.stringify(updatedData));
-	// 	} catch (error) {
-	// 		console.error("Error updating AsyncStorage:", error);
-	// 	}
-	// 	setActionsMenuVisible(false);
-	// };
-
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
@@ -90,7 +79,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 					</TouchableOpacity>
 				</View>
 			</BlurView>
-			{/* <UpdateMenu data={data} setData={setData} onUpdate={onUpdate} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} item={item} /> */}
+			<UpdateMenu data={data} setData={setData} onUpdate={onUpdate} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} item={item} />
 		</Modal>
 	);
 };

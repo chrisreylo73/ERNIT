@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [tilesLeft, setTilesLeft] = useState(item.tilesLeft);
 	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
-	const [dayCompleted, setDayCompleted] = useState(item.dayCompleted);
+	const [taskFinished, setTaskFinished] = useState(item.taskFinished);
 	const [randomTileKeys, setRandomTileKeys] = useState(item.randomTileKeys);
 	const [addBack, setAddBack] = useState(item.addBack);
 	const [gridData, setGridData] = useState(item.gridData);
@@ -15,6 +15,10 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 
 	const [loading, setLoading] = useState(true);
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
+
+	useEffect(() => {
+		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack });
+	}, [taskFinished]);
 
 	const updateTileKeys = async () => {
 		let a = getRandomTileIndex(item.rows);
@@ -41,8 +45,9 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		return `${randomRow}-${randomColumn}`;
 	};
 
-	const handlePress = () => {
-		if (dayCompleted === false) {
+	const handlePress = async () => {
+		if (taskFinished === false) {
+			// setTaskFinished((taskFinished) => !taskFinished);
 			if (tilesLeft - daysLeft === 0) {
 				setTilesLeft((tilesLeft) => tilesLeft - 1);
 				updateGridData(randomTileKeys[0]);
@@ -53,8 +58,11 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				updateGridData(randomTileKeys[1]);
 				setAddBack(2);
 			}
+			// setTaskFinished(true);
 			setDaysLeft((daysLeft) => daysLeft - 1);
-		} else if (dayCompleted === true) {
+		}
+		if (taskFinished === true) {
+			// setTaskFinished((taskFinished) => !taskFinished);
 			if (addBack === 1) {
 				setTilesLeft((tilesLeft) => tilesLeft + 1);
 				updateGridData(randomTileKeys[0]);
@@ -65,8 +73,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 			}
 			setDaysLeft((daysLeft) => daysLeft + 1);
 		}
-		setDayCompleted(!dayCompleted);
-		// onUpdate({ ...item, tilesLeft, gridData, daysLeft, addBack });
+		setTaskFinished((prevTaskFinished) => !prevTaskFinished);
 	};
 
 	const updateGridData = (index) => {
@@ -80,6 +87,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		if (daysLeft === 0) {
 			Linking.openURL(item.rewardLink).catch((err) => console.error("An error occurred while opening the link:", err));
 		}
+		console.log(item);
 	};
 
 	return (
@@ -102,8 +110,8 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 						)}
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.button, { backgroundColor: dayCompleted === true ? "#111111" : dayCompleted === false ? "white" : "#FFD700" }]} onPress={handlePress}>
-					<Text style={[styles.buttonText, { color: dayCompleted === false ? "#111111" : "white" }]}>{dayCompleted === false ? "INCOMPLETE" : "COMPLETED"}</Text>
+				<TouchableOpacity style={[styles.button, { backgroundColor: taskFinished === true ? "#111111" : taskFinished === false ? "white" : "#FFD700" }]} onPress={handlePress}>
+					<Text style={[styles.buttonText, { color: taskFinished === false ? "#111111" : "white" }]}>{taskFinished === false ? "INCOMPLETE" : "COMPLETED"}</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
