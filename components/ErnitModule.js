@@ -116,9 +116,17 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 						)}
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.button, { backgroundColor: taskFinished === true ? "#111111" : taskFinished === false ? "white" : "#FFD700" }]} onPress={handlePress}>
-					<Text style={[styles.buttonText, { color: taskFinished === false ? "#111111" : "white" }]}>{taskFinished === false ? "INCOMPLETE" : "COMPLETED"}</Text>
-				</TouchableOpacity>
+				{daysLeft === 0 ? (
+					<View style={styles.earned}>
+						<Text style={[styles.buttonText, { color: "#111111" }]}>{"EARNED"}</Text>
+					</View>
+				) : (
+					<>
+						<TouchableOpacity style={[styles.button, { backgroundColor: taskFinished === true ? "#111111" : taskFinished === false ? "white" : "#FFD700" }]} onPress={handlePress}>
+							<Text style={[styles.buttonText, { color: taskFinished === false ? "#111111" : "white" }]}>{taskFinished === false ? "INCOMPLETE" : "COMPLETED"}</Text>
+						</TouchableOpacity>
+					</>
+				)}
 			</View>
 			<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
 				<Image source={{ uri: item.rewardImage }} style={styles.image} />
@@ -186,6 +194,15 @@ const styles = StyleSheet.create({
 		color: "#4a4a4e",
 		fontFamily: "Roboto",
 		letterSpacing: 2,
+	},
+	earned: {
+		backgroundColor: "#FFD700",
+		padding: 6,
+		alignSelf: "center",
+		borderRadius: 5,
+		width: 170,
+		height: 35,
+		borderWidth: 0,
 	},
 	button: {
 		padding: 6,
