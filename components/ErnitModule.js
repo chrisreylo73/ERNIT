@@ -19,7 +19,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	}, [taskFinished]);
 
 	useEffect(() => {
-		if (currentDate !== new Date().toLocaleDateString()) {
+		if (currentDate === new Date().toLocaleDateString()) {
 			setTaskFinished(false);
 			setCurrentDate(new Date().toLocaleDateString());
 		}
@@ -32,7 +32,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const updateTileKeys = () => {
 		let a = getRandomTileIndex(item.rows);
 		let b = getRandomTileIndex(item.rows);
-		if (item.totalDays === 1) {
+		if (item.daysLeft === 1) {
 			setRandomTileKeys([a]);
 		} else {
 			while (a === b) {
