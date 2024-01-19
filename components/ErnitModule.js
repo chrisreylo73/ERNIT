@@ -12,18 +12,27 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [addBack, setAddBack] = useState(item.addBack);
 	const [gridData, setGridData] = useState(item.gridData);
 	const [currentDate, setCurrentDate] = useState(item.currentDate);
-
-	const [loading, setLoading] = useState(true);
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 
 	useEffect(() => {
-		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack });
+		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack, currentDate, randomTileKeys });
 	}, [taskFinished]);
 
-	const updateTileKeys = async () => {
+	useEffect(() => {
+		if (currentDate !== new Date().toLocaleDateString()) {
+			setTaskFinished(false);
+			setCurrentDate(new Date().toLocaleDateString());
+		}
+	}, []);
+
+	useEffect(() => {
+		updateTileKeys();
+	}, [currentDate]);
+
+	const updateTileKeys = () => {
 		let a = getRandomTileIndex(item.rows);
 		let b = getRandomTileIndex(item.rows);
-		if (item.totalDays == 1) {
+		if (item.totalDays === 1) {
 			setRandomTileKeys([a]);
 		} else {
 			while (a === b) {
@@ -35,7 +44,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		// onUpdate({ ...item, randomTileKeys });
 	};
 
-	const getRandomTileIndex = async (rows) => {
+	const getRandomTileIndex = (rows) => {
 		let randomRow = Math.floor(Math.random() * rows);
 		let randomColumn = Math.floor(Math.random() * rows);
 		while (gridData[randomRow][randomColumn].visible === false) {
@@ -45,7 +54,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		return `${randomRow}-${randomColumn}`;
 	};
 
-	const handlePress = async () => {
+	const handlePress = () => {
 		if (taskFinished === false) {
 			// setTaskFinished((taskFinished) => !taskFinished);
 			if (tilesLeft - daysLeft === 0) {
@@ -77,6 +86,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	};
 
 	const updateGridData = (index) => {
+		console.log("Index:", index);
 		const updatedGridData = [...gridData];
 		const [rowIndex, colIndex] = index.split("-");
 		updatedGridData[rowIndex][colIndex].visible = !updatedGridData[rowIndex][colIndex].visible;
@@ -92,10 +102,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 
 	return (
 		<BlurView intensity={100} tint="dark" style={styles.container}>
-			{/* {loading ? (
-				<ActivityIndicator size="large" color="#FFFFFF" />
-			) : (
-				<> */}
 			<View style={styles.info}>
 				<TouchableOpacity style={styles.header} onPress={() => setActionsMenuVisible(true)}>
 					<Text style={styles.title}>{item.title.toUpperCase()}</Text>
@@ -127,8 +133,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				</View>
 			</TouchableOpacity>
 			<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
-			{/* </>
-			)} */}
 		</BlurView>
 	);
 };
