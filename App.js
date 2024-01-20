@@ -48,7 +48,7 @@ export default function App() {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<StatusBar style="auto" />
+			<StatusBar style="dark" translucent={true} />
 			<Header />
 			<View style={styles.list}>
 				<FlatList contentContainerStyle={{ paddingBottom: 60, paddingTop: 85 }} showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule item={item} data={data} setData={setData} onUpdate={updateModule} onDelete={deleteModule} />} />
@@ -61,6 +61,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
 	container: {
+		// marginTop: 20,
 		flex: 1,
 		backgroundColor: "#111111",
 		alignItems: "center",

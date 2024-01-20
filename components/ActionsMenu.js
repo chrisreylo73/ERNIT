@@ -12,8 +12,6 @@ import UpdateMenu from "./UpdateMenu";
 
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
-	const [deleteCheck, setDeleteCheck] = useState(false);
-
 	const handleDeleteButtonPress = () => {
 		Alert.alert(
 			"Confirm Deletion",
@@ -26,8 +24,6 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 				{
 					text: "Delete",
 					onPress: () => {
-						// Handle the deletion logic here
-						// This function will be called when the user presses the 'Delete' button
 						onDelete(item.id);
 						setActionsMenuVisible(false);
 					},
@@ -36,6 +32,11 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 			],
 			{ cancelable: false }
 		);
+		// setCompletionRate(1 - item.daysLeft / item.totalDays);
+	};
+
+	const getCompletionRate = () => {
+		const numDatesBetween = Math.floor((item.currentDate - item.dateCreated) / (24 * 60 * 60 * 1000)) + 1;
 	};
 
 	return (
@@ -64,10 +65,16 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 								{item.daysLeft}/{item.totalDays}
 							</Text>
 						</View>
-						<Text style={styles.statsText}>COMPLETION RATE</Text>
-						<Progress.Bar borderRadius={10} height={10} unfilledColor="rgba(0, 0, 0, 0.5)" borderWidth={0} progress={0.3} width={330} color={"white"} style={{ marginBottom: 20 }} />
+						<Text style={styles.statsText}>COMPLETION STATUS</Text>
+						<View style={styles.progressBarOverlay}>
+							<Text style={styles.progressBarPercent}>{Math.round((1 - item.daysLeft / item.totalDays) * 100)}%</Text>
+							<Progress.Bar borderRadius={10} height={17} unfilledColor="#111111" borderWidth={0} progress={1 - item.daysLeft / item.totalDays} width={330} color={"white"} style={{ marginBottom: 20 }} />
+						</View>
 						<Text style={styles.statsText}>CONSISTENCY RATE </Text>
-						<Progress.Bar borderRadius={10} height={10} unfilledColor="rgba(0, 0, 0, 0.5)" borderWidth={0} progress={0.6} width={330} color={"white"} style={{ marginBottom: 20 }} />
+						<View style={styles.progressBarOverlay}>
+							<Text style={styles.progressBarPercent}>{}%</Text>
+							<Progress.Bar borderRadius={10} height={17} unfilledColor="#111111" borderWidth={0} progress={0.6} width={330} color={"white"} style={{ marginBottom: 20 }} />
+						</View>
 						{/* <View style={styles.circleStats}>
 							<View style={styles.streak}>
 								<Text style={styles.statsText}>CURRENT STREAK</Text>
@@ -142,15 +149,25 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 export default ActionsMenu;
 
 const styles = StyleSheet.create({
+	progressBarOverlay: {
+		marginTop: 3,
+		alignItems: "center",
+	},
+	progressBarPercent: {
+		color: "#4a4a4e",
+		position: "absolute",
+		zIndex: 2,
+		fontSize: 12,
+	},
 	dayCounter: {
 		// flexDirection: "row",
-		marginTop: 10,
+		marginTop: 11,
 		alignItems: "center",
 	},
 	calendarContainer: {
 		width: "100%",
 		backgroundColor: "#111111",
-		marginTop: 220,
+		marginTop: 180,
 	},
 	calendar: {
 		width: 350,

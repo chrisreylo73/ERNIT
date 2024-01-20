@@ -23,9 +23,9 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 
 	useEffect(() => {
 		if (daysLeft !== 0) {
-			if (currentDate === new Date().toLocaleDateString()) {
+			if (currentDate === new Date().toLocaleDateString("en-US").replace(/\//g, "-")) {
 				setTaskFinished(false);
-				setCurrentDate(new Date().toLocaleDateString());
+				setCurrentDate(new Date().toLocaleDateString("en-US").replace(/\//g, "-"));
 			}
 		}
 	}, []);
@@ -75,7 +75,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				setAddBack(2);
 			}
 			setDaysLeft((daysLeft) => daysLeft - 1);
-			setDaysCompleted([...daysCompleted, new Date().toLocaleDateString()]);
+			setDaysCompleted([...daysCompleted, new Date().toLocaleDateString("en-US").replace(/\//g, "-")]);
 		}
 		if (taskFinished === true) {
 			if (addBack === 1) {
@@ -87,7 +87,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				updateGridData(randomTileKeys[1]);
 			}
 			setDaysLeft((daysLeft) => daysLeft + 1);
-			removeDate(new Date().toLocaleDateString());
+			removeDate(new Date().toLocaleDateString("en-US").replace(/\//g, "-"));
 		}
 		setTaskFinished((prevTaskFinished) => !prevTaskFinished);
 	};
@@ -112,8 +112,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	};
 
 	return (
-		// <Shadow>
-
 		<BlurView intensity={100} tint="dark" style={styles.container}>
 			<View style={styles.info}>
 				<TouchableOpacity style={styles.header} onPress={() => setActionsMenuVisible(true)}>
@@ -155,7 +153,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 			</TouchableOpacity>
 			<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
 		</BlurView>
-		// </Shadow>
 	);
 };
 

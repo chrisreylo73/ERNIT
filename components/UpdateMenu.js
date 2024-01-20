@@ -52,12 +52,14 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 			setErrorMessage("Please fill out the reward link");
 			resetError(false);
 			return;
-		} else if (!isValidUrl(rewardLink)) {
-			setGotError(true);
-			setErrorMessage("Invalid Link");
-			resetError(false);
-			return;
-		} else if (!rewardImage) {
+		}
+		// else if (!isValidUrl(rewardLink)) {
+		// 	setGotError(true);
+		// 	setErrorMessage("Invalid Link");
+		// 	resetError(false);
+		// 	return;
+		// }
+		else if (!rewardImage) {
 			setGotError(true);
 			setErrorMessage("Please select a reward image");
 			resetError(false);
