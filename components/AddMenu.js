@@ -102,12 +102,14 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			setErrorMessage("Please fill out the reward link");
 			resetError(false);
 			return;
-		} else if (!isValidUrl(rewardLink)) {
-			setGotError(true);
-			setErrorMessage("Invalid Link");
-			resetError(false);
-			return;
-		} else if (!rewardImage) {
+		}
+		// else if (!isValidUrl(rewardLink)) {
+		// 	setGotError(true);
+		// 	setErrorMessage("Invalid Link");
+		// 	resetError(false);
+		// 	return;
+		// }
+		else if (!rewardImage) {
 			setGotError(true);
 			setErrorMessage("Please select a reward image");
 			resetError(false);
@@ -173,7 +175,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 				<TouchableOpacity style={styles.closeButton} onPress={handleClose}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)}>
+				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
 					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
 				</TouchableOpacity>
 			</BlurView>

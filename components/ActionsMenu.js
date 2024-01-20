@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput, Image, ScrollView } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput, Image, ScrollView, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
@@ -12,9 +12,29 @@ import UpdateMenu from "./UpdateMenu";
 
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
+	const [deleteCheck, setDeleteCheck] = useState(false);
 	const handleDeleteButtonPress = () => {
-		onDelete(item.id);
-		setActionsMenuVisible(false);
+		Alert.alert(
+			"Confirm Deletion",
+			"Are you sure you want to delete this module?",
+			[
+				{
+					text: "Cancel",
+					style: "cancel",
+				},
+				{
+					text: "Delete",
+					onPress: () => {
+						// Handle the deletion logic here
+						// This function will be called when the user presses the 'Delete' button
+						onDelete(item.id);
+						setActionsMenuVisible(false);
+					},
+					style: "destructive", // You can use 'destructive' for the delete button to highlight its significance
+				},
+			],
+			{ cancelable: false }
+		);
 	};
 
 	return (
@@ -77,6 +97,13 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 						<MaterialIcons name="delete-outline" size={24} color="white" />
 					</TouchableOpacity>
 				</View>
+				{/* <View>
+					<View>
+						<TouchableOpacity>
+							<Text></Text>
+						</TouchableOpacity>
+					</View>
+				</View> */}
 			</BlurView>
 			<UpdateMenu data={data} setData={setData} onUpdate={onUpdate} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} item={item} />
 		</Modal>

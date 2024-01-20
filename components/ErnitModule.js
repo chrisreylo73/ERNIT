@@ -90,7 +90,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	};
 
 	const updateGridData = (index) => {
-		console.log("Index:", index);
 		const updatedGridData = [...gridData];
 		const [rowIndex, colIndex] = index.split("-");
 		updatedGridData[rowIndex][colIndex].visible = !updatedGridData[rowIndex][colIndex].visible;
@@ -177,7 +176,6 @@ const styles = StyleSheet.create({
 		height: 140,
 		width: 140,
 		resizeMode: "cover",
-		borderRadius: 10,
 	},
 	overlay: {
 		...StyleSheet.absoluteFillObject,

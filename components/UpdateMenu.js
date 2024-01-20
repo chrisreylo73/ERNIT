@@ -25,6 +25,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 			setGotError(false);
 		}, 5000);
 	};
+
 	const handleUpdateButtonPress = async () => {
 		if (!title) {
 			setGotError(true);
@@ -97,7 +98,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 				<TouchableOpacity style={styles.closeButton} onPress={() => setUpdateMenuVisible(false)}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)}>
+				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
 					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
 				</TouchableOpacity>
 			</BlurView>
