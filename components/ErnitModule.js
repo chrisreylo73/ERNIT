@@ -3,6 +3,8 @@ import { Linking, StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndic
 import { BlurView } from "expo-blur";
 import ActionsMenu from "./ActionsMenu";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Shadow } from "react-native-shadow-2";
+import DropShadow from "react-native-drop-shadow";
 
 const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [tilesLeft, setTilesLeft] = useState(item.tilesLeft);
@@ -104,6 +106,8 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	};
 
 	return (
+		// <Shadow>
+
 		<BlurView intensity={100} tint="dark" style={styles.container}>
 			<View style={styles.info}>
 				<TouchableOpacity style={styles.header} onPress={() => setActionsMenuVisible(true)}>
@@ -145,6 +149,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 			</TouchableOpacity>
 			<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
 		</BlurView>
+		// </Shadow>
 	);
 };
 
@@ -158,18 +163,24 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		width: 360,
 		padding: 10,
-		borderWidth: 1,
+		//borderWidth: 1,
 		borderRadius: 15,
 		marginVertical: 5,
 		height: 170,
-		borderColor: "#080808",
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.5,
+		shadowRadius: 2,
+		elevation: 2,
+		//sbackgroundColor: "#080808",
+		// borderColor: "#080808",
 	},
 	imageContainer: {
 		aspectRatio: 1,
 		overflow: "hidden",
 		borderWidth: 1,
 		borderRadius: 10,
-		borderColor: "#4a4a4e",
+		borderColor: "#2b2b2b",
 		backgroundColor: "white",
 	},
 	image: {
@@ -238,7 +249,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		aspectRatio: 1,
 		borderWidth: 1,
-		borderColor: "#4a4a4e",
+		borderColor: "#2b2b2b",
 		margin: -0.5,
 		backgroundColor: "rgba(0, 0, 0, 0.85)",
 	},
@@ -250,87 +261,3 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 	},
 });
-
-// const saveData = async () => {
-// 	try {
-// 		const updatedData = data.map((module) => {
-// 			if (module.id === item.id) {
-// 				return {
-// 					...module,
-// 					tilesLeft: parseInt(tilesLeft),
-// 					daysLeft: parseInt(daysLeft),
-// 					dayCompleted: dayCompleted,
-// 					currentDate: currentDate,
-// 					randomTileKeys: randomTileKeys,
-// 					addBack: parseInt(addBack),
-// 					gridData: gridData,
-// 				};
-// 			}
-// 			return module;
-// 		});
-// 		setData(updatedData);
-// 		await AsyncStorage.setItem("modules", JSON.stringify(data));
-// 	} catch (error) {
-// 		console.error("Error saving data:", error);
-// 	}
-// };
-// useEffect(() => {
-// 	const saveDataAsync = async () => {
-// 		await saveData();
-// 	};
-// 	saveDataAsync();
-// }, []);
-
-// useEffect(() => {
-// 	loadData();
-// }, []);
-
-// useEffect(() => {
-// 	saveData();
-// }, [dayCompleted]);
-
-// const loadData = async () => {
-// 	try {
-// 		const storedData = await AsyncStorage.getItem("modules");
-// 		if (currentDate !== new Date().getDate()) {
-// 			setAddBack(0);
-// 			setDayCompleted("INCOMPLETE");
-// 			updateTileKeys();
-// 			setCurrentDate(new Date().getDate());
-
-// 			if (storedData) {
-// 				const modules = JSON.parse(storedData);
-// 				const selectedModule = modules.find((module) => module.id === item.id);
-// 				if (selectedModule) {
-// 					// Populate the input fields with the previous data
-// 					setGridData(selectedModule.gridData);
-// 					setTilesLeft(selectedModule.tilesLeft);
-// 					setDaysLeft(selectedModule.daysLeft);
-// 					// setDayCompleted(selectedModule.dayCompleted);
-// 					// setCurrentDate(selectedModule.currentDate);
-// 					// setRandomTileKeys(selectedModule.randomTileKeys);
-// 					// setAddBack(selectedModule.addBack);
-// 				}
-// 			}
-// 		} else {
-// 			if (storedData) {
-// 				const modules = JSON.parse(storedData);
-// 				const selectedModule = modules.find((module) => module.id === item.id);
-// 				if (selectedModule) {
-// 					// Populate the input fields with the previous data
-// 					setGridData(item.gridData);
-// 					setTilesLeft(item.tilesLeft);
-// 					setDaysLeft(item.daysLeft);
-// 					setDayCompleted(item.dayCompleted);
-// 					setCurrentDate(item.currentDate);
-// 					setRandomTileKeys(item.randomTileKeys);
-// 					setAddBack(item.addBack);
-// 				}
-// 			}
-// 		}
-
-// 		setLoading(false);
-// 	} catch (error) {
-// 		console.error("Error loading data:", error);
-// 	}
-// };

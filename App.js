@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput, SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -47,7 +47,7 @@ export default function App() {
 	};
 
 	return (
-		<View style={styles.container}>
+		<SafeAreaView style={styles.container}>
 			<StatusBar style="auto" />
 			<Header />
 			<View style={styles.list}>
@@ -55,7 +55,7 @@ export default function App() {
 			</View>
 			<Footer setAddMenuVisible={setAddMenuVisible} />
 			<AddMenu data={data} setData={setData} isAddMenuVisible={isAddMenuVisible} setAddMenuVisible={setAddMenuVisible} />
-		</View>
+		</SafeAreaView>
 	);
 }
 

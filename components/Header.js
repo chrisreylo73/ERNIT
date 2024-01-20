@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
+import { Shadow } from "react-native-shadow-2";
 
 const Header = () => {
 	return (
@@ -23,6 +24,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		top: 0,
 		zIndex: 2,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.5,
+		shadowRadius: 2,
+		elevation: 2,
 	},
 	title: {
 		marginTop: 40,
@@ -36,7 +42,7 @@ const styles = StyleSheet.create({
 	},
 	separator: {
 		height: 1,
-		backgroundColor: "black",
+		backgroundColor: "#111111",
 		width: "100%",
 	},
 });

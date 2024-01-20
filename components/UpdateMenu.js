@@ -74,19 +74,19 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
-					<TextInput placeholder="Enter daily action title" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
+					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter daily action title" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Total Days:</Text>
-					<TextInput placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays.toString()} onChangeText={(text) => setTotalDays(text)} />
+					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays.toString()} onChangeText={(text) => setTotalDays(text)} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}> Days Left:</Text>
-					<TextInput placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft.toString()} onChangeText={(text) => setDaysLeft(text)} />
+					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft.toString()} onChangeText={(text) => setDaysLeft(text)} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Reward Link:</Text>
-					<TextInput placeholder="http://" value={rewardLink} onChangeText={(text) => setRewardLink(text)} style={styles.modalInput} />
+					<TextInput placeholderTextColor="#4a4a4e" placeholder="http://" value={rewardLink} onChangeText={(text) => setRewardLink(text)} style={styles.modalInput} />
 				</View>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Reward Image:</Text>
@@ -145,10 +145,15 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 	},
 	modalInput: {
-		backgroundColor: "white",
+		backgroundColor: "#111111",
+		borderColor: "#2b2b2b",
+		borderWidth: 1,
+		color: "white",
 		width: 200,
 		borderRadius: 5,
 		padding: 3,
+		paddingLeft: 5,
+		paddingRight: 5,
 	},
 	buttonText: {
 		textAlign: "center",

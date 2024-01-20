@@ -27,12 +27,15 @@ const styles = StyleSheet.create({
 		bottom: 0, // backgroundColor: "#111111",
 		height: "7%",
 		// marginTop: 5,
-		elevation: 10,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.5,
+		shadowRadius: 2,
+		elevation: 2,
 	},
 	separator: {
 		height: 1,
-		backgroundColor: "#080808",
-		//backgroundColor: "#49528f",
+		backgroundColor: "#111111",
 		width: "100%",
 	},
 	button: {

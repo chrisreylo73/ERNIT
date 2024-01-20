@@ -13,6 +13,7 @@ import UpdateMenu from "./UpdateMenu";
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
 	const [deleteCheck, setDeleteCheck] = useState(false);
+
 	const handleDeleteButtonPress = () => {
 		Alert.alert(
 			"Confirm Deletion",
@@ -57,6 +58,16 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 						</View>
 					</TouchableOpacity>
 					<View style={styles.statsContainer}>
+						<View style={styles.dayCounter}>
+							<Text style={styles.statsText}>DAYS LEFT</Text>
+							<Text style={[styles.statsText, { color: "white" }]}>
+								{item.daysLeft}/{item.totalDays}
+							</Text>
+						</View>
+						<Text style={styles.statsText}>COMPLETION RATE</Text>
+						<Progress.Bar borderRadius={10} height={10} unfilledColor="rgba(0, 0, 0, 0.5)" borderWidth={0} progress={0.3} width={330} color={"white"} style={{ marginBottom: 20 }} />
+						<Text style={styles.statsText}>CONSISTENCY RATE </Text>
+						<Progress.Bar borderRadius={10} height={10} unfilledColor="rgba(0, 0, 0, 0.5)" borderWidth={0} progress={0.6} width={330} color={"white"} style={{ marginBottom: 20 }} />
 						<View style={styles.circleStats}>
 							<View style={styles.streak}>
 								<Text style={styles.statsText}>CURRENT STREAK</Text>
@@ -67,24 +78,42 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 								<Text style={[styles.statsText, { color: "white" }]}>12</Text>
 							</View>
 						</View>
-
-						<Text style={styles.statsText}>COMPLETION RATE</Text>
-						<Progress.Bar borderRadius={10} height={20} unfilledColor="#4a4a4e" borderWidth={0} progress={0.3} width={330} color={"white"} />
-						<Text style={styles.statsText}>CONSISTENCY RATE </Text>
-						<Progress.Bar borderRadius={10} height={20} unfilledColor="#4a4a4e" borderWidth={0} progress={0.6} width={330} color={"white"} style={{ marginBottom: 20 }} />
 					</View>
-
-					<Calendar
-						style={styles.calendar}
-						theme={{
-							calendarBackground: "rgba(0, 0, 0, .2)",
-							textSectionTitleColor: "#b6c1cd", // Grayscale
-							selectedDayBackgroundColor: "#808080", // Grayscale
-							selectedDayTextColor: "#ffffff",
-							todayTextColor: "#00adf5", // Grayscale
-							dayTextColor: "#808080", // Grayscale
-						}}
-					/>
+					<View style={styles.calendarContainer}>
+						<Calendar
+							style={styles.calendar}
+							hideExtraDays={true}
+							onDayPress={(day) => {
+								console.log("selected day", day);
+							}}
+							theme={{
+								backgroundColor: "#111111",
+								calendarBackground: "#111111",
+								textSectionTitleColor: "#b6c1cd",
+								textSectionTitleDisabledColor: "#d9e1e8",
+								selectedDayBackgroundColor: "#ffffff",
+								selectedDayTextColor: "#111111",
+								todayTextColor: "#00adf5",
+								dayTextColor: "#4a4a4e",
+								textDisabledColor: "#d9e1e8",
+								dotColor: "#00adf5",
+								selectedDotColor: "#ffffff",
+								arrowColor: "#ffffff",
+								disabledArrowColor: "#d9e1e8",
+								monthTextColor: "#ffffff",
+								indicatorColor: "blue",
+								textDayFontFamily: "Roboto",
+								textMonthFontFamily: "Roboto",
+								textDayHeaderFontFamily: "Roboto",
+								textDayFontWeight: "300",
+								textMonthFontWeight: "bold",
+								textDayHeaderFontWeight: "300",
+								textDayFontSize: 16,
+								textMonthFontSize: 16,
+								textDayHeaderFontSize: 16,
+							}}
+						/>
+					</View>
 				</ScrollView>
 				<View style={styles.actionButtons}>
 					<TouchableOpacity style={styles.closeButton} onPress={() => setActionsMenuVisible(false)}>
@@ -113,12 +142,21 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 export default ActionsMenu;
 
 const styles = StyleSheet.create({
+	dayCounter: {
+		// flexDirection: "row",
+		marginTop: 10,
+		alignItems: "center",
+	},
+	calendarContainer: {
+		width: "100%",
+		backgroundColor: "#111111",
+		marginTop: 220,
+	},
 	calendar: {
 		width: 350,
-		padding: 10,
 		borderRadius: 20,
-		marginTop: 110,
-		marginBottom: 30,
+		marginTop: 20,
+		marginBottom: 20,
 		marginHorizontal: 17,
 	},
 	scrollContainer: {
@@ -131,13 +169,12 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		overflow: "hidden",
 		alignItems: "center",
-		padding: 10,
+		//padding: 10,
 		borderWidth: 1,
 		borderRadius: 15,
 		marginVertical: 5,
 	},
 	statsContainer: {
-		marginVertical: 20,
 		height: 50,
 		alignItems: "center",
 		justifyContent: "space-between",
@@ -184,20 +221,20 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		borderWidth: 1,
 		borderRadius: 10,
-		borderColor: "#4a4a4e",
+		borderColor: "#2b2b2b",
 		backgroundColor: "white",
 	},
 	image: {
 		height: 260,
 		width: 260,
 		resizeMode: "cover",
-		borderRadius: 10,
+		// borderRadius: 10,
 	},
 	gridBox: {
 		flex: 1,
 		aspectRatio: 1,
 		borderWidth: 1,
-		borderColor: "#4a4a4e",
+		borderColor: "#2b2b2b",
 		margin: -0.5,
 		backgroundColor: "rgba(0, 0, 0, 0.85)",
 	},
