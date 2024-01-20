@@ -14,6 +14,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [gotError, setGotError] = useState(false);
+
 	const isValidUrl = (url) => {
 		// Regular expression to check if the URL is valid
 		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;

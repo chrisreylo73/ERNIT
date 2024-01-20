@@ -65,6 +65,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			return [a, b];
 		}
 	};
+
 	const isValidUrl = (url) => {
 		// Regular expression to check if the URL is valid
 		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
@@ -133,15 +134,14 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			randomTileKeys: updateTileKeys(),
 			addBack: 0,
 			gridData: gridData,
-			// daysCompleted: [],
-			// dateCreated: new Date(),
+			daysCompleted: [],
+			dateCreated: new Date().toLocaleDateString(),
 			// currentStreak: 0,
 			// highestStreak: 0,
 			// completionRate: 0,
 			// consistencyRate: 0,
 		};
 		setData((prevData) => [...prevData, newModule]);
-
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
 			handleClose();
@@ -175,7 +175,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 				<TouchableOpacity style={styles.closeButton} onPress={handleClose}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
+				<TouchableOpacity style={[styles.error, { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
 					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
 				</TouchableOpacity>
 			</BlurView>

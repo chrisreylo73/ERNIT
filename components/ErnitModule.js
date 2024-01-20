@@ -14,10 +14,11 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [addBack, setAddBack] = useState(item.addBack);
 	const [gridData, setGridData] = useState(item.gridData);
 	const [currentDate, setCurrentDate] = useState(item.currentDate);
+	const [daysCompleted, setDaysCompleted] = useState(item.daysCompleted);
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 
 	useEffect(() => {
-		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack, currentDate, randomTileKeys });
+		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack, currentDate, randomTileKeys, daysCompleted });
 	}, [taskFinished]);
 
 	useEffect(() => {
@@ -49,7 +50,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 			}
 			setRandomTileKeys([a, b]);
 		}
-		// onUpdate({ ...item, randomTileKeys });
 	};
 
 	const getRandomTileIndex = (rows) => {
@@ -74,8 +74,8 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				updateGridData(randomTileKeys[1]);
 				setAddBack(2);
 			}
-			// setTaskFinished(true);
 			setDaysLeft((daysLeft) => daysLeft - 1);
+			setDaysCompleted([...daysCompleted, new Date().toLocaleDateString()]);
 		}
 		if (taskFinished === true) {
 			if (addBack === 1) {
@@ -87,8 +87,14 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				updateGridData(randomTileKeys[1]);
 			}
 			setDaysLeft((daysLeft) => daysLeft + 1);
+			removeDate(new Date().toLocaleDateString());
 		}
 		setTaskFinished((prevTaskFinished) => !prevTaskFinished);
+	};
+
+	const removeDate = (dateToRemove) => {
+		const updatedDays = daysCompleted.filter((date) => date !== dateToRemove);
+		setDaysCompleted(updatedDays);
 	};
 
 	const updateGridData = (index) => {
@@ -172,15 +178,13 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.5,
 		shadowRadius: 2,
 		elevation: 2,
-		//sbackgroundColor: "#080808",
-		// borderColor: "#080808",
 	},
 	imageContainer: {
 		aspectRatio: 1,
 		overflow: "hidden",
 		borderWidth: 1,
 		borderRadius: 10,
-		borderColor: "#2b2b2b",
+		borderColor: "#4a4a4e",
 		backgroundColor: "white",
 	},
 	image: {
@@ -249,7 +253,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		aspectRatio: 1,
 		borderWidth: 1,
-		borderColor: "#2b2b2b",
+		borderColor: "#4a4a4e",
 		margin: -0.5,
 		backgroundColor: "rgba(0, 0, 0, 0.85)",
 	},

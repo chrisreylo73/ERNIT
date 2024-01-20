@@ -68,7 +68,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 						<Progress.Bar borderRadius={10} height={10} unfilledColor="rgba(0, 0, 0, 0.5)" borderWidth={0} progress={0.3} width={330} color={"white"} style={{ marginBottom: 20 }} />
 						<Text style={styles.statsText}>CONSISTENCY RATE </Text>
 						<Progress.Bar borderRadius={10} height={10} unfilledColor="rgba(0, 0, 0, 0.5)" borderWidth={0} progress={0.6} width={330} color={"white"} style={{ marginBottom: 20 }} />
-						<View style={styles.circleStats}>
+						{/* <View style={styles.circleStats}>
 							<View style={styles.streak}>
 								<Text style={styles.statsText}>CURRENT STREAK</Text>
 								<Text style={[styles.statsText, { color: "white" }]}>6</Text>
@@ -77,7 +77,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 								<Text style={styles.statsText}>HIGHEST STREAK</Text>
 								<Text style={[styles.statsText, { color: "white" }]}>12</Text>
 							</View>
-						</View>
+						</View> */}
 					</View>
 					<View style={styles.calendarContainer}>
 						<Calendar
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		borderWidth: 1,
 		borderRadius: 10,
-		borderColor: "#2b2b2b",
+		borderColor: "#4a4a4e",
 		backgroundColor: "white",
 	},
 	image: {
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		aspectRatio: 1,
 		borderWidth: 1,
-		borderColor: "#2b2b2b",
+		borderColor: "#4a4a4e",
 		margin: -0.5,
 		backgroundColor: "rgba(0, 0, 0, 0.85)",
 	},
