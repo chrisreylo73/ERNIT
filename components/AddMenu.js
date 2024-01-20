@@ -12,8 +12,10 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	const [rewardLink, setRewardLink] = useState("");
 	const [rewardImage, setRewardImage] = useState(null);
 	const [gridData, setGridData] = useState([]);
+	const [errorMessage, setErrorMessage] = useState("");
+	const [gotError, setGotError] = useState(false);
 
-	const handleCloseButton = () => {
+	const handleClose = () => {
 		setTitle("");
 		setTotalDays("");
 		setRewardLink("");
@@ -21,6 +23,8 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		setGridData([]);
 		setRewardImage(null);
 		setAddMenuVisible(false);
+		setErrorMessage(false);
+		setErrorMessage("");
 	};
 
 	useEffect(() => {
@@ -61,15 +65,56 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			return [a, b];
 		}
 	};
+	const isValidUrl = (url) => {
+		// Regular expression to check if the URL is valid
+		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+		return urlPattern.test(url);
+	};
+
+	const resetError = () => {
+		setTimeout(() => {
+			setGotError(false);
+		}, 5000);
+	};
 
 	const handleCreateButtonPress = async () => {
-		if (!title || !totalDays || !rewardLink || !rewardImage) {
+		if (!title) {
+			setGotError(true);
+			setErrorMessage("Please fill out the title");
+			resetError();
 			console.log("title: ", title);
 			console.log("totalDays: ", totalDays);
 			console.log("RewardLink: ", rewardLink);
 			console.log("RewardImage: ", rewardImage);
 			return;
+		} else if (!totalDays) {
+			setGotError(true);
+			setErrorMessage("Please fill out the total days");
+			resetError(false);
+			return;
+		} else if (totalDays > 100) {
+			setGotError(true);
+			setErrorMessage("Total days is limited to 100 days for performance");
+			resetError(false);
+			return;
+		} else if (!rewardLink) {
+			setGotError(true);
+			setErrorMessage("Please fill out the reward link");
+			resetError(false);
+			return;
+		} else if (!isValidUrl(rewardLink)) {
+			setGotError(true);
+			setErrorMessage("Invalid Link");
+			resetError(false);
+			return;
+		} else if (!rewardImage) {
+			setGotError(true);
+			setErrorMessage("Please select a reward image");
+			resetError(false);
+			return;
 		}
+		setErrorMessage(false);
+		setErrorMessage("");
 
 		const newModule = {
 			id: String(Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0)),
@@ -97,18 +142,14 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
-			setTitle("");
-			setTotalDays("");
-			setRewardLink("");
-			setRewardImage(null);
-			setAddMenuVisible(false);
+			handleClose();
 		} catch (error) {
 			console.error("Error saving data:", error);
 		}
 	};
 
 	return (
-		<Modal animationType="slide" transparent={true} visible={isAddMenuVisible} onRequestClose={handleCloseButton}>
+		<Modal animationType="slide" transparent={true} visible={isAddMenuVisible} onRequestClose={handleClose}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Action Title:</Text>
@@ -129,8 +170,11 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 				<TouchableOpacity style={styles.createButton} onPress={handleCreateButtonPress}>
 					<AntDesign name="plus" size={24} color="white" />
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.closeButton} onPress={handleCloseButton}>
+				<TouchableOpacity style={styles.closeButton} onPress={handleClose}>
 					<AntDesign name="close" size={24} color="white" />
+				</TouchableOpacity>
+				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)}>
+					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
 				</TouchableOpacity>
 			</BlurView>
 		</Modal>
@@ -140,6 +184,21 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 export default AddMenu;
 
 const styles = StyleSheet.create({
+	error: {
+		justifyContent: "center",
+		alignItems: "center",
+		bottom: 15,
+		position: "absolute",
+		backgroundColor: "#d4596c",
+		width: "90%",
+		height: 60,
+		borderRadius: 10,
+		padding: 10,
+	},
+	errorText: {
+		color: "white",
+		fontSize: 15,
+	},
 	modalContainer: {
 		flex: 1,
 		justifyContent: "center",

@@ -17,8 +17,7 @@ export default function App() {
 
 	const loadData = async () => {
 		try {
-			const storedModules = await AsyncStorage.clear();
-			//const storedModules = await AsyncStorage.getItem("modules");
+			const storedModules = await AsyncStorage.getItem("modules");
 			if (storedModules) {
 				const parsedModules = JSON.parse(storedModules);
 				setData(parsedModules);

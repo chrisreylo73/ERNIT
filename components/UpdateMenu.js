@@ -12,16 +12,58 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 	const [rewardLink, setRewardLink] = useState(item.rewardLink);
 	const [rewardImage, setRewardImage] = useState(item.rewardImage);
 	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
+	const [errorMessage, setErrorMessage] = useState("");
+	const [gotError, setGotError] = useState(false);
+	const isValidUrl = (url) => {
+		// Regular expression to check if the URL is valid
+		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+		return urlPattern.test(url);
+	};
 
+	const resetError = () => {
+		setTimeout(() => {
+			setGotError(false);
+		}, 5000);
+	};
 	const handleUpdateButtonPress = async () => {
-		if (!title || !totalDays || !rewardLink || !rewardImage || !daysLeft) {
+		if (!title) {
+			setGotError(true);
+			setErrorMessage("Please fill out the title");
+			resetError();
 			console.log("title: ", title);
 			console.log("totalDays: ", totalDays);
 			console.log("RewardLink: ", rewardLink);
 			console.log("RewardImage: ", rewardImage);
-			console.log("daysLeft: ", daysLeft);
+			return;
+		} else if (!totalDays) {
+			setGotError(true);
+			setErrorMessage("Please fill out the total days");
+			resetError(false);
+			return;
+		} else if (totalDays > 100) {
+			setGotError(true);
+			setErrorMessage("Total days is limited to 100 days for performance");
+			resetError(false);
+			return;
+		} else if (!rewardLink) {
+			setGotError(true);
+			setErrorMessage("Please fill out the reward link");
+			resetError(false);
+			return;
+		} else if (!isValidUrl(rewardLink)) {
+			setGotError(true);
+			setErrorMessage("Invalid Link");
+			resetError(false);
+			return;
+		} else if (!rewardImage) {
+			setGotError(true);
+			setErrorMessage("Please select a reward image");
+			resetError(false);
 			return;
 		}
+		setErrorMessage(false);
+		setErrorMessage("");
+
 		onUpdate({ ...item, title, totalDays: parseInt(totalDays), daysLeft: parseInt(daysLeft), rewardImage: rewardImage, rewardlink: rewardLink });
 		setUpdateMenuVisible(false);
 	};
@@ -55,6 +97,9 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 				<TouchableOpacity style={styles.closeButton} onPress={() => setUpdateMenuVisible(false)}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
+				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)}>
+					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
+				</TouchableOpacity>
 			</BlurView>
 		</Modal>
 	);
@@ -63,6 +108,21 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 export default UpdateMenu;
 
 const styles = StyleSheet.create({
+	error: {
+		justifyContent: "center",
+		alignItems: "center",
+		bottom: 15,
+		position: "absolute",
+		backgroundColor: "#d4596c",
+		width: "90%",
+		height: 60,
+		borderRadius: 10,
+		padding: 10,
+	},
+	errorText: {
+		color: "white",
+		fontSize: 15,
+	},
 	modalContainer: {
 		flex: 1,
 		justifyContent: "center",

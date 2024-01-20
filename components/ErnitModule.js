@@ -19,20 +19,26 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	}, [taskFinished]);
 
 	useEffect(() => {
-		if (currentDate === new Date().toLocaleDateString()) {
-			setTaskFinished(false);
-			setCurrentDate(new Date().toLocaleDateString());
+		if (daysLeft !== 0) {
+			if (currentDate === new Date().toLocaleDateString()) {
+				setTaskFinished(false);
+				setCurrentDate(new Date().toLocaleDateString());
+			}
 		}
 	}, []);
 
 	useEffect(() => {
-		updateTileKeys();
+		if (daysLeft !== 0) {
+			updateTileKeys();
+		}
 	}, [currentDate]);
 
 	const updateTileKeys = () => {
 		let a = getRandomTileIndex(item.rows);
 		let b = getRandomTileIndex(item.rows);
-		if (item.daysLeft === 1) {
+		if (item.daysLeft === 1 && item.totalDays === 2) {
+			setRandomTileKeys([getRandomTileIndex(item.rows), getRandomTileIndex(item.rows)]);
+		} else if (item.daysLeft === 1) {
 			setRandomTileKeys([a]);
 		} else {
 			while (a === b) {
@@ -56,7 +62,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 
 	const handlePress = () => {
 		if (taskFinished === false) {
-			// setTaskFinished((taskFinished) => !taskFinished);
 			if (tilesLeft - daysLeft === 0) {
 				setTilesLeft((tilesLeft) => tilesLeft - 1);
 				updateGridData(randomTileKeys[0]);
@@ -71,7 +76,6 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 			setDaysLeft((daysLeft) => daysLeft - 1);
 		}
 		if (taskFinished === true) {
-			// setTaskFinished((taskFinished) => !taskFinished);
 			if (addBack === 1) {
 				setTilesLeft((tilesLeft) => tilesLeft + 1);
 				updateGridData(randomTileKeys[0]);

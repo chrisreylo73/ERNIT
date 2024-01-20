@@ -12,7 +12,6 @@ import UpdateMenu from "./UpdateMenu";
 
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
-
 	const handleDeleteButtonPress = () => {
 		onDelete(item.id);
 		setActionsMenuVisible(false);
