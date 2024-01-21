@@ -51,7 +51,7 @@ export default function App() {
 			<StatusBar style="dark" translucent={true} />
 			<Header />
 			<View style={styles.list}>
-				<FlatList contentContainerStyle={{ paddingBottom: 60, paddingTop: 85 }} showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule item={item} data={data} setData={setData} onUpdate={updateModule} onDelete={deleteModule} />} />
+				<FlatList contentContainerStyle={{ paddingBottom: 70, paddingTop: 85 }} showsVerticalScrollIndicator={false} data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <ErnitModule item={item} data={data} setData={setData} onUpdate={updateModule} onDelete={deleteModule} />} />
 			</View>
 			<Footer setAddMenuVisible={setAddMenuVisible} />
 			<AddMenu data={data} setData={setData} isAddMenuVisible={isAddMenuVisible} setAddMenuVisible={setAddMenuVisible} />

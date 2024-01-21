@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Linking, StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { Linking, StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, Animated, Easing } from "react-native";
 import { BlurView } from "expo-blur";
 import ActionsMenu from "./ActionsMenu";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,6 +7,7 @@ import { Shadow } from "react-native-shadow-2";
 import DropShadow from "react-native-drop-shadow";
 
 const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
+	const AnimatedErnitModule = Animated.createAnimatedComponent(ErnitModule);
 	const [tilesLeft, setTilesLeft] = useState(item.tilesLeft);
 	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 	const [taskFinished, setTaskFinished] = useState(item.taskFinished);
@@ -16,7 +17,16 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [currentDate, setCurrentDate] = useState(item.currentDate);
 	const [daysCompleted, setDaysCompleted] = useState(item.daysCompleted);
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
+	const fadeAnim = useRef(new Animated.Value(0)).current;
 
+	useEffect(() => {
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 1000,
+			easing: Easing.linear,
+			useNativeDriver: true,
+		}).start();
+	}, [fadeAnim]);
 	useEffect(() => {
 		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack, currentDate, randomTileKeys, daysCompleted });
 	}, [taskFinished]);
@@ -112,48 +122,50 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	};
 
 	return (
-		<BlurView intensity={100} tint="dark" style={styles.container}>
-			<View style={styles.info}>
-				<TouchableOpacity style={styles.header} onPress={() => setActionsMenuVisible(true)}>
-					<Text style={styles.title}>{item.title.toUpperCase()}</Text>
-					<View style={styles.dayCounter}>
-						{daysLeft === 0 ? (
-							<Text style={[styles.text, { color: "#FFD700", fontSize: 16 }]}>{item.totalDays} Days Completed</Text>
-						) : (
-							<>
-								<Text style={styles.text}>
-									{daysLeft}/{item.totalDays} Days Left
-								</Text>
-							</>
-						)}
+		<Animated.View style={{ opacity: fadeAnim }}>
+			<BlurView intensity={100} tint="dark" style={styles.container}>
+				<View style={styles.info}>
+					<TouchableOpacity style={styles.header} onPress={() => setActionsMenuVisible(true)}>
+						<Text style={styles.title}>{item.title.toUpperCase()}</Text>
+						<View style={styles.dayCounter}>
+							{daysLeft === 0 ? (
+								<Text style={[styles.text, { color: "#FFD700", fontSize: 16 }]}>{item.totalDays} Days Completed</Text>
+							) : (
+								<>
+									<Text style={styles.text}>
+										{daysLeft}/{item.totalDays} Days Left
+									</Text>
+								</>
+							)}
+						</View>
+					</TouchableOpacity>
+					{daysLeft === 0 ? (
+						<View style={styles.earned}>
+							<Text style={[styles.buttonText, { color: "#111111" }]}>{"EARNED"}</Text>
+						</View>
+					) : (
+						<>
+							<TouchableOpacity style={[styles.button, { backgroundColor: taskFinished === true ? "#111111" : taskFinished === false ? "white" : "#FFD700" }]} onPress={handlePress}>
+								<Text style={[styles.buttonText, { color: taskFinished === false ? "#111111" : "white" }]}>{taskFinished === false ? "INCOMPLETE" : "COMPLETED"}</Text>
+							</TouchableOpacity>
+						</>
+					)}
+				</View>
+				<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
+					<Image source={{ uri: item.rewardImage }} style={styles.image} />
+					<View style={styles.overlay}>
+						{gridData.map((row, rowIndex) => (
+							<View key={rowIndex} style={styles.row}>
+								{row.map(({ key, visible }) => (
+									<View key={key} style={[styles.gridBox, { opacity: visible ? 1 : 0 }]} />
+								))}
+							</View>
+						))}
 					</View>
 				</TouchableOpacity>
-				{daysLeft === 0 ? (
-					<View style={styles.earned}>
-						<Text style={[styles.buttonText, { color: "#111111" }]}>{"EARNED"}</Text>
-					</View>
-				) : (
-					<>
-						<TouchableOpacity style={[styles.button, { backgroundColor: taskFinished === true ? "#111111" : taskFinished === false ? "white" : "#FFD700" }]} onPress={handlePress}>
-							<Text style={[styles.buttonText, { color: taskFinished === false ? "#111111" : "white" }]}>{taskFinished === false ? "INCOMPLETE" : "COMPLETED"}</Text>
-						</TouchableOpacity>
-					</>
-				)}
-			</View>
-			<TouchableOpacity style={[styles.imageContainer]} onPress={handleLink}>
-				<Image source={{ uri: item.rewardImage }} style={styles.image} />
-				<View style={styles.overlay}>
-					{gridData.map((row, rowIndex) => (
-						<View key={rowIndex} style={styles.row}>
-							{row.map(({ key, visible }) => (
-								<View key={key} style={[styles.gridBox, { opacity: visible ? 1 : 0 }]} />
-							))}
-						</View>
-					))}
-				</View>
-			</TouchableOpacity>
-			<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
-		</BlurView>
+				<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
+			</BlurView>
+		</Animated.View>
 	);
 };
 

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 		elevation: 2,
 	},
 	title: {
-		marginVertical: 30,
+		marginTop: 35,
 		textAlign: "center",
 		fontSize: 20,
 		fontWeight: "bold",

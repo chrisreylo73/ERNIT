@@ -68,6 +68,14 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 		}
 	};
 
+	const handleCalendarPress = (day) => {
+		console.log(day.dateString);
+		if (item.daysCompleted.includes(day.dayString)) {
+			const updatedDaysCompleted = item.daysCompleted.filter((day) => day.dayString !== item.daysCompleted);
+			console.log(updatedDaysCompleted);
+		}
+	};
+
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
@@ -120,6 +128,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 							style={styles.calendar}
 							hideExtraDays={true}
 							onDayPress={(day) => {
+								handleCalendarPress(day);
 								console.log("selected day", day);
 							}}
 							markedDates={markedDates}
