@@ -12,6 +12,11 @@ import UpdateMenu from "./UpdateMenu";
 
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
+	const [completionRate, setCompletionRate] = useState(0);
+	useEffect(() => {
+		getCompletionRate();
+	}, [item.daysLeft]);
+
 	const handleDeleteButtonPress = () => {
 		Alert.alert(
 			"Confirm Deletion",
@@ -35,8 +40,21 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 		// setCompletionRate(1 - item.daysLeft / item.totalDays);
 	};
 
-	const getCompletionRate = () => {
-		const numDatesBetween = Math.floor((item.currentDate - item.dateCreated) / (24 * 60 * 60 * 1000)) + 1;
+	const getCompletionRate = async () => {
+		//const a = item.dateCreated.split("-");
+		// const a = "1-10-2024".split("-");
+		const a = item.daysCompleted[0].split("-");
+		const b = item.daysCompleted[item.daysCompleted.length - 1].split("-");
+		console.log("a", a);
+		console.log("b", b);
+		const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+		const firstDate = new Date(a[2], a[0], a[1]);
+		const secondDate = new Date(b[2], b[0], b[1]);
+		const numDatesBetween = Math.round(Math.abs((secondDate - firstDate) / oneDay) + 1);
+		console.log("numDatesBetween", numDatesBetween);
+		console.log("daysCompleted length", item.daysCompleted.length);
+		console.log(item.daysCompleted.length / numDatesBetween);
+		setCompletionRate(item.daysCompleted.length / numDatesBetween);
 	};
 
 	return (
@@ -72,8 +90,8 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 						</View>
 						<Text style={styles.statsText}>CONSISTENCY RATE </Text>
 						<View style={styles.progressBarOverlay}>
-							<Text style={styles.progressBarPercent}>{}%</Text>
-							<Progress.Bar borderRadius={10} height={17} unfilledColor="#111111" borderWidth={0} progress={0.6} width={330} color={"white"} style={{ marginBottom: 20 }} />
+							<Text style={styles.progressBarPercent}>{Math.round(completionRate * 100)}%</Text>
+							<Progress.Bar borderRadius={10} height={17} unfilledColor="#111111" borderWidth={0} progress={completionRate} width={330} color={"white"} style={{ marginBottom: 20 }} />
 						</View>
 						{/* <View style={styles.circleStats}>
 							<View style={styles.streak}>
