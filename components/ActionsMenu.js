@@ -13,8 +13,11 @@ import UpdateMenu from "./UpdateMenu";
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
 	const [completionRate, setCompletionRate] = useState(0);
+	const [markedDates, setMarkedDates] = useState({});
+
 	useEffect(() => {
 		getCompletionRate();
+		markDatesFromArray();
 	}, [item.daysLeft]);
 
 	const handleDeleteButtonPress = () => {
@@ -37,24 +40,32 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 			],
 			{ cancelable: false }
 		);
-		// setCompletionRate(1 - item.daysLeft / item.totalDays);
 	};
 
-	const getCompletionRate = async () => {
-		//const a = item.dateCreated.split("-");
-		// const a = "1-10-2024".split("-");
-		const a = item.daysCompleted[0].split("-");
-		const b = item.daysCompleted[item.daysCompleted.length - 1].split("-");
-		console.log("a", a);
-		console.log("b", b);
-		const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-		const firstDate = new Date(a[2], a[0], a[1]);
-		const secondDate = new Date(b[2], b[0], b[1]);
-		const numDatesBetween = Math.round(Math.abs((secondDate - firstDate) / oneDay) + 1);
-		console.log("numDatesBetween", numDatesBetween);
-		console.log("daysCompleted length", item.daysCompleted.length);
-		console.log(item.daysCompleted.length / numDatesBetween);
-		setCompletionRate(item.daysCompleted.length / numDatesBetween);
+	const markDatesFromArray = () => {
+		const datesToMark = item.daysCompleted; // Replace with your array of dates
+		const markedDatesObj = {};
+		datesToMark.forEach((date) => {
+			markedDatesObj[date] = { selected: true, selectedColor: "white" }; // You can customize the color here
+		});
+		setMarkedDates(markedDatesObj);
+	};
+
+	const getCompletionRate = () => {
+		if (item.daysCompleted.length !== 0) {
+			const a = item.daysCompleted[0].split("-");
+			const b = item.currentDate.split("-");
+			const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+			const firstDate = new Date(a[1], a[0], a[2]);
+			const secondDate = new Date(b[1], b[0], b[2]);
+			const numDatesBetween = Math.round(Math.abs((secondDate - firstDate) / oneDay) + 1);
+			setCompletionRate(item.daysCompleted.length / numDatesBetween);
+			console.log("numDatesBetween: ", numDatesBetween);
+			console.log("daysCompleted Length: ", item.daysCompleted.length);
+			console.log("Completion Rate: ", item.daysCompleted.length / numDatesBetween);
+		} else {
+			setCompletionRate(0);
+		}
 	};
 
 	return (
@@ -111,6 +122,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 							onDayPress={(day) => {
 								console.log("selected day", day);
 							}}
+							markedDates={markedDates}
 							theme={{
 								backgroundColor: "#111111",
 								calendarBackground: "#111111",

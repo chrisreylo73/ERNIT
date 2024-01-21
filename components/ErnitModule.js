@@ -23,9 +23,9 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 
 	useEffect(() => {
 		if (daysLeft !== 0) {
-			if (currentDate === new Date().toLocaleDateString("en-US").replace(/\//g, "-")) {
+			if (currentDate === new Date().toISOString().split("T")[0]) {
 				setTaskFinished(false);
-				setCurrentDate(new Date().toLocaleDateString("en-US").replace(/\//g, "-"));
+				setCurrentDate(new Date().toISOString().split("T")[0]);
 			}
 		}
 	}, []);
@@ -75,7 +75,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				setAddBack(2);
 			}
 			setDaysLeft((daysLeft) => daysLeft - 1);
-			setDaysCompleted([...daysCompleted, new Date().toLocaleDateString("en-US").replace(/\//g, "-")]);
+			setDaysCompleted([...daysCompleted, new Date().toISOString().split("T")[0]]);
 		}
 		if (taskFinished === true) {
 			if (addBack === 1) {
@@ -87,7 +87,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				updateGridData(randomTileKeys[1]);
 			}
 			setDaysLeft((daysLeft) => daysLeft + 1);
-			removeDate(new Date().toLocaleDateString("en-US").replace(/\//g, "-"));
+			removeDate(new Date().toISOString().split("T")[0]);
 		}
 		setTaskFinished((prevTaskFinished) => !prevTaskFinished);
 	};
@@ -121,8 +121,9 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 							<Text style={[styles.text, { color: "#FFD700", fontSize: 16 }]}>{item.totalDays} Days Completed</Text>
 						) : (
 							<>
-								<Text style={[styles.text, { color: "white" }]}>{daysLeft}</Text>
-								<Text style={styles.text}>/{item.totalDays} Days Left</Text>
+								<Text style={styles.text}>
+									{daysLeft}/{item.totalDays} Days Left
+								</Text>
 							</>
 						)}
 					</View>

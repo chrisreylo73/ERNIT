@@ -11,7 +11,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 	const [totalDays, setTotalDays] = useState(item.totalDays);
 	const [rewardLink, setRewardLink] = useState(item.rewardLink);
 	const [rewardImage, setRewardImage] = useState(item.rewardImage);
-	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
+	// const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [gotError, setGotError] = useState(false);
 
@@ -68,7 +68,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 		setErrorMessage(false);
 		setErrorMessage("");
 
-		onUpdate({ ...item, title, totalDays: parseInt(totalDays), daysLeft: parseInt(daysLeft), rewardImage: rewardImage, rewardlink: rewardLink });
+		onUpdate({ ...item, title, totalDays: parseInt(totalDays), rewardImage: rewardImage, rewardLink: rewardLink });
 		setUpdateMenuVisible(false);
 	};
 
@@ -83,10 +83,10 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 					<Text style={styles.modalText}>Total Days:</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays.toString()} onChangeText={(text) => setTotalDays(text)} />
 				</View>
-				<View style={styles.modalContainerRow}>
+				{/* <View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}> Days Left:</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft.toString()} onChangeText={(text) => setDaysLeft(text)} />
-				</View>
+				</View> */}
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>Reward Link:</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="http://" value={rewardLink} onChangeText={(text) => setRewardLink(text)} style={styles.modalInput} />
