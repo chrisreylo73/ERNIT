@@ -1,124 +1,66 @@
+// Import necessary modules and components
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate }) => {
-	// const [numRows, setNumRows] = useState("");
 	const [title, setTitle] = useState(item.title);
-	// const [totalDays, setTotalDays] = useState(item.totalDays);
 	const [rewardLink, setRewardLink] = useState(item.rewardLink);
 	const [rewardImage, setRewardImage] = useState(item.rewardImage);
-	// const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [gotError, setGotError] = useState(false);
-	// const [gridData, setGridData] = useState(item.gridData);
 
+	// Validate if the URL is in a valid format
 	const isValidUrl = (url) => {
 		// Regular expression to check if the URL is valid
 		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
 		return urlPattern.test(url);
 	};
 
+	// Reset error state after a timeout
 	const resetError = () => {
 		setTimeout(() => {
 			setGotError(false);
 		}, 5000);
 	};
 
-	// useEffect(() => {
-	// 	for (let i = 0; i < item.daysCompleted.length; i++) {
-	// 		updateGridData();
-	// 	}
-	// }, [gridData]);
-
-	// useEffect(() => {
-	// 	setNumRows(Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1);
-	// }, [totalDays]);
-
-	// useEffect(() => {
-	// 	setGridData(
-	// 		Array.from({ length: numRows }, (_, rowIndex) =>
-	// 			Array.from({ length: numRows }, (_, colIndex) => ({
-	// 				key: `${rowIndex}-${colIndex}`,
-	// 				visible: true,
-	// 			}))
-	// 		)
-	// 	);
-	// }, [numRows]);
-
-	// const updateGridData = (index) => {
-	// 	const updatedGridData = [...gridData];
-	// 	const [rowIndex, colIndex] = index.split("-");
-	// 	updatedGridData[rowIndex][colIndex].visible = !updatedGridData[rowIndex][colIndex].visible;
-	// 	setGridData(updatedGridData);
-	// };
-
-	// const getRandomTileIndex = (rows) => {
-	// 	let randomRow = Math.floor(Math.random() * rows);
-	// 	let randomColumn = Math.floor(Math.random() * rows);
-	// 	while (gridData[randomRow][randomColumn].visible === false) {
-	// 		randomRow = Math.floor(Math.random() * rows);
-	// 		randomColumn = Math.floor(Math.random() * rows);
-	// 	}
-	// 	return `${randomRow}-${randomColumn}`;
-	// };
-
+	// Handle button press to update a module
 	const handleUpdateButtonPress = async () => {
+		// Validation for input fields
 		if (!title) {
 			setGotError(true);
 			setErrorMessage("Please fill out the title");
-			resetError();
-			console.log("title: ", title);
-			console.log("RewardLink: ", rewardLink);
-			console.log("RewardImage: ", rewardImage);
+			resetError(false);
 			return;
-		}
-		// else if (!totalDays) {
-		// 	setGotError(true);
-		// 	setErrorMessage("Please fill out the total days");
-		// 	resetError(false);
-		// 	return;
-		// }
-		// else if (totalDays > 100) {
-		// 	setGotError(true);
-		// 	setErrorMessage("Total days is limited to 100 days for performance");
-		// 	resetError(false);
-		// 	return;
-		// }
-		else if (!rewardLink) {
+		} else if (!rewardLink) {
 			setGotError(true);
 			setErrorMessage("Please fill out the reward link");
 			resetError(false);
 			return;
-		}
-		// else if (item.totalDays >= totalDays) {
-		// 	setGotError(true);
-		// 	setErrorMessage("You can only increase the the number of total days");
-		// 	resetError(false);
-		// }
-		// else if (!isValidUrl(rewardLink)) {
-		// 	setGotError(true);
-		// 	setErrorMessage("Invalid Link");
-		// 	resetError(false);
-		// 	return;
-		// }
-		else if (!rewardImage) {
+		} else if (!rewardImage) {
 			setGotError(true);
 			setErrorMessage("Please select a reward image");
 			resetError(false);
 			return;
+		} else if (!isValidUrl(rewardLink)) {
+			setGotError(true);
+			setErrorMessage("Invalid Link");
+			resetError(false);
+			return;
 		}
+
 		setErrorMessage(false);
 		setErrorMessage("");
 
+		// Update state and trigger onUpdate callback
 		onUpdate({ ...item, title, rewardImage: rewardImage, rewardLink: rewardLink });
 		setUpdateMenuVisible(false);
 	};
 
+	// Render the UpdateMenu component
 	return (
 		<Modal animationType="slide" transparent={true} visible={isUpdateMenuVisible} onRequestClose={() => setUpdateMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
@@ -153,6 +95,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate 
 
 export default UpdateMenu;
 
+// Styles for the component
 const styles = StyleSheet.create({
 	header: {
 		marginTop: 20,
@@ -206,8 +149,6 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		color: "white",
 		width: "90%",
-		//borderRadius: 1,
-		// padding: 3,
 		paddingLeft: 15,
 		paddingRight: 15,
 		height: 45,
@@ -235,3 +176,67 @@ const styles = StyleSheet.create({
 		right: 20,
 	},
 });
+
+/// FOR FUTURE FEATURES
+
+// else if (!totalDays) {
+// 	setGotError(true);
+// 	setErrorMessage("Please fill out the total days");
+// 	resetError(false);
+// 	return;
+// }
+// else if (totalDays > 100) {
+// 	setGotError(true);
+// 	setErrorMessage("Total days is limited to 100 days for performance");
+// 	resetError(false);
+// 	return;
+// }
+// else if (item.totalDays >= totalDays) {
+// 	setGotError(true);
+// 	setErrorMessage("You can only increase the the number of total days");
+// 	resetError(false);
+// }
+// else if (!isValidUrl(rewardLink)) {
+// 	setGotError(true);
+// 	setErrorMessage("Invalid Link");
+// 	resetError(false);
+// 	return;
+// }
+
+// useEffect(() => {
+// 	for (let i = 0; i < item.daysCompleted.length; i++) {
+// 		updateGridData();
+// 	}
+// }, [gridData]);
+
+// useEffect(() => {
+// 	setNumRows(Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1);
+// }, [totalDays]);
+
+// useEffect(() => {
+// 	setGridData(
+// 		Array.from({ length: numRows }, (_, rowIndex) =>
+// 			Array.from({ length: numRows }, (_, colIndex) => ({
+// 				key: `${rowIndex}-${colIndex}`,
+// 				visible: true,
+// 			}))
+// 		)
+// 	);
+// }, [numRows]);
+
+// const updateGridData = (index) => {
+// 	const updatedGridData = [...gridData];
+// 	const [rowIndex, colIndex] = index.split("-");
+// 	updatedGridData[rowIndex][colIndex].visible = !updatedGridData[rowIndex][colIndex].visible;
+// 	setGridData(updatedGridData);
+// };
+
+// const getRandomTileIndex = (rows) => {
+// 	let randomRow = Math.floor(Math.random() * rows);
+// 	let randomColumn = Math.floor(Math.random() * rows);
+// 	while (gridData[randomRow][randomColumn].visible === false) {
+// 		randomRow = Math.floor(Math.random() * rows);
+// 		randomColumn = Math.floor(Math.random() * rows);
+// 	}
+// 	return `${randomRow}-${randomColumn}`;
+// };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
@@ -15,6 +15,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [gotError, setGotError] = useState(false);
 
+	// Close the modal and reset state variables
 	const handleClose = () => {
 		setTitle("");
 		setTotalDays("");
@@ -27,10 +28,12 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		setErrorMessage("");
 	};
 
+	// Update numRows based on totalDays
 	useEffect(() => {
 		setNumRows(Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1);
 	}, [totalDays]);
 
+	// Update gridData based on numRows
 	useEffect(() => {
 		setGridData(
 			Array.from({ length: numRows }, (_, rowIndex) =>
@@ -42,6 +45,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		);
 	}, [numRows]);
 
+	// Get a random tile index based on the number of rows
 	const getRandomTileIndex = (rows) => {
 		let randomRow = Math.floor(Math.random() * rows);
 		let randomColumn = Math.floor(Math.random() * rows);
@@ -52,6 +56,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		return `${randomRow}-${randomColumn}`;
 	};
 
+	// Update randomTileKeys based on numRows and totalDays
 	const updateTileKeys = () => {
 		let a = getRandomTileIndex(numRows);
 		let b = getRandomTileIndex(numRows);
@@ -66,18 +71,21 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		}
 	};
 
+	// Validate if the URL is in a valid format
 	const isValidUrl = (url) => {
 		// Regular expression to check if the URL is valid
 		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
 		return urlPattern.test(url);
 	};
 
+	// Reset error state after a timeout
 	const resetError = () => {
 		setTimeout(() => {
 			setGotError(false);
 		}, 5000);
 	};
 
+	// Format the current date as "YYYY-MM-DD"
 	const formatCurrentDate = () => {
 		const currentDate = new Date().toLocaleDateString().split("/");
 		const formattedDate = `${currentDate[2]}-${currentDate[0]}-${currentDate[1]}`;
@@ -85,15 +93,13 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		return formattedDate;
 	};
 
+	// Handle button press to create a new module
 	const handleCreateButtonPress = async () => {
+		// Validation for input fields
 		if (!title) {
 			setGotError(true);
 			setErrorMessage("Please fill out the title");
-			resetError();
-			console.log("title: ", title);
-			console.log("totalDays: ", totalDays);
-			console.log("RewardLink: ", rewardLink);
-			console.log("RewardImage: ", rewardImage);
+			resetError(false);
 			return;
 		} else if (!totalDays) {
 			setGotError(true);
@@ -110,14 +116,12 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			setErrorMessage("Please fill out the reward link");
 			resetError(false);
 			return;
-		}
-		// else if (!isValidUrl(rewardLink)) {
-		// 	setGotError(true);
-		// 	setErrorMessage("Invalid Link");
-		// 	resetError(false);
-		// 	return;
-		// }
-		else if (!rewardImage) {
+		} else if (!isValidUrl(rewardLink)) {
+			setGotError(true);
+			setErrorMessage("Invalid Link");
+			resetError(false);
+			return;
+		} else if (!rewardImage) {
 			setGotError(true);
 			setErrorMessage("Please select a reward image");
 			resetError(false);
@@ -126,6 +130,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		setErrorMessage(false);
 		setErrorMessage("");
 
+		// Create a new module object
 		const newModule = {
 			id: String(Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0)),
 			title: title,
@@ -142,9 +147,10 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			addBack: 0,
 			gridData: gridData,
 			daysCompleted: [],
-			// daysCompleted: ["2024-01-01", "2024-01-05", "2024-01-10", "2024-01-11"],
 			dateCreated: formatCurrentDate(),
 		};
+
+		// Update state and save data to AsyncStorage
 		setData((prevData) => [...prevData, newModule]);
 		try {
 			await AsyncStorage.setItem("modules", JSON.stringify([...data, newModule]));
@@ -154,6 +160,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		}
 	};
 
+	// Render the AddMenu component
 	return (
 		<Modal animationType="slide" transparent={true} visible={isAddMenuVisible} onRequestClose={handleClose}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
@@ -192,6 +199,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 
 export default AddMenu;
 
+// Styles for the component
 const styles = StyleSheet.create({
 	error: {
 		justifyContent: "center",
@@ -246,8 +254,6 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		color: "white",
 		width: "90%",
-		//borderRadius: 1,
-		// padding: 3,
 		paddingLeft: 15,
 		paddingRight: 15,
 		height: 45,

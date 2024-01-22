@@ -1,21 +1,28 @@
+// Import necessary modules and components
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
-import { Shadow } from "react-native-shadow-2";
 
+// Define the Header functional component
 const Header = () => {
+	// Render the Header component
 	return (
 		<BlurView style={styles.header} intensity={100} tint="dark">
+			{/* View containing the title */}
 			<View>
+				{/* Text displaying the title */}
 				<Text style={styles.title}>ERN-IT</Text>
 			</View>
+			{/* View for separator line */}
 			<View style={styles.separator} />
 		</BlurView>
 	);
 };
 
+// Export the Header component
 export default Header;
 
+// Styles for the component
 const styles = StyleSheet.create({
 	header: {
 		position: "absolute",

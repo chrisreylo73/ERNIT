@@ -1,13 +1,12 @@
+// Import necessary modules and components
 import React, { useState, useEffect, useRef } from "react";
-import { Linking, StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, Animated, Easing } from "react-native";
+import { Linking, StyleSheet, Text, View, Image, TouchableOpacity, Animated, Easing } from "react-native";
 import { BlurView } from "expo-blur";
 import ActionsMenu from "./ActionsMenu";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Shadow } from "react-native-shadow-2";
-import DropShadow from "react-native-drop-shadow";
 
+// Define the ErnitModule component
 const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
-	const AnimatedErnitModule = Animated.createAnimatedComponent(ErnitModule);
+	// State variables for module properties
 	const [tilesLeft, setTilesLeft] = useState(item.tilesLeft);
 	const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 	const [taskFinished, setTaskFinished] = useState(item.taskFinished);
@@ -19,15 +18,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 
-	const formatCurrentDate = () => {
-		//2024-01-22
-		//2024-11-22
-		const currentDate = new Date().toLocaleDateString().split("/");
-		const formattedDate = currentDate[0].length > 1 ? `${currentDate[2]}-${currentDate[0]}-${currentDate[1]}` : `${currentDate[2]}-0${currentDate[0]}-${currentDate[1]}`;
-		console.log(formattedDate);
-		return formattedDate;
-	};
-
+	// Animation effect for fading in the module
 	useEffect(() => {
 		Animated.timing(fadeAnim, {
 			toValue: 1,
@@ -37,53 +28,29 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		}).start();
 	}, [fadeAnim]);
 
+	// Update module when taskFinished changes
 	useEffect(() => {
 		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack, currentDate, randomTileKeys, daysCompleted });
 	}, [taskFinished]);
 
+	// Check and update currentDate if needed
 	useEffect(() => {
 		if (daysLeft !== 0) {
-			if (currentDate === formatCurrentDate()) {
+			if (currentDate !== formatCurrentDate()) {
 				setTaskFinished(false);
 				setCurrentDate(formatCurrentDate());
-				// console.log(new Date().toLocaleDateString());
-				// console.log(new Date().toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" }));
 			}
 		}
 	}, []);
 
+	// Update randomTileKeys when currentDate changes
 	useEffect(() => {
 		if (daysLeft !== 0) {
 			updateTileKeys();
 		}
 	}, [currentDate]);
 
-	const updateTileKeys = () => {
-		let a = getRandomTileIndex(item.rows);
-		let b = getRandomTileIndex(item.rows);
-		if (item.daysLeft === 1 && item.totalDays === 2) {
-			setRandomTileKeys([getRandomTileIndex(item.rows), getRandomTileIndex(item.rows)]);
-		} else if (item.daysLeft === 1) {
-			setRandomTileKeys([a]);
-		} else {
-			while (a === b) {
-				a = getRandomTileIndex(item.rows);
-				b = getRandomTileIndex(item.rows);
-			}
-			setRandomTileKeys([a, b]);
-		}
-	};
-
-	const getRandomTileIndex = (rows) => {
-		let randomRow = Math.floor(Math.random() * rows);
-		let randomColumn = Math.floor(Math.random() * rows);
-		while (gridData[randomRow][randomColumn].visible === false) {
-			randomRow = Math.floor(Math.random() * rows);
-			randomColumn = Math.floor(Math.random() * rows);
-		}
-		return `${randomRow}-${randomColumn}`;
-	};
-
+	// Handle module press event
 	const handlePress = () => {
 		if (taskFinished === false) {
 			if (tilesLeft - daysLeft === 0) {
@@ -114,11 +81,52 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		setTaskFinished((prevTaskFinished) => !prevTaskFinished);
 	};
 
+	// Format the current date as "YYYY-MM-DD"
+	const formatCurrentDate = () => {
+		//2024-01-22
+		//2024-11-22
+		const currentDate = new Date().toLocaleDateString().split("/");
+		const formattedDate = currentDate[0].length > 1 ? `${currentDate[2]}-${currentDate[0]}-${currentDate[1]}` : `${currentDate[2]}-0${currentDate[0]}-${currentDate[1]}`;
+		console.log(formattedDate);
+		return formattedDate;
+	};
+
+	// Update randomTileKeys
+	const updateTileKeys = () => {
+		let a = getRandomTileIndex(item.rows);
+		let b = getRandomTileIndex(item.rows);
+		if (item.daysLeft === 1 && item.totalDays === 2) {
+			setRandomTileKeys([getRandomTileIndex(item.rows), getRandomTileIndex(item.rows)]);
+		} else if (item.daysLeft === 1) {
+			setRandomTileKeys([a]);
+		} else {
+			while (a === b) {
+				a = getRandomTileIndex(item.rows);
+				b = getRandomTileIndex(item.rows);
+			}
+			setRandomTileKeys([a, b]);
+		}
+	};
+
+	// Get a random tile index
+	// EX: 1-2
+	const getRandomTileIndex = (rows) => {
+		let randomRow = Math.floor(Math.random() * rows);
+		let randomColumn = Math.floor(Math.random() * rows);
+		while (gridData[randomRow][randomColumn].visible === false) {
+			randomRow = Math.floor(Math.random() * rows);
+			randomColumn = Math.floor(Math.random() * rows);
+		}
+		return `${randomRow}-${randomColumn}`;
+	};
+
+	// Remove a date from the daysCompleted array
 	const removeDate = (dateToRemove) => {
 		const updatedDays = daysCompleted.filter((date) => date !== dateToRemove);
 		setDaysCompleted(updatedDays);
 	};
 
+	// Update gridData to toggle visibility of a grid box
 	const updateGridData = (index) => {
 		const updatedGridData = [...gridData];
 		const [rowIndex, colIndex] = index.split("-");
@@ -126,6 +134,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		setGridData(updatedGridData);
 	};
 
+	// Open the reward link if daysLeft is 0
 	handleLink = () => {
 		if (daysLeft === 0) {
 			Linking.openURL(item.rewardLink).catch((err) => console.error("An error occurred while opening the link:", err));
@@ -133,6 +142,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 		console.log(item);
 	};
 
+	// Render the ErnitModule component
 	return (
 		<Animated.View style={{ opacity: fadeAnim }}>
 			<BlurView intensity={100} tint="dark" style={styles.container}>
@@ -183,6 +193,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 
 export default ErnitModule;
 
+// Styles for the component
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
@@ -278,10 +289,6 @@ const styles = StyleSheet.create({
 		borderColor: "#4a4a4e",
 		margin: -0.5,
 		backgroundColor: "rgba(0, 0, 0, 0.85)",
-	},
-	updatedStyle: {
-		backgroundColor: "transparent",
-		borderColor: "transparent",
 	},
 	dayCounter: {
 		flexDirection: "row",

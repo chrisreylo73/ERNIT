@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+// Import necessary modules and components
+import { useEffect } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
+// Define the ImagePickerComponent functional component
 const ImagePickerComponent = ({ rewardImage, setRewardImage }) => {
+	// Use effect to request media library permissions when the component mounts
 	useEffect(() => {
 		(async () => {
+			// Request permission to access the media library
 			const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 			if (status !== "granted") {
 				console.error("Permission to access gallery was denied");
@@ -12,29 +16,33 @@ const ImagePickerComponent = ({ rewardImage, setRewardImage }) => {
 		})();
 	}, []);
 
+	// Function to pick an image from the gallery
 	const pickImage = async () => {
 		try {
+			// Launch the image picker with specified options
 			const result = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
 				allowsEditing: true,
 				aspect: [3, 3],
 				quality: 1,
 			});
-			//console.log(result);
 
+			// If an image is selected, update the reward image state
 			if (!result.canceled) {
 				const selectedImageUri = result.assets[0].uri;
 				setRewardImage(selectedImageUri);
-				//console.log(selectedImageUri);
 			}
 		} catch (error) {
 			console.error("Error picking an image", error);
 		}
 	};
 
+	// Render the ImagePickerComponent
 	return (
 		<View>
+			{/* Display the selected reward image if available */}
 			{rewardImage && <Image style={styles.image} source={{ uri: rewardImage }} />}
+			{/* Button to trigger the image picker */}
 			<TouchableOpacity onPress={pickImage} style={styles.button}>
 				<Text style={styles.buttonText}>SELECT IMAGE</Text>
 			</TouchableOpacity>
@@ -42,8 +50,10 @@ const ImagePickerComponent = ({ rewardImage, setRewardImage }) => {
 	);
 };
 
+// Export the ImagePickerComponent
 export default ImagePickerComponent;
 
+// Styles for the component
 const styles = StyleSheet.create({
 	image: {
 		borderRadius: 20,
@@ -58,7 +68,6 @@ const styles = StyleSheet.create({
 		borderColor: "#2b2b2b",
 		borderWidth: 1,
 		padding: 8,
-		// alignSelf: "center",
 		borderRadius: 5,
 		width: 160,
 		height: 40,

@@ -1,7 +1,6 @@
+// Import necessary modules and components
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput, Image, ScrollView, Alert } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet, Text, View, TouchableOpacity, Modal, Image, ScrollView, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -10,16 +9,20 @@ import { Calendar } from "react-native-calendars";
 import * as Progress from "react-native-progress";
 import UpdateMenu from "./UpdateMenu";
 
+// Define the ActionsMenu functional component
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete, setDaysCompleted, daysCompleted, currentDate, removeDate, daysLeft }) => {
+	// State variables
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
 	const [completionRate, setCompletionRate] = useState(0);
 	const [markedDates, setMarkedDates] = useState({});
 
+	// useEffect hook to update completion rate and marked dates when daysCompleted changes
 	useEffect(() => {
 		getCompletionRate();
 		markDatesFromArray();
 	}, [daysCompleted]);
 
+	// Function to handle delete button press, showing confirmation alert
 	const handleDeleteButtonPress = () => {
 		Alert.alert(
 			"Confirm Deletion",
@@ -35,76 +38,38 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 						onDelete(item.id);
 						setActionsMenuVisible(false);
 					},
-					style: "destructive", // You can use 'destructive' for the delete button to highlight its significance
+					style: "destructive",
 				},
 			],
 			{ cancelable: false }
 		);
 	};
 
+	// Function to mark dates from daysCompleted array on the calendar
 	const markDatesFromArray = () => {
 		const markedDatesObj = {};
-		console.log(daysCompleted);
 		daysCompleted.forEach((date) => {
-			markedDatesObj[date] = { selected: true, selectedColor: "white" }; // You can customize the color here
+			markedDatesObj[date] = { selected: true, selectedColor: "white" };
 		});
 		setMarkedDates(markedDatesObj);
 	};
 
+	// Function to calculate and set the completion rate
 	const getCompletionRate = () => {
 		if (daysCompleted.length !== 0) {
 			const a = daysCompleted[0].split("-");
 			const b = currentDate.split("-");
-			const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+			const oneDay = 24 * 60 * 60 * 1000;
 			const firstDate = new Date(a[1], a[0], a[2]);
 			const secondDate = new Date(b[1], b[0], b[2]);
 			const numDatesBetween = Math.round(Math.abs((secondDate - firstDate) / oneDay) + 1);
 			setCompletionRate(daysCompleted.length / numDatesBetween);
-			console.log("numDatesBetween: ", numDatesBetween);
-			console.log("daysCompleted Length: ", daysCompleted.length);
-			console.log("Completion Rate: ", daysCompleted.length / numDatesBetween);
 		} else {
 			setCompletionRate(0);
 		}
 	};
 
-	const handleCalendarPress = (day) => {
-		// if (daysCompleted.length !== 0) {
-		// 	const startDate = new Date(daysCompleted[0]);
-		// 	const currentDate = new Date(currentDate);
-		// 	const dayClicked = new Date(day.dateString);
-		// 	if (startDate <= dayClicked && dayClicked <= currentDate) {
-		// 		// IN ARRAY
-		// 		if (daysCompleted.includes(day.dateString)) {
-		// 			// 	if (addBack === 1) {
-		// 			// 		setTilesLeft((tilesLeft) => tilesLeft + 1);
-		// 			// 		updateGridData(randomTileKeys[0]);
-		// 			// 	} else if (addBack === 2) {
-		// 			// 		setTilesLeft((tilesLeft) => tilesLeft + 2);
-		// 			// 		updateGridData(randomTileKeys[0]);
-		// 			// 		updateGridData(randomTileKeys[1]);
-		// 			// 	}
-		// 			// 	setDaysLeft((daysLeft) => daysLeft + 1);
-		// 			// 	removeDate(day.dateString);
-		// 		} else {
-		// 			// NOT IN ARRAY
-		// 			// if (tilesLeft - daysLeft === 0) {
-		// 			// 	setTilesLeft((tilesLeft) => tilesLeft - 1);
-		// 			// 	updateGridData(randomTileKeys[0]);
-		// 			// 	setAddBack(1);
-		// 			// } else {
-		// 			// 	setTilesLeft((tilesLeft) => tilesLeft - 2);
-		// 			// 	updateGridData(randomTileKeys[0]);
-		// 			// 	updateGridData(randomTileKeys[1]);
-		// 			// 	setAddBack(2);
-		// 			// }
-		// 			// setDaysLeft((daysLeft) => daysLeft - 1);
-		// 			// setDaysCompleted([...daysCompleted, day.dateString]);
-		// 		}
-		// 	}
-		// }
-	};
-
+	// Render the ActionsMenu component
 	return (
 		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
@@ -141,24 +106,14 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 							<Text style={styles.progressBarPercent}>{Math.round(completionRate * 100)}%</Text>
 							<Progress.Bar borderRadius={10} height={17} unfilledColor="#111111" borderWidth={0} progress={completionRate} width={330} color={"white"} style={{ marginBottom: 20 }} />
 						</View>
-						{/* <View style={styles.circleStats}>
-							<View style={styles.streak}>
-								<Text style={styles.statsText}>CURRENT STREAK</Text>
-								<Text style={[styles.statsText, { color: "white" }]}>6</Text>
-							</View>
-							<View style={styles.streak}>
-								<Text style={styles.statsText}>HIGHEST STREAK</Text>
-								<Text style={[styles.statsText, { color: "white" }]}>12</Text>
-							</View>
-						</View> */}
 					</View>
 					<View style={styles.calendarContainer}>
 						<Calendar
 							style={styles.calendar}
 							hideExtraDays={true}
 							onDayPress={(day) => {
-								handleCalendarPress(day);
-								//console.log("selected day", day);
+								// handleCalendarPress(day);
+								console.log("selected day", day);
 							}}
 							markedDates={markedDates}
 							theme={{
@@ -209,6 +164,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 
 export default ActionsMenu;
 
+// Styles for the component
 const styles = StyleSheet.create({
 	progressBarOverlay: {
 		marginTop: 3,
@@ -221,7 +177,6 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 	},
 	dayCounter: {
-		// flexDirection: "row",
 		marginTop: 11,
 		alignItems: "center",
 	},
@@ -247,7 +202,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		overflow: "hidden",
 		alignItems: "center",
-		//padding: 10,
+
 		borderWidth: 1,
 		borderRadius: 15,
 		marginVertical: 5,
@@ -276,16 +231,12 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	header: {
-		// position: "absolute",
 		marginTop: 20,
 		width: 260,
 		borderRadius: 100,
 		alignItems: "center",
-		// top: 0,
-		// zIndex: 2,
 	},
 	title: {
-		// marginTop: 40,
 		textAlign: "center",
 		fontSize: 20,
 		fontWeight: "bold",
@@ -306,7 +257,6 @@ const styles = StyleSheet.create({
 		height: 260,
 		width: 260,
 		resizeMode: "cover",
-		// borderRadius: 10,
 	},
 	gridBox: {
 		flex: 1,
@@ -352,7 +302,6 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 5,
 		right: 0,
-		// zIndex: 2,
 	},
 	deleteButton: {
 		alignItems: "center",
@@ -373,3 +322,40 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 	},
 });
+
+// const handleCalendarPress = (day) => {
+// if (daysCompleted.length !== 0) {
+// 	const startDate = new Date(daysCompleted[0]);
+// 	const currentDate = new Date(currentDate);
+// 	const dayClicked = new Date(day.dateString);
+// 	if (startDate <= dayClicked && dayClicked <= currentDate) {
+// 		// IN ARRAY
+// 		if (daysCompleted.includes(day.dateString)) {
+// 			// 	if (addBack === 1) {
+// 			// 		setTilesLeft((tilesLeft) => tilesLeft + 1);
+// 			// 		updateGridData(randomTileKeys[0]);
+// 			// 	} else if (addBack === 2) {
+// 			// 		setTilesLeft((tilesLeft) => tilesLeft + 2);
+// 			// 		updateGridData(randomTileKeys[0]);
+// 			// 		updateGridData(randomTileKeys[1]);
+// 			// 	}
+// 			// 	setDaysLeft((daysLeft) => daysLeft + 1);
+// 			// 	removeDate(day.dateString);
+// 		} else {
+// 			// NOT IN ARRAY
+// 			// if (tilesLeft - daysLeft === 0) {
+// 			// 	setTilesLeft((tilesLeft) => tilesLeft - 1);
+// 			// 	updateGridData(randomTileKeys[0]);
+// 			// 	setAddBack(1);
+// 			// } else {
+// 			// 	setTilesLeft((tilesLeft) => tilesLeft - 2);
+// 			// 	updateGridData(randomTileKeys[0]);
+// 			// 	updateGridData(randomTileKeys[1]);
+// 			// 	setAddBack(2);
+// 			// }
+// 			// setDaysLeft((daysLeft) => daysLeft - 1);
+// 			// setDaysCompleted([...daysCompleted, day.dateString]);
+// 		}
+// 	}
+// }
+// };
