@@ -6,14 +6,16 @@ import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, item, onUpdate }) => {
+const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate }) => {
+	// const [numRows, setNumRows] = useState("");
 	const [title, setTitle] = useState(item.title);
-	const [totalDays, setTotalDays] = useState(item.totalDays);
+	// const [totalDays, setTotalDays] = useState(item.totalDays);
 	const [rewardLink, setRewardLink] = useState(item.rewardLink);
 	const [rewardImage, setRewardImage] = useState(item.rewardImage);
 	// const [daysLeft, setDaysLeft] = useState(item.daysLeft);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [gotError, setGotError] = useState(false);
+	// const [gridData, setGridData] = useState(item.gridData);
 
 	const isValidUrl = (url) => {
 		// Regular expression to check if the URL is valid
@@ -27,32 +29,77 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 		}, 5000);
 	};
 
+	// useEffect(() => {
+	// 	for (let i = 0; i < item.daysCompleted.length; i++) {
+	// 		updateGridData();
+	// 	}
+	// }, [gridData]);
+
+	// useEffect(() => {
+	// 	setNumRows(Number.isInteger(Math.sqrt(totalDays)) ? Math.sqrt(totalDays) : Math.floor(Math.sqrt(totalDays)) + 1);
+	// }, [totalDays]);
+
+	// useEffect(() => {
+	// 	setGridData(
+	// 		Array.from({ length: numRows }, (_, rowIndex) =>
+	// 			Array.from({ length: numRows }, (_, colIndex) => ({
+	// 				key: `${rowIndex}-${colIndex}`,
+	// 				visible: true,
+	// 			}))
+	// 		)
+	// 	);
+	// }, [numRows]);
+
+	// const updateGridData = (index) => {
+	// 	const updatedGridData = [...gridData];
+	// 	const [rowIndex, colIndex] = index.split("-");
+	// 	updatedGridData[rowIndex][colIndex].visible = !updatedGridData[rowIndex][colIndex].visible;
+	// 	setGridData(updatedGridData);
+	// };
+
+	// const getRandomTileIndex = (rows) => {
+	// 	let randomRow = Math.floor(Math.random() * rows);
+	// 	let randomColumn = Math.floor(Math.random() * rows);
+	// 	while (gridData[randomRow][randomColumn].visible === false) {
+	// 		randomRow = Math.floor(Math.random() * rows);
+	// 		randomColumn = Math.floor(Math.random() * rows);
+	// 	}
+	// 	return `${randomRow}-${randomColumn}`;
+	// };
+
 	const handleUpdateButtonPress = async () => {
 		if (!title) {
 			setGotError(true);
 			setErrorMessage("Please fill out the title");
 			resetError();
 			console.log("title: ", title);
-			console.log("totalDays: ", totalDays);
 			console.log("RewardLink: ", rewardLink);
 			console.log("RewardImage: ", rewardImage);
 			return;
-		} else if (!totalDays) {
-			setGotError(true);
-			setErrorMessage("Please fill out the total days");
-			resetError(false);
-			return;
-		} else if (totalDays > 100) {
-			setGotError(true);
-			setErrorMessage("Total days is limited to 100 days for performance");
-			resetError(false);
-			return;
-		} else if (!rewardLink) {
+		}
+		// else if (!totalDays) {
+		// 	setGotError(true);
+		// 	setErrorMessage("Please fill out the total days");
+		// 	resetError(false);
+		// 	return;
+		// }
+		// else if (totalDays > 100) {
+		// 	setGotError(true);
+		// 	setErrorMessage("Total days is limited to 100 days for performance");
+		// 	resetError(false);
+		// 	return;
+		// }
+		else if (!rewardLink) {
 			setGotError(true);
 			setErrorMessage("Please fill out the reward link");
 			resetError(false);
 			return;
 		}
+		// else if (item.totalDays >= totalDays) {
+		// 	setGotError(true);
+		// 	setErrorMessage("You can only increase the the number of total days");
+		// 	resetError(false);
+		// }
 		// else if (!isValidUrl(rewardLink)) {
 		// 	setGotError(true);
 		// 	setErrorMessage("Invalid Link");
@@ -68,31 +115,26 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 		setErrorMessage(false);
 		setErrorMessage("");
 
-		onUpdate({ ...item, title, totalDays: parseInt(totalDays), rewardImage: rewardImage, rewardLink: rewardLink });
+		onUpdate({ ...item, title, rewardImage: rewardImage, rewardLink: rewardLink });
 		setUpdateMenuVisible(false);
 	};
 
 	return (
 		<Modal animationType="slide" transparent={true} visible={isUpdateMenuVisible} onRequestClose={() => setUpdateMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
-				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Action Title:</Text>
-					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter daily action title" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
+				<View style={styles.header}>
+					<Text style={styles.title}>UPDATE MODULE</Text>
 				</View>
 				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Total Days:</Text>
-					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays.toString()} onChangeText={(text) => setTotalDays(text)} />
+					<Text style={styles.modalText}>TASK TITLE</Text>
+					<TextInput placeholderTextColor="#4a4a4e" placeholder="EX: Practice Guitar" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
 				</View>
-				{/* <View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}> Days Left:</Text>
-					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter number of days left" keyboardType="numeric" style={styles.modalInput} value={daysLeft.toString()} onChangeText={(text) => setDaysLeft(text)} />
-				</View> */}
 				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Reward Link:</Text>
+					<Text style={styles.modalText}>REWARD LINK</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="http://" value={rewardLink} onChangeText={(text) => setRewardLink(text)} style={styles.modalInput} />
 				</View>
 				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Reward Image:</Text>
+					<Text style={styles.modalText}>REWARD IMAGE</Text>
 					<ImagePickerComponent setRewardImage={setRewardImage} rewardImage={rewardImage} />
 				</View>
 				<TouchableOpacity style={styles.updateButton} onPress={handleUpdateButtonPress}>
@@ -101,7 +143,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 				<TouchableOpacity style={styles.closeButton} onPress={() => setUpdateMenuVisible(false)}>
 					<AntDesign name="close" size={24} color="white" />
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.error, , { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
+				<TouchableOpacity style={[styles.error, { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
 					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
 				</TouchableOpacity>
 			</BlurView>
@@ -112,6 +154,17 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, data, setData, 
 export default UpdateMenu;
 
 const styles = StyleSheet.create({
+	header: {
+		marginTop: 20,
+		width: 260,
+		borderRadius: 100,
+		alignItems: "center",
+		marginBottom: 20,
+	},
+	title: {
+		color: "white",
+		fontSize: 18,
+	},
 	error: {
 		justifyContent: "center",
 		alignItems: "center",
@@ -129,18 +182,18 @@ const styles = StyleSheet.create({
 	},
 	modalContainer: {
 		flex: 1,
-		justifyContent: "center",
+		justifyContent: "flex-start",
 		alignItems: "center",
 		backgroundColor: "#111111",
 		width: "100%",
-		hight: "100%",
+		height: "100%",
 	},
 	modalContainerRow: {
-		padding: 10,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		width: "90%",
+		marginVertical: 8,
+		justifyContent: "flex-start",
+		alignItems: "left",
+		marginLeft: 50,
+		width: "100%",
 	},
 	modalText: {
 		color: "white",
@@ -152,11 +205,13 @@ const styles = StyleSheet.create({
 		borderColor: "#2b2b2b",
 		borderWidth: 1,
 		color: "white",
-		width: 200,
-		borderRadius: 5,
-		padding: 3,
-		paddingLeft: 5,
-		paddingRight: 5,
+		width: "90%",
+		//borderRadius: 1,
+		// padding: 3,
+		paddingLeft: 15,
+		paddingRight: 15,
+		height: 45,
+		borderRadius: 10,
 	},
 	buttonText: {
 		textAlign: "center",

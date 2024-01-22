@@ -10,7 +10,7 @@ import { Calendar } from "react-native-calendars";
 import * as Progress from "react-native-progress";
 import UpdateMenu from "./UpdateMenu";
 
-const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete }) => {
+const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete, setDaysCompleted, daysCompleted, currentDate, removeDate, daysLeft }) => {
 	const [isUpdateMenuVisible, setUpdateMenuVisible] = useState(false);
 	const [completionRate, setCompletionRate] = useState(0);
 	const [markedDates, setMarkedDates] = useState({});
@@ -18,7 +18,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 	useEffect(() => {
 		getCompletionRate();
 		markDatesFromArray();
-	}, [item.daysLeft]);
+	}, [daysCompleted]);
 
 	const handleDeleteButtonPress = () => {
 		Alert.alert(
@@ -43,37 +43,66 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 	};
 
 	const markDatesFromArray = () => {
-		const datesToMark = item.daysCompleted; // Replace with your array of dates
 		const markedDatesObj = {};
-		datesToMark.forEach((date) => {
+		console.log(daysCompleted);
+		daysCompleted.forEach((date) => {
 			markedDatesObj[date] = { selected: true, selectedColor: "white" }; // You can customize the color here
 		});
 		setMarkedDates(markedDatesObj);
 	};
 
 	const getCompletionRate = () => {
-		if (item.daysCompleted.length !== 0) {
-			const a = item.daysCompleted[0].split("-");
-			const b = item.currentDate.split("-");
+		if (daysCompleted.length !== 0) {
+			const a = daysCompleted[0].split("-");
+			const b = currentDate.split("-");
 			const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 			const firstDate = new Date(a[1], a[0], a[2]);
 			const secondDate = new Date(b[1], b[0], b[2]);
 			const numDatesBetween = Math.round(Math.abs((secondDate - firstDate) / oneDay) + 1);
-			setCompletionRate(item.daysCompleted.length / numDatesBetween);
+			setCompletionRate(daysCompleted.length / numDatesBetween);
 			console.log("numDatesBetween: ", numDatesBetween);
-			console.log("daysCompleted Length: ", item.daysCompleted.length);
-			console.log("Completion Rate: ", item.daysCompleted.length / numDatesBetween);
+			console.log("daysCompleted Length: ", daysCompleted.length);
+			console.log("Completion Rate: ", daysCompleted.length / numDatesBetween);
 		} else {
 			setCompletionRate(0);
 		}
 	};
 
 	const handleCalendarPress = (day) => {
-		console.log(day.dateString);
-		if (item.daysCompleted.includes(day.dayString)) {
-			const updatedDaysCompleted = item.daysCompleted.filter((day) => day.dayString !== item.daysCompleted);
-			console.log(updatedDaysCompleted);
-		}
+		// if (daysCompleted.length !== 0) {
+		// 	const startDate = new Date(daysCompleted[0]);
+		// 	const currentDate = new Date(currentDate);
+		// 	const dayClicked = new Date(day.dateString);
+		// 	if (startDate <= dayClicked && dayClicked <= currentDate) {
+		// 		// IN ARRAY
+		// 		if (daysCompleted.includes(day.dateString)) {
+		// 			// 	if (addBack === 1) {
+		// 			// 		setTilesLeft((tilesLeft) => tilesLeft + 1);
+		// 			// 		updateGridData(randomTileKeys[0]);
+		// 			// 	} else if (addBack === 2) {
+		// 			// 		setTilesLeft((tilesLeft) => tilesLeft + 2);
+		// 			// 		updateGridData(randomTileKeys[0]);
+		// 			// 		updateGridData(randomTileKeys[1]);
+		// 			// 	}
+		// 			// 	setDaysLeft((daysLeft) => daysLeft + 1);
+		// 			// 	removeDate(day.dateString);
+		// 		} else {
+		// 			// NOT IN ARRAY
+		// 			// if (tilesLeft - daysLeft === 0) {
+		// 			// 	setTilesLeft((tilesLeft) => tilesLeft - 1);
+		// 			// 	updateGridData(randomTileKeys[0]);
+		// 			// 	setAddBack(1);
+		// 			// } else {
+		// 			// 	setTilesLeft((tilesLeft) => tilesLeft - 2);
+		// 			// 	updateGridData(randomTileKeys[0]);
+		// 			// 	updateGridData(randomTileKeys[1]);
+		// 			// 	setAddBack(2);
+		// 			// }
+		// 			// setDaysLeft((daysLeft) => daysLeft - 1);
+		// 			// setDaysCompleted([...daysCompleted, day.dateString]);
+		// 		}
+		// 	}
+		// }
 	};
 
 	return (
@@ -129,7 +158,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 							hideExtraDays={true}
 							onDayPress={(day) => {
 								handleCalendarPress(day);
-								console.log("selected day", day);
+								//console.log("selected day", day);
 							}}
 							markedDates={markedDates}
 							theme={{
@@ -172,13 +201,6 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 						<MaterialIcons name="delete-outline" size={24} color="white" />
 					</TouchableOpacity>
 				</View>
-				{/* <View>
-					<View>
-						<TouchableOpacity>
-							<Text></Text>
-						</TouchableOpacity>
-					</View>
-				</View> */}
 			</BlurView>
 			<UpdateMenu data={data} setData={setData} onUpdate={onUpdate} isUpdateMenuVisible={isUpdateMenuVisible} setUpdateMenuVisible={setUpdateMenuVisible} item={item} />
 		</Modal>

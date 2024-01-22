@@ -78,6 +78,13 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 		}, 5000);
 	};
 
+	const formatCurrentDate = () => {
+		const currentDate = new Date().toLocaleDateString().split("/");
+		const formattedDate = `${currentDate[2]}-${currentDate[0]}-${currentDate[1]}`;
+		console.log(formattedDate);
+		return formattedDate;
+	};
+
 	const handleCreateButtonPress = async () => {
 		if (!title) {
 			setGotError(true);
@@ -130,16 +137,13 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 			tilesLeft: parseInt(numRows * numRows),
 			daysLeft: parseInt(totalDays),
 			taskFinished: false,
-			currentDate: new Date().toISOString().split("T")[0],
+			currentDate: formatCurrentDate(),
 			randomTileKeys: updateTileKeys(),
 			addBack: 0,
 			gridData: gridData,
-			daysCompleted: ["2024-01-01", "2024-01-05", "2024-01-10", "2024-01-11"],
-			dateCreated: new Date().toISOString().split("T")[0],
-			// currentStreak: 0,
-			// highestStreak: 0,
-			// completionRate: 0,
-			// consistencyRate: 0,
+			daysCompleted: [],
+			// daysCompleted: ["2024-01-01", "2024-01-05", "2024-01-10", "2024-01-11"],
+			dateCreated: formatCurrentDate(),
 		};
 		setData((prevData) => [...prevData, newModule]);
 		try {
@@ -153,20 +157,23 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	return (
 		<Modal animationType="slide" transparent={true} visible={isAddMenuVisible} onRequestClose={handleClose}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
-				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Action Title:</Text>
-					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter daily action title" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
+				<View style={styles.header}>
+					<Text style={styles.title}>CREATE NEW MODULE</Text>
 				</View>
 				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Total Days:</Text>
-					<TextInput placeholderTextColor="#4a4a4e" placeholder="Enter number of days" keyboardType="numeric" style={styles.modalInput} value={totalDays} onChangeText={(text) => setTotalDays(text)} />
+					<Text style={styles.modalText}>TASK TITLE</Text>
+					<TextInput placeholderTextColor="#4a4a4e" placeholder="EX: Practice Guitar" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
 				</View>
 				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Reward Link:</Text>
+					<Text style={styles.modalText}>TOTAL DAYS</Text>
+					<TextInput placeholderTextColor="#4a4a4e" placeholder="EX: 30" keyboardType="numeric" style={styles.modalInput} value={totalDays} onChangeText={(text) => setTotalDays(text)} />
+				</View>
+				<View style={styles.modalContainerRow}>
+					<Text style={styles.modalText}>REWARD LINK</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="http://" value={rewardLink} onChangeText={(text) => setRewardLink(text)} style={styles.modalInput} />
 				</View>
 				<View style={styles.modalContainerRow}>
-					<Text style={styles.modalText}>Reward Image:</Text>
+					<Text style={styles.modalText}>REWARD IMAGE</Text>
 					<ImagePickerComponent setRewardImage={setRewardImage} rewardImage={rewardImage} />
 				</View>
 				<TouchableOpacity style={styles.createButton} onPress={handleCreateButtonPress}>
@@ -201,37 +208,50 @@ const styles = StyleSheet.create({
 		color: "white",
 		fontSize: 15,
 	},
+	header: {
+		marginTop: 20,
+		width: 260,
+		borderRadius: 100,
+		alignItems: "center",
+		marginBottom: 20,
+	},
+	title: {
+		color: "white",
+		fontSize: 18,
+	},
 	modalContainer: {
 		flex: 1,
-		justifyContent: "center",
+		justifyContent: "flex-start",
 		alignItems: "center",
 		backgroundColor: "#111111",
+
 		width: "100%",
-		hight: "100%",
+		height: "100%",
 	},
 	modalContainerRow: {
-		padding: 10,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		width: "90%",
+		marginVertical: 8,
+		justifyContent: "flex-start",
+		alignItems: "left",
+		marginLeft: 50,
+		width: "100%",
 	},
 	modalText: {
 		color: "white",
-		fontSize: 18,
-		marginRight: 10,
+		fontSize: 16,
+		marginBottom: 2,
 	},
 	modalInput: {
 		backgroundColor: "#111111",
 		borderColor: "#2b2b2b",
-
 		borderWidth: 1,
 		color: "white",
-		width: 200,
-		borderRadius: 5,
-		padding: 3,
-		paddingLeft: 5,
-		paddingRight: 5,
+		width: "90%",
+		//borderRadius: 1,
+		// padding: 3,
+		paddingLeft: 15,
+		paddingRight: 15,
+		height: 45,
+		borderRadius: 10,
 	},
 	createButton: {
 		alignItems: "center",

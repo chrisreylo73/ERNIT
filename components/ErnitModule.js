@@ -19,6 +19,15 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 	const [isActionsMenuVisible, setActionsMenuVisible] = useState(false);
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 
+	const formatCurrentDate = () => {
+		//2024-01-22
+		//2024-11-22
+		const currentDate = new Date().toLocaleDateString().split("/");
+		const formattedDate = currentDate[0].length > 1 ? `${currentDate[2]}-${currentDate[0]}-${currentDate[1]}` : `${currentDate[2]}-0${currentDate[0]}-${currentDate[1]}`;
+		console.log(formattedDate);
+		return formattedDate;
+	};
+
 	useEffect(() => {
 		Animated.timing(fadeAnim, {
 			toValue: 1,
@@ -27,15 +36,18 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 			useNativeDriver: true,
 		}).start();
 	}, [fadeAnim]);
+
 	useEffect(() => {
 		onUpdate({ ...item, taskFinished, tilesLeft, gridData, daysLeft, addBack, currentDate, randomTileKeys, daysCompleted });
 	}, [taskFinished]);
 
 	useEffect(() => {
 		if (daysLeft !== 0) {
-			if (currentDate === new Date().toISOString().split("T")[0]) {
+			if (currentDate === formatCurrentDate()) {
 				setTaskFinished(false);
-				setCurrentDate(new Date().toISOString().split("T")[0]);
+				setCurrentDate(formatCurrentDate());
+				// console.log(new Date().toLocaleDateString());
+				// console.log(new Date().toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" }));
 			}
 		}
 	}, []);
@@ -85,7 +97,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				setAddBack(2);
 			}
 			setDaysLeft((daysLeft) => daysLeft - 1);
-			setDaysCompleted([...daysCompleted, new Date().toISOString().split("T")[0]]);
+			setDaysCompleted([...daysCompleted, formatCurrentDate()]);
 		}
 		if (taskFinished === true) {
 			if (addBack === 1) {
@@ -97,7 +109,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 				updateGridData(randomTileKeys[1]);
 			}
 			setDaysLeft((daysLeft) => daysLeft + 1);
-			removeDate(new Date().toISOString().split("T")[0]);
+			removeDate(formatCurrentDate());
 		}
 		setTaskFinished((prevTaskFinished) => !prevTaskFinished);
 	};
@@ -163,7 +175,7 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 						))}
 					</View>
 				</TouchableOpacity>
-				<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} />
+				<ActionsMenu item={item} data={data} setData={setData} onUpdate={onUpdate} onDelete={onDelete} isActionsMenuVisible={isActionsMenuVisible} setActionsMenuVisible={setActionsMenuVisible} daysCompleted={daysCompleted} setDaysCompleted={setDaysCompleted} currentDate={currentDate} removeDate={removeDate} daysLeft={daysLeft} />
 			</BlurView>
 		</Animated.View>
 	);
