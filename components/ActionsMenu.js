@@ -1,6 +1,6 @@
 // Import necessary modules and components
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Modal, Image, ScrollView, Alert } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -8,6 +8,7 @@ import { BlurView } from "expo-blur";
 import { Calendar } from "react-native-calendars";
 import * as Progress from "react-native-progress";
 import UpdateMenu from "./UpdateMenu";
+import Modal from "react-native-modal";
 
 // Define the ActionsMenu functional component
 const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, setData, onUpdate, onDelete, setDaysCompleted, daysCompleted, currentDate, removeDate, daysLeft }) => {
@@ -71,7 +72,7 @@ const ActionsMenu = ({ item, isActionsMenuVisible, setActionsMenuVisible, data, 
 
 	// Render the ActionsMenu component
 	return (
-		<Modal animationType="fade" transparent={true} visible={isActionsMenuVisible} onRequestClose={() => setActionsMenuVisible(false)}>
+		<Modal style={styles.modal} isVisible={isActionsMenuVisible} animationIn="fadeIn" animationOut="fadeOut" animationInTiming={500} animationOutTiming={300} coverScreen={true} hasBackdrop={true} backdropOpacity={1} backdropColor="transparent" onRequestClose={() => setActionsMenuVisible(false)}>
 			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
 				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
 					<View style={styles.header}>
@@ -166,6 +167,14 @@ export default ActionsMenu;
 
 // Styles for the component
 const styles = StyleSheet.create({
+	modal: {
+		margin: 0,
+		justifyContent: "flex-end",
+		width: "100%",
+		height: "100%",
+		flex: 1,
+		alignSelf: "center",
+	},
 	progressBarOverlay: {
 		marginTop: 3,
 		alignItems: "center",
@@ -276,7 +285,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		backgroundColor: "#111111",
 		width: "100%",
-		hight: "100%",
+		height: "100%",
 	},
 
 	modalContainerRow: {

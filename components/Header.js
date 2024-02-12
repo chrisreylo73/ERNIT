@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
 	header: {
 		position: "absolute",
 		width: "100%",
-		borderRadius: 100,
 		alignItems: "center",
 		top: 0,
 		zIndex: 2,
@@ -35,7 +34,7 @@ const styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.5,
 		shadowRadius: 2,
-		elevation: 2,
+		elevation: 8,
 	},
 	title: {
 		marginTop: 35,

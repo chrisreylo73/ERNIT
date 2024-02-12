@@ -62,9 +62,12 @@ const styles = StyleSheet.create({
 		height: 160,
 		marginBottom: 10,
 		marginTop: 5,
+		borderColor: "#2b2b2b",
+		borderWidth: 1,
+		backgroundColor: "white",
 	},
 	button: {
-		backgroundColor: "#111111",
+		backgroundColor: "#2b2b2b",
 		borderColor: "#2b2b2b",
 		borderWidth: 1,
 		padding: 8,
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
 	buttonText: {
 		textAlign: "center",
 		flex: 1,
-		color: "#4a4a4e",
+		color: "#111111",
 		fontSize: 16,
 		justifyContent: "center",
 		alignItems: "center",

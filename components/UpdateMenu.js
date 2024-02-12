@@ -1,10 +1,11 @@
 // Import necessary modules and components
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Keyboard } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 
 const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate }) => {
 	const [title, setTitle] = useState(item.title);
@@ -12,6 +13,16 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate 
 	const [rewardImage, setRewardImage] = useState(item.rewardImage);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [gotError, setGotError] = useState(false);
+
+	const handleClose = () => {
+		Keyboard.dismiss();
+		setTitle("");
+		setRewardLink("");
+		setRewardImage(null);
+		setUpdateMenuVisible(false);
+		setErrorMessage(false);
+		setErrorMessage("");
+	};
 
 	// Validate if the URL is in a valid format
 	const isValidUrl = (url) => {
@@ -51,7 +62,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate 
 			resetError(false);
 			return;
 		}
-
+		Keyboard.dismiss();
 		setErrorMessage(false);
 		setErrorMessage("");
 
@@ -62,8 +73,8 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate 
 
 	// Render the UpdateMenu component
 	return (
-		<Modal animationType="slide" transparent={true} visible={isUpdateMenuVisible} onRequestClose={() => setUpdateMenuVisible(false)}>
-			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
+		<Modal style={styles.modal} isVisible={isUpdateMenuVisible} animationIn="slideInUp" animationOut="slideOutDown" animationInTiming={500} animationOutTiming={500} coverScreen={true} hasBackdrop={true} backdropOpacity={1} backdropColor="#111111" onRequestClose={handleClose}>
+			<View style={styles.modalContainer}>
 				<View style={styles.header}>
 					<Text style={styles.title}>UPDATE MODULE</Text>
 				</View>
@@ -88,7 +99,7 @@ const UpdateMenu = ({ isUpdateMenuVisible, setUpdateMenuVisible, item, onUpdate 
 				<TouchableOpacity style={[styles.error, { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
 					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
 				</TouchableOpacity>
-			</BlurView>
+			</View>
 		</Modal>
 	);
 };
@@ -97,6 +108,14 @@ export default UpdateMenu;
 
 // Styles for the component
 const styles = StyleSheet.create({
+	modal: {
+		margin: 0,
+		justifyContent: "flex-end",
+		width: "100%",
+		height: "100%",
+		flex: 1,
+		alignSelf: "center",
+	},
 	header: {
 		marginTop: 20,
 		width: 260,

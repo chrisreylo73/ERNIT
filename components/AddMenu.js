@@ -205,7 +205,8 @@ export default AddMenu;
 // Styles for the component
 const styles = StyleSheet.create({
 	modal: {
-		justifyContent: "center",
+		margin: 0,
+		justifyContent: "flex-end",
 		width: "100%",
 		height: "100%",
 		flex: 1,
