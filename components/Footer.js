@@ -1,5 +1,5 @@
 // Import necessary modules and components
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import Ripple from "react-native-material-ripple";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,10 +13,10 @@ const Footer = ({ setAddMenuVisible }) => {
 			{/* View for separator line */}
 			<View style={styles.separator} />
 			{/* Ripple button to trigger the Add Menu visibility */}
-			<Ripple rippleColor="#fff" rippleopacity={0.87} rippleDuration={2400} style={styles.button} onPress={() => setAddMenuVisible(true)}>
+			<TouchableOpacity style={styles.button} onPress={() => setAddMenuVisible(true)}>
 				{/* Plus icon inside the button */}
 				<AntDesign name="plus" size={24} color="white" />
-			</Ripple>
+			</TouchableOpacity>
 		</BlurView>
 	);
 };
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
 	button: {
 		alignItems: "center",
 		justifyContent: "center",
-		width: "100%",
-		hight: "100%",
+		// width: "100%",
+		// hight: "100%",
 		padding: 15,
 		borderRadius: 20,
 	},

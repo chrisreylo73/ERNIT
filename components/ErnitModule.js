@@ -35,20 +35,20 @@ const ErnitModule = ({ item, data, setData, onUpdate, onDelete }) => {
 
 	// Check and update currentDate if needed
 	useEffect(() => {
-		if (daysLeft !== 0) {
-			if (currentDate !== formatCurrentDate()) {
-				setTaskFinished(false);
-				setCurrentDate(formatCurrentDate());
-			}
+		console.log("currentDate: ", currentDate);
+		console.log("formatCurrentDate(): ", formatCurrentDate());
+		if (daysLeft !== 0 && currentDate !== formatCurrentDate()) {
+			setTaskFinished(false);
+			setCurrentDate(formatCurrentDate());
+			updateTileKeys();
 		}
 	}, []);
 
 	// Update randomTileKeys when currentDate changes
-	useEffect(() => {
-		if (daysLeft !== 0) {
-			updateTileKeys();
-		}
-	}, [currentDate]);
+	// useEffect(() => {
+	// 	if (daysLeft !== 0) {
+	// 	}
+	// }, [currentDate]);
 
 	// Handle module press event
 	const handlePress = () => {

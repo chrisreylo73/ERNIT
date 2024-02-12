@@ -1,6 +1,6 @@
 // Import necessary components and modules
 import { useState, useEffect } from "react";
-import { StyleSheet, View, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, View, FlatList, SafeAreaView, KeyboardAvoidingView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -57,26 +57,28 @@ export default function App() {
 
 	// Render the main structure of the app
 	return (
-		<SafeAreaView style={styles.container}>
-			<StatusBar style="dark" translucent={true} />
+		<View style={styles.container}>
+			<StatusBar backgroundColor="transparent" style="dark" />
 			<Header />
 			<View style={styles.list}>
-				{/* FlatList to display the modules */}
-				<FlatList
-					contentContainerStyle={{ paddingBottom: 70, paddingTop: 85 }}
-					showsVerticalScrollIndicator={false}
-					data={data}
-					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => (
-						// Render each module using the ErnitModule component
-						<ErnitModule item={item} data={data} setData={setData} onUpdate={updateModule} onDelete={deleteModule} />
-					)}
-				/>
+				<KeyboardAvoidingView behavior="none" style={styles.list}>
+					{/* FlatList to display the modules */}
+					<FlatList
+						contentContainerStyle={{ paddingBottom: 70, paddingTop: 85 }}
+						showsVerticalScrollIndicator={false}
+						data={data}
+						keyExtractor={(item) => item.id}
+						renderItem={({ item }) => (
+							// Render each module using the ErnitModule component
+							<ErnitModule item={item} data={data} setData={setData} onUpdate={updateModule} onDelete={deleteModule} />
+						)}
+					/>
+				</KeyboardAvoidingView>
 			</View>
 			{/* Footer and AddMenu components */}
 			<Footer setAddMenuVisible={setAddMenuVisible} />
 			<AddMenu data={data} setData={setData} isAddMenuVisible={isAddMenuVisible} setAddMenuVisible={setAddMenuVisible} />
-		</SafeAreaView>
+		</View>
 	);
 }
 

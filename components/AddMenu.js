@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Keyboard } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { BlurView } from "expo-blur";
+import Modal from "react-native-modal";
+// import ExtraDimensions from "react-native-extra-dimensions-android";
 
 const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	const [numRows, setNumRows] = useState("");
@@ -17,6 +19,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 
 	// Close the modal and reset state variables
 	const handleClose = () => {
+		Keyboard.dismiss();
 		setTitle("");
 		setTotalDays("");
 		setRewardLink("");
@@ -88,7 +91,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 	// Format the current date as "YYYY-MM-DD"
 	const formatCurrentDate = () => {
 		const currentDate = new Date().toLocaleDateString().split("/");
-		const formattedDate = `${currentDate[2]}-${currentDate[0]}-${currentDate[1]}`;
+		const formattedDate = currentDate[0].length > 1 ? `${currentDate[2]}-${currentDate[0]}-${currentDate[1]}` : `${currentDate[2]}-0${currentDate[0]}-${currentDate[1]}`;
 		console.log(formattedDate);
 		return formattedDate;
 	};
@@ -162,23 +165,23 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 
 	// Render the AddMenu component
 	return (
-		<Modal animationType="slide" transparent={true} visible={isAddMenuVisible} onRequestClose={handleClose}>
-			<BlurView style={styles.modalContainer} tint="dark" intensity={100}>
+		<Modal style={styles.modal} isVisible={isAddMenuVisible} animationIn="slideInUp" animationOut="slideOutDown" animationInTiming={500} animationOutTiming={500} coverScreen={true} hasBackdrop={true} backdropOpacity={1} backdropColor="#111111" onRequestClose={handleClose}>
+			<View style={styles.modalContainer} tint="dark" intensity={100}>
 				<View style={styles.header}>
 					<Text style={styles.title}>CREATE NEW MODULE</Text>
 				</View>
-				<View style={styles.modalContainerRow}>
+				<KeyboardAvoidingView style={styles.modalContainerRow} behavior="none">
 					<Text style={styles.modalText}>TASK TITLE</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="EX: Practice Guitar" value={title} onChangeText={(text) => setTitle(text)} style={styles.modalInput} />
-				</View>
-				<View style={styles.modalContainerRow}>
+				</KeyboardAvoidingView>
+				<KeyboardAvoidingView style={styles.modalContainerRow} behavior="none">
 					<Text style={styles.modalText}>TOTAL DAYS</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="EX: 30" keyboardType="numeric" style={styles.modalInput} value={totalDays} onChangeText={(text) => setTotalDays(text)} />
-				</View>
-				<View style={styles.modalContainerRow}>
+				</KeyboardAvoidingView>
+				<KeyboardAvoidingView style={styles.modalContainerRow} behavior="none">
 					<Text style={styles.modalText}>REWARD LINK</Text>
 					<TextInput placeholderTextColor="#4a4a4e" placeholder="http://" value={rewardLink} onChangeText={(text) => setRewardLink(text)} style={styles.modalInput} />
-				</View>
+				</KeyboardAvoidingView>
 				<View style={styles.modalContainerRow}>
 					<Text style={styles.modalText}>REWARD IMAGE</Text>
 					<ImagePickerComponent setRewardImage={setRewardImage} rewardImage={rewardImage} />
@@ -192,7 +195,7 @@ const AddMenu = ({ setAddMenuVisible, isAddMenuVisible, data, setData }) => {
 				<TouchableOpacity style={[styles.error, { opacity: gotError ? 1 : 0 }]} onPress={() => setGotError(false)} disabled={!gotError}>
 					<Text style={[styles.errorText]}>ERROR: {errorMessage}</Text>
 				</TouchableOpacity>
-			</BlurView>
+			</View>
 		</Modal>
 	);
 };
@@ -201,6 +204,13 @@ export default AddMenu;
 
 // Styles for the component
 const styles = StyleSheet.create({
+	modal: {
+		justifyContent: "center",
+		width: "100%",
+		height: "100%",
+		flex: 1,
+		alignSelf: "center",
+	},
 	error: {
 		justifyContent: "center",
 		alignItems: "center",
@@ -232,12 +242,11 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		alignItems: "center",
 		backgroundColor: "#111111",
-
-		width: "100%",
-		height: "100%",
+		// width: "100%",
+		// height: "100%",
 	},
 	modalContainerRow: {
-		marginVertical: 8,
+		marginVertical: 6,
 		justifyContent: "flex-start",
 		alignItems: "left",
 		marginLeft: 50,
